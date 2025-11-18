@@ -25,7 +25,7 @@ sleep 3
 rm -rf $MODULE_PATH/disable
 
 # 获取 Host 状态
-host_status=$(cat "/data/adb/modules/SAM/setting.conf" | grep "HOST_ENABLE=" | sed "s/HOST_ENABLE=//g")
+host_status=$(cat "$MODULE_PATH/setting.conf" | grep "HOST_ENABLE=" | sed "s/HOST_ENABLE=//g")
 # 判断 host 启用则执行
 if [ "$host_status" = true ]; then
     time=$(date "+%Y-%m-%d %H:%M:%S")
@@ -44,9 +44,16 @@ if [ "$host_status" = true ]; then
     echo "[$time]: 监控 host 文件" >> "$MODULE_PATH/tmp/host.log"
 fi
 
+# 获取 busybox 路径
+busybox_path="/data/adb"
+if [ -e "/data/adb/ksu" ]; then
+    busybox_path+="/ksu/bin/busybox"
+elif [ -e "/data/adb/magisk" ]; then
+    busybox_path+="/magisk/busybox"
+fi
 # 获取定时是否启用
-crontab_status=$(cat "/data/adb/modules/SAM/setting.conf" | grep "CRONTAB_ENABLE=" | sed "s/CRONTAB_ENABLE=//g")
+crontab_status=$(cat "$MODULE_PATH/setting.conf" | grep "CRONTAB_ENABLE=" | sed "s/CRONTAB_ENABLE=//g")
 # 判断定时启用则执行
 if [ "$crontab_status" = true ]; then
-    busybox crond -c /data/adb/modules/SAM/etc/crontabs/
+    $busybox_path crond -c "$MODULE_PATH/etc/crontabs/"
 fi

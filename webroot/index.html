@@ -1,124 +1,47 @@
 <!DOCTYPE html>
- <html lang="zh-CN">
+ <html>
  <head>
-     <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>SAM</title>
      <style>
-         * {
-             margin: 0;
-             padding: 0;
-             box-sizing: border-box;
-             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-         }
-         
-         body {
-             padding: 20px;
-             line-height: 1.6;
-             transition: background-color 0.3s, color 0.3s;
-         }
-         
-         h1 {
-             text-align: center;
-             margin-bottom: 30px;
-             padding-bottom: 15px;
-             border-bottom: 1px solid;
-         }
-         
-         .content-item {
-             background-color: #ffffff;
-             border-radius: 12px;
-             padding: 20px;
-             margin-bottom: 25px;
-         }
-         
-         .content-item h2 {
-             margin-bottom: 15px;
-             color: #ffffff;
-         }
-         
-         .content-item p {
-             color: #EAF6FF;
-             margin-bottom: 10px;
-         }
-         
-         .content-item div {
-             width: 40px;
-             height: 5px;
-             background-color: #ffffff;
-             margin-bottom: 30px;
-         }
-         
-         .content-item a {
-             color: #ffffff;
-         }
-         
-         /* 浅色模式 */
-         @media (prefers-color-scheme: light) {
-             body {
-                 background-color: #ffffff;
-                 color: #333333;
-             }
-             
-             h1 {
-                 border-color: #eeeeee;
-             }
-             
-             .content-item {
-                 background-color: #1a73e8;
-             }
-         }
-         
+         body { font-family: sans-serif; max-width: 400px; margin: 0 auto; padding: 20px; }
+         .card { background: #fff; padding: 15px 15px 30px 15px; margin: 30px 0; border-radius: 8px; box-shadow: 0 3px 8px #ddd; }
+         .card a { text-decoration: none; }
+         .status { padding: 8px; border-radius: 4px; font-weight: bold; margin: 5px auto; }
+         .running { background: #e6f7ee; color: #00875a; }
+         .stopped { background: #fff2f2; color: #e53e3e; }
+         .webui { background: #E6EBF7; color: #004887; }
          /* 深色模式 */
          @media (prefers-color-scheme: dark) {
-             body {
-                 background-color: #0C1522;
-                 color: #e0e0e0;
-             }
-             
-             h1 {
-                 border-color: #142339;
-             }
-             
-             .content-item {
-                 background-color: #101D30;
-             }
-             
-             .content-item h2 {
-                 color: #ffffff;
-             }
-             
-             .content-item div {
-                 background-color: #3464AB;
-             }
-             
-             .content-item a {
-                 color: #CEE4FF;
-             }
+             body { background-color: #0C1522; }
+             h2 { color: #ffffff; }
+             .card { background-color: #14233A; box-shadow: 0 3px 8px #050A10; }
+             .card h3 { color: #ffffff; }
+             .running { background: #3D4E45; color: #B3D7C4; }
+             .stopped { background: #4E3D3D; color: #D7B3B3; }
+             .webui { background: #3D424E; color: #B3C0D7; }
          }
      </style>
  </head>
  <body>
-     <h1>SAM</h1>
-     
-     <div class="content-item">
-         <h2>SmartDNS</h2>
-         <div></div>
-         <p>监听端口:&nbsp;3721</p>
+     <h2>SAM WEBUI</h2>
+     <!-- SmartDNS 状态 -->
+     <div class="card">
+         <h3>SmartDNS</h3>
+         <div id="smartdns-status" class="status running">已运行</div>
      </div>
      
-     <div class="content-item">
-         <h2>AdGuardHome</h2>
-         <div></div>
-         <p>监听端口:&nbsp;5300</p>
-         <p>WebUI: <a href="http://127.0.0.1:3000">127.0.0.1:3000</a></p>
+     <!-- AdGuardHome 状态 -->
+     <div class="card">
+         <h3>AdGuardHome</h3>
+         <div id="agh-status" class="status running">已运行</div>
+         <a href="http://127.0.0.1:3000"><div class="status webui">WebUI</div></a>
      </div>
      
-     <div class="content-item">
-         <h2>Mihomo</h2>
-         <div></div>
-         <p>代理端口:&nbsp;7890</p>
-         <p>WebUI: <a href="http://127.0.0.1:9090/ui/">127.0.0.1:9090</a></p>
+     <!-- Mihomo 状态 -->
+     <div class="card">
+         <h3>Mihomo</h3>
+         <div id="mihomo-status" class="status running">已运行</div>
+         <a href="http://127.0.0.1:9090/ui/"><div class="status webui">WebUI</div></a>
      </div>
  </body>
  </html>

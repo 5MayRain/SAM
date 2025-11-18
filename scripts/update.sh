@@ -198,6 +198,41 @@ dns(){
     log "DNS 配置修改成功"
 }
 
+# 修改 webui
+webui(){
+    # webui 文件路径
+    html_file="$MODULE_PATH/webroot/index.html"    
+    # 输出内容
+    out_content=$(cat "$html_file")
+    
+    # 状态
+    null="空格空格空格空格空格空格空格空格空格"
+    smartdns_state="$null<div id=\"smartdns-status\" class=\"status "
+    agh_state="$null<div id=\"agh-status\" class=\"status "
+    mihomo_state="$null<div id=\"mihomo-status\" class=\"status "
+    
+    # 获取 SmartDNS 状态
+    state_number=$(pidof $SMARTDNS_BIN)
+    [ $state_number ] && smartdns_state+="running\">已运行</div>" || smartdns_state+="stopped\">未运行</div>"    
+    line_number=$(echo "$out_content" | sed -n -e "/smartdns-status/=")
+    out_content=$(echo "$out_content" | sed $line_number"c $smartdns_state" | sed "s/空格/ /g")
+    
+    # 获取 AdGuardHome 状态
+    state_number=$(pidof $AGH_BIN)
+    [ $state_number ] && agh_state+="running\">已运行</div>" || agh_state+="stopped\">未运行</div>"
+    line_number=$(echo "$out_content" | sed -n -e "/agh-status/=")
+    out_content=$(echo "$out_content" | sed $line_number"c $agh_state" | sed "s/空格/ /g")
+    
+    # 获取 Mihomo 状态
+    state_number=$(pidof $MIHOMO_BIN)
+    [ $state_number ] && mihomo_state+="running\">已运行</div>" || mihomo_state+="stopped\">未运行</div>"
+    line_number=$(echo "$out_content" | sed -n -e "/mihomo-status/=")
+    out_content=$(echo "$out_content" | sed $line_number"c $mihomo_state" | sed "s/空格/ /g")
+    
+    # 输出
+    echo "$out_content" > $html_file
+}
+
 # 添加指令
 case "$1" in
     # 配置
@@ -211,6 +246,7 @@ case "$1" in
     desc)
         # 修改模块描述
         description
+        webui
         ;;
     # 订阅
     sub)

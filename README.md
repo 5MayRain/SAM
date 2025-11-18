@@ -1,4 +1,4 @@
-# AdGuardHome + Mihomo + SmartDNS
+# SAM
 1. 这是 SmartDNS、Mihomo、AdGuardHome 三个结合的Magisk 模块
 2. 模块结构为 SmartDNS > Mihomo > AdGuardHome
 3. 模块启用了开关监听，启用模块则运行程序，禁用模块则停止程序
@@ -15,6 +15,7 @@
 ## 2025.11.18
 1. 添加定时执行功能
 2. 给模块添加 WebUI
+3. 修复 BUG
 
 ## 2025.11.17
 1. 重新调整模块架构
