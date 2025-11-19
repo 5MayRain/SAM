@@ -16,8 +16,9 @@ $SCRIPTS_PATH/service.sh start
 
 )
 
-# 重置描述
+# 重置
 cat "$MODULE_PATH/module.prop" | sed  -i "6c description=None" "$MODULE_PATH/module.prop"
+cat "$MODULE_PATH/webroot/index.html" | sed "s/status running/status stopped/g" | sed -i "s/已运行/未运行/g" "$MODULE_PATH/webroot/index.html"
 
 # 监控模块目录
 inotifyd $SCRIPTS_PATH/inotify.sh "$MODULE_PATH" > /dev/null 2>&1 &
@@ -44,16 +45,9 @@ if [ "$host_status" = true ]; then
     echo "[$time]: 监控 host 文件" >> "$MODULE_PATH/tmp/host.log"
 fi
 
-# 获取 busybox 路径
-busybox_path="/data/adb"
-if [ -e "/data/adb/ksu" ]; then
-    busybox_path+="/ksu/bin/busybox"
-elif [ -e "/data/adb/magisk" ]; then
-    busybox_path+="/magisk/busybox"
-fi
 # 获取定时是否启用
 crontab_status=$(cat "$MODULE_PATH/setting.conf" | grep "CRONTAB_ENABLE=" | sed "s/CRONTAB_ENABLE=//g")
 # 判断定时启用则执行
 if [ "$crontab_status" = true ]; then
-    $busybox_path crond -c "$MODULE_PATH/etc/crontabs/"
+    $MODULE_PATH/bin/busybox crond -c "$MODULE_PATH/etc/crontabs/"
 fi

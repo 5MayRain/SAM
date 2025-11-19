@@ -107,6 +107,18 @@ if [ -e "$MODULE_PATH/setting.conf" ]; then
     cp -f "$copy_path/hosts" "$MODPATH/etc/hosts"
 fi
 
+# 获取 busybox 路径
+busybox_path="/data/adb"
+if [ "$KSU" = true ]; then
+    busybox_path="$busybox_path/ksu/bin/busybox"
+else
+    busybox_path="$busybox_path/magisk/busybox"
+fi
+# 创建软链接
+busybox_bin="$MODPATH/bin/busybox"
+ln -s "$busybox_path" "$busybox_bin"
+ui_print "🏷️ 创建软链接 $busybox_path > $busybox_bin"
+
 # 设置权限
 ui_print "🔒 设置权限 ......"
 chmod +x "$MODPATH/bin/$AGH_BIN"

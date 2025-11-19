@@ -198,36 +198,34 @@ dns(){
     log "DNS 配置修改成功"
 }
 
+# webui 显示状态
+webui_status(){
+    content="$1"
+    state_number=$(pidof $2)       
+    line_number=$(echo "$content" | sed -n -e "/$3/=")
+    if [ $state_number ]; then
+        content=$(echo "$content" | sed $line_number"s/stopped/running/" | sed $line_number"s/未/已/")
+    else
+        content=$(echo "$content" | sed $line_number"s/running/stopped/" | sed $line_number"s/已/未/")
+    fi
+    echo "$content"
+}
+
 # 修改 webui
 webui(){
     # webui 文件路径
     html_file="$MODULE_PATH/webroot/index.html"    
     # 输出内容
-    out_content=$(cat "$html_file")
-    
-    # 状态
-    null="空格空格空格空格空格空格空格空格空格"
-    smartdns_state="$null<div id=\"smartdns-status\" class=\"status "
-    agh_state="$null<div id=\"agh-status\" class=\"status "
-    mihomo_state="$null<div id=\"mihomo-status\" class=\"status "
+    out_content=$(cat "$html_file")    
     
     # 获取 SmartDNS 状态
-    state_number=$(pidof $SMARTDNS_BIN)
-    [ $state_number ] && smartdns_state+="running\">已运行</div>" || smartdns_state+="stopped\">未运行</div>"    
-    line_number=$(echo "$out_content" | sed -n -e "/smartdns-status/=")
-    out_content=$(echo "$out_content" | sed $line_number"c $smartdns_state" | sed "s/空格/ /g")
+    out_content=$(webui_status "$out_content" "$SMARTDNS_BIN" "smartdns-status")
     
-    # 获取 AdGuardHome 状态
-    state_number=$(pidof $AGH_BIN)
-    [ $state_number ] && agh_state+="running\">已运行</div>" || agh_state+="stopped\">未运行</div>"
-    line_number=$(echo "$out_content" | sed -n -e "/agh-status/=")
-    out_content=$(echo "$out_content" | sed $line_number"c $agh_state" | sed "s/空格/ /g")
+    # 获取 AdGuardHome 状态    
+    out_content=$(webui_status "$out_content" "$AGH_BIN" "agh-status")
     
-    # 获取 Mihomo 状态
-    state_number=$(pidof $MIHOMO_BIN)
-    [ $state_number ] && mihomo_state+="running\">已运行</div>" || mihomo_state+="stopped\">未运行</div>"
-    line_number=$(echo "$out_content" | sed -n -e "/mihomo-status/=")
-    out_content=$(echo "$out_content" | sed $line_number"c $mihomo_state" | sed "s/空格/ /g")
+    # 获取 Mihomo 状态    
+    out_content=$(webui_status "$out_content" "$MIHOMO_BIN" "mihomo-status")
     
     # 输出
     echo "$out_content" > $html_file
@@ -259,6 +257,7 @@ case "$1" in
         dns
         ;;
     *)
+        webui
         echo "使用: config(更新配置) | desc(更新描述) | dns(更新DNS规则)"
         exit 1
         ;;

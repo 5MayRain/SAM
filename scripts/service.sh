@@ -156,15 +156,8 @@ crontabs_start(){
         return
     fi
     log "启动 crontabs"
-    # 获取 busybox 路径
-    busybox_path="/data/adb"
-    if [ -e "/data/adb/ksu" ]; then
-        busybox_path+="/ksu/bin/busybox"
-    elif [ -e "/data/adb/magisk" ]; then
-        busybox_path+="/magisk/busybox"
-    fi
     # 启动
-    $busybox_path crond -c "$MODULE_PATH/etc/crontabs/"
+    $MODULE_PATH/bin/busybox crond -c "$MODULE_PATH/etc/crontabs/"
     # 延时 1秒
     sleep 1
     # 输出 crontabs 状态
