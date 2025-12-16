@@ -94,7 +94,7 @@ statistics:
   enabled: true
 filters:
   - enabled: true
-    url: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/AWAvenue-Ads-Rule.txt
+    url: https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/AWAvenue-Ads-Rule.txt
     name: AWAvenue
     id: 1732747955
   - enabled: false
@@ -106,7 +106,7 @@ filters:
     name: EasylistChina
     id: 1756531603
   - enabled: true
-    url: https://raw.githubusercontent.com/Cats-Team/AdRules/main/dns.txt
+    url: https://cdn.jsdelivr.net/gh//Cats-Team/AdRules@main/dns.txt
     name: Cats-Team
     id: 1763885644
   - enabled: true
@@ -115,6 +115,8 @@ filters:
     id: 1763885646
 whitelist_filters: []
 user_rules:
+  - '# 手机管家'
+  - '@@||srv.sec.miui.com^'
   - '# 小米主题'
   - '@@||thm.market.xiaomi.com^'
   - '# 小米社区'

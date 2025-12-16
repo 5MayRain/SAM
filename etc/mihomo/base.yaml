@@ -57,7 +57,7 @@ p: &p
   interval: 86400
   health-check:
     enable: true
-    url: "https://www.gstatic.com/generate_204"
+    url: "http://www.gstatic.com/generate_204"
     interval: 300
   proxy: 🔄 订阅更新
   header:
@@ -130,23 +130,32 @@ sniffer:
   force-dns-mapping: true
   # 对所有未获取到域名的流量进行强制嗅探
   parse-pure-ip: true
-  # 使用嗅探结果作为实际访问
-  override-destination: true
   # 嗅探的协议设置
   sniff:
     HTTP:
       ports: [80, 8080-8880]
+      # 使用嗅探结果作为实际访问
+      override-destination: true
     TLS:
-      ports: [443, 5228, 8443]
+      ports: [443, 8443]
     QUIC:
       ports: [443, 8443]
   # 强制嗅探
   force-domain:
     - "+.v2ex.com"
+    - "+.netflix.com"
+    - "+.nflxvideo.net"
+    - "+.amazonaws.com"
+    - "+.media.dssott.com"
   # 跳过嗅探
   skip-domain:
     - "Mijia Cloud"
-
+    - "+.apple.com"
+    - "dlg.io.mi.com"
+    - "+.oray.com"
+    - "+.sunlogin.net"
+    - "+.push.apple.com"
+    
 # Tun 网卡
 tun:
   enable: true
@@ -202,21 +211,13 @@ proxy_groups: &proxy_groups
       - "🇰🇷 韩国节点"
       - "🇸🇬 新加坡节点"
       - "🇨🇦 加拿大节点"
-      - "🇻🇳 越南节点"
-      - "🇹🇭 泰国节点"
-      - "🇮🇳 印度节点"
-      - "🇿🇦 南非节点"
       - "🇺🇸 美国节点"
-      - "🇲🇽 墨西哥节点"
       - "🇬🇧 英国节点"
       - "🇫🇷 法国节点"
       - "🇩🇪 德国节点"
       - "🇳🇱 荷兰节点"
-      - "🇦🇺 澳大利亚节点"
-      - "🇧🇷 巴西节点"
-      - "🇸🇪 瑞典节点"
-      - "🇹🇷 土耳其节点"
-      - "🇦🇪 阿拉伯节点"
+      - "🇮🇳 印度节点"
+      - "🌀 其它节点"
       - "🛰️ 全球直连"
     # <<: *A
 CNproxy_groups: &CNproxy_groups
@@ -232,21 +233,13 @@ CNproxy_groups: &CNproxy_groups
       - "🇰🇷 韩国节点"
       - "🇸🇬 新加坡节点"
       - "🇨🇦 加拿大节点"
-      - "🇻🇳 越南节点"
-      - "🇹🇭 泰国节点"
-      - "🇮🇳 印度节点"
-      - "🇿🇦 南非节点"
       - "🇺🇸 美国节点"
-      - "🇲🇽 墨西哥节点"
       - "🇬🇧 英国节点"
       - "🇫🇷 法国节点"
       - "🇩🇪 德国节点"
       - "🇳🇱 荷兰节点"
-      - "🇦🇺 澳大利亚节点"
-      - "🇧🇷 巴西节点"
-      - "🇸🇪 瑞典节点"
-      - "🇹🇷 土耳其节点"
-      - "🇦🇪 阿拉伯节点"
+      - "🇮🇳 印度节点"
+      - "🌀 其它节点"
     # <<: *A
 proxy-groups:
   - name: "🎯 节点选择"
@@ -259,25 +252,17 @@ proxy-groups:
       - "🇰🇷 韩国节点"
       - "🇸🇬 新加坡节点"
       - "🇨🇦 加拿大节点"
-      - "🇻🇳 越南节点"
-      - "🇹🇭 泰国节点"
-      - "🇮🇳 印度节点"
-      - "🇿🇦 南非节点"
       - "🇺🇸 美国节点"
-      - "🇲🇽 墨西哥节点"
       - "🇬🇧 英国节点"
       - "🇫🇷 法国节点"
       - "🇩🇪 德国节点"
       - "🇳🇱 荷兰节点"
-      - "🇦🇺 澳大利亚节点"
-      - "🇧🇷 巴西节点"
-      - "🇸🇪 瑞典节点"
-      - "🇹🇷 土耳其节点"
-      - "🇦🇪 阿拉伯节点"
+      - "🇮🇳 印度节点"
+      - "🌀 其它节点"
       - "🛰️ 全球直连"
   - name: "♻️ 自动选择"
     type: url-test
-    exclude-filter: "中州|九州|🇨🇳"
+    exclude-filter: "中州|九州|🇨🇳|中国"
     <<: *A
   - name: "🇬 GitHub"
     <<: *proxy_groups
@@ -346,23 +331,8 @@ proxy-groups:
   - name: "🇨🇦 加拿大节点"
     filter: "加拿大|多伦多|Canada|CA|渥太华|温哥华|卡尔加里|🇨🇦"
     <<: *All
-  - name: "🇻🇳 越南节点"
-    filter: "越南|Vietnam|VN|🇻🇳"
-    <<: *All
-  - name: "🇹🇭 泰国节点"
-    filter: "泰国|Thailand|TH|🇹🇭"
-    <<: *All
-  - name: "🇮🇳 印度节点"
-    filter: "印度|孟买|海得拉巴|India|IN|🇮🇳"
-    <<: *All
-  - name: "🇿🇦 南非节点"
-    filter: "南非|约翰内斯堡|South Africa|ZA|🇿🇦"
-    <<: *All
   - name: "🇺🇸 美国节点"
     filter: "美|阿什本|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States|UnitedStates|🇺🇸"
-    <<: *All
-  - name: "🇲🇽 墨西哥节点"
-    filter: "墨西哥|克雷塔罗|Mexico|MX|🇲🇽"
     <<: *All
   - name: "🇬🇧 英国节点"
     filter: "英国|伦敦|Great Britain|United Kiongdom|GB|🇬🇧"
@@ -376,20 +346,11 @@ proxy-groups:
   - name: "🇳🇱 荷兰节点"
     filter: "荷兰|Netherlands|NL|阿姆斯特丹|🇳🇱"
     <<: *All
-  - name: "🇦🇺 澳大利亚节点"
-    filter: "澳大利亚|悉尼|Australia|AU|🇦🇺"
+  - name: "🇮🇳 印度节点"
+    filter: "印度|孟买|海得拉巴|India|IN|🇮🇳"
     <<: *All
-  - name: "🇧🇷 巴西节点"
-    filter: "巴西|圣保罗|Brazil|BR|🇧🇷"
-    <<: *All
-  - name: "🇸🇪 瑞典节点"
-    filter: "瑞典|斯德哥尔摩|Sweden|SE|🇸🇪"
-    <<: *All
-  - name: "🇹🇷 土耳其节点"
-    filter: "土耳其|Turkey|Türkiye|TR|🇹🇷"
-    <<: *All
-  - name: "🇦🇪 阿拉伯节点"
-    filter: "阿拉伯|阿联酋|迪拜|United Arab Emirates|AE|🇦🇪"
+  - name: "🌀 其它节点"
+    exclude-filter: "港|HK|hk|Hong Kong|HongKong|hongkong|深港|🇭🇰|台|新北|彰化|TW|Taiwan|🇼🇸|日本|川日|东京|大阪|泉日|埼玉|沪日|深日|[^-]日|JP|Japan|🇯🇵|KR|Korea|KOR|首尔|韩|韓|🇰🇷|新加坡|坡|狮城|SG|Singapore|🇸🇬|加拿大|多伦多|Canada|CA|渥太华|温哥华|卡尔加里|🇨🇦|美|阿什本|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States|UnitedStates|🇺🇸|英国|伦敦|Great Britain|United Kiongdom|GB|🇬🇧|法国|France|FR|巴黎|🇫🇷|德国|Germany|DE|柏林|法兰克福|🇩🇪|荷兰|Netherlands|NL|阿姆斯特丹|🇳🇱|印度|孟买|海得拉巴|India|IN|🇮🇳"
     <<: *All
 
 # 规则集合
@@ -663,7 +624,8 @@ rules:
   - "RULE-SET,domain_XiaoHongShu,🛰️ 全球直连"
   - "RULE-SET,domain_BiliBili,🛰️ 全球直连"
   - "RULE-SET,ip_BiliBili,🛰️ 全球直连"
-  - "RULE-SET,domain_Steam,🛰️ 全球直连"
+  
+  - "RULE-SET,domain_Steam,🕹️ Steam"
 
   - "RULE-SET,domain_Speedtest,🚀 测速工具"
 
@@ -702,6 +664,6 @@ rules:
   - "RULE-SET,domain_cn,🛰️ 全球直连"
   - "RULE-SET,ip_cn,🛰️ 全球直连"
   - "RULE-SET,domain_Private,🛰️ 全球直连"
-  - "RULE-SET,ip_Private,🛰️ 全球直连"
+  - "RULE-SET,ip_Private,🛰️ 全球直连,no-resolve"
 
   - "MATCH,🐟 漏网之鱼"

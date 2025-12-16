@@ -143,7 +143,7 @@ sub(){
     # 在 proxy-providers 项，添加订阅内容
     line=$(cat $base_conf | sed -n -e "/proxy-providers:/=")
     line=`expr $line + 1`
-    out_content=$(cat $base_conf | sed $line"c $sub_contents")    
+    out_content=$(cat $base_conf | sed $line"i $sub_contents")    
     # 在 All: &All 项，添加订阅名称
     line=$(echo "$out_content" | sed -n -e "/All: &All/=")
     line=`expr $line + 3`

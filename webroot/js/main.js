@@ -101,9 +101,10 @@ async function serviceControls(text, cmd) {
     exec(`su -c "${scripts_path}/service.sh ${cmd}"`)
     updateServiceStatus();
     var outNumber = await exec(`su -c "${scripts_path}/webui.sh process"`);
-    if ( outNumber.stdout < 3 && ( cmd == "start" || cmd == "restart" )) {
+    var serNumber = await exec(`su -c "${scripts_path}/webui.sh service"`);
+    if ( outNumber.stdout < serNumber.stdout && ( cmd == "start" || cmd == "restart" )) {
         showToast(text+"失败");
-    } else if ( outNumber.stdout == 3 && ( cmd == "start" || cmd == "restart" )) {
+    } else if ( outNumber.stdout == serNumber.stdout && ( cmd == "start" || cmd == "restart" )) {
         showToast(text+"成功");
     } else if ( outNumber.stdout > 0 && cmd == "stop" ) {
         showToast(text+"失败");

@@ -11,6 +11,18 @@ get_status(){
     fi
 }
 
+# 获取已启用服务的数量
+get_service_number(){
+    number=3
+    if [ $AGH_ENABLE = false ]; then
+        number=$((number - 1))
+    fi
+    if [ $SMARTDNS_ENABLE = false ]; then
+        number=$((number - 1))
+    fi
+    echo $number
+}
+
 # 获取进程数量
 get_process_number(){
     pids=($(pgrep -f "$SMARTDNS_BIN" -f "$AGH_BIN" -f "$MIHOMO_BIN"))
@@ -65,6 +77,9 @@ case "$1" in
     status)
         get_status $2
         ;;
+    service)
+        get_service_number
+        ;;
     process)
         get_process_number
         ;;
@@ -84,8 +99,7 @@ case "$1" in
         kill_monitor $2
         ;;
     *)
-        get_monitor_pid "module"
-        echo "使用: status(服务状态) | process(进程数量) | mount(挂载状态) | monitor(监控状态) | pid(监控pid) | start(启动监控) | kill(杀死监控)"
+        echo "使用: status(服务状态) | service(服务数量) | process(进程数量) | mount(挂载状态) | monitor(监控状态) | pid(监控pid) | start(启动监控) | kill(杀死监控)"
         exit 1
         ;;
 esac
