@@ -1,3 +1,13 @@
+# 等待系统启动
+until [ "$(getprop sys.boot_completed)" = "1" ]; do
+    sleep 2
+done
+    
+# 等待目录可用
+until [ -d "/sdcard" ]; do
+    sleep 2
+done
+    
 # 模块路径
 MODULE_PATH="/data/adb/modules/SAM"
 # 脚本路径
@@ -13,7 +23,7 @@ BACKUP_CONF=$(cat "$MODULE_PATH/setting.conf" | grep "BACKUP_CONF=" | awk -F'=' 
 # 判断已启用备份
 if [ $BACKUP_CONF = true ]; then
     # 复制配置文件到sd根目录
-    cp -f "$MIHOMO_CONF" "/storage/emulated/0/Mihomo配置.yaml"
+    cp -f "$MIHOMO_CONF" "/sdcard/Mihomo配置.yaml"
 fi
 
 # 解除 App 广告文件锁定

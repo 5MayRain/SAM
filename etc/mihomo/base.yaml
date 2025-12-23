@@ -57,7 +57,7 @@ p: &p
   interval: 86400
   health-check:
     enable: true
-    url: "http://www.gstatic.com/generate_204"
+    url: "https://www.gstatic.com/generate_204"
     interval: 300
   proxy: 🔄 订阅更新
   header:
@@ -177,6 +177,8 @@ tun:
   strict-route: true
   # UDP NAT 过期时间
   udp-timeout: 300
+  # 禁用 ICMP 转发
+  disable-icmp-forwarding: true
   # Android 排除应用包名
   # exclude-package:
     # 三星专用 >>>
@@ -368,44 +370,24 @@ rule-providers:
   # 自定义直连
   classical_custom_direct:
     <<: *classical
-    url: "https://tool.mrzgh.top/www/mayrain/clash/rule_provider/classical_custom_direct.list"
+    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/classical_direct.list"
     path: "./rule_provider/classical_custom_direct.list"
   # 自定义代理
-  classical_custom_proxy:
-    <<: *classical
-    url: "https://tool.mrzgh.top/www/mayrain/clash/rule_provider/classical_custom_proxy.list"
-    path: "./rule_provider/classical_custom_proxy.list"
+  domain_custom_proxy:
+    <<: *domain
+    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/domain_proxy.mrs" 
+    path: "./rule_provider/domain_custom_proxy.mrs"
   # 自定义拦截
   classical_custom_reject:
     <<: *classical
-    url: "https://tool.mrzgh.top/www/mayrain/clash/rule_provider/classical_custom_reject.list"
-    path: "./rule_provider/classical_custom_reject.list"
+    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/classical_reject.list" 
+    path: "./rule_provider/classical_custom_rejectt.list"
 
   # WebRTC
   classical_WebRTC:
     <<: *classical
     url: "https://cdn.jsdelivr.net/gh/GitMetaio/Surfing@rm/Home/rules/WebRTC.list"
     path: "./rule_provider/classical_WebRTC.list"
-  # anti-AD
-  domain_Ads_antiad:
-    <<: *domain
-    url: "https://anti-ad.net/mihomo.mrs"
-    path: "./rule_provider/domain_Ads_antiad.mrs"
-  # 秋风
-  domain_Ads_AWAvenue:
-    <<: *classical
-    path: ./rule_provider/domain_Ads_AWAvenue.list
-    url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET.list"
-  # Cats-Team
-  domain_Ads_CatsTeam:
-    <<: *domain
-    path: ./rule_provider/domain_Ads_CatsTeam.mrs
-    url: "https://gp.adrules.top/adrules-mihomo.mrs"
-  # hagezi
-  domain_Ads_hagezi:
-    <<: *domain_text
-    path: ./rule_provider/domain_Ads_hagezi.mrs
-    url: "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/pro-onlydomains.txt"
     
   # fakeip-filter
   fakeip-filter:
@@ -609,16 +591,12 @@ rules:
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   
-  - "RULE-SET,classical_blacklist_direct,🛰️ 全球直连"
+  - "RULE-SET,classical_blacklist_direct,🛰️ 全球直连"  
   - "RULE-SET,classical_custom_direct,🛰️ 全球直连"
-  - "RULE-SET,classical_custom_proxy,🎯 节点选择"
+  - "RULE-SET,domain_custom_proxy,🎯 节点选择"
   - "RULE-SET,classical_custom_reject,🚫 广告拦截"
 
   - "RULE-SET,classical_WebRTC,🖥️ WebRTC"
-  # - "RULE-SET,domain_Ads_antiad,🚫 广告拦截"
-  - "RULE-SET,domain_Ads_AWAvenue,🚫 广告拦截"
-  - "RULE-SET,domain_Ads_CatsTeam,🚫 广告拦截"
-  - "RULE-SET,domain_Ads_hagezi,🚫 广告拦截"
 
   - "RULE-SET,domain_DouYin,🛰️ 全球直连"
   - "RULE-SET,domain_XiaoHongShu,🛰️ 全球直连"

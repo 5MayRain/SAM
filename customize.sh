@@ -38,7 +38,7 @@ update_conf(){
     # 更新模块的配置文件路径
     t="$MODPATH/setting.conf"
     # 需要更新的配置
-    #conf_array=("AGH_ENABLE" "AGH_DNS_PORT" "AGH_USER" "AGH_GROUP" "BLOCK_IPV6_DNS" "SMARTDNS_ENABLE" "TUN_DEVICE" "HOST_ENABLE" "CRONTAB_ENABLE" "BACKUP_CONF" "SUB_URL" "BLACKLIST_PACKAGE")
+    #conf_array=("AGH_ENABLE" "AGH_DNS_PORT" "AGH_USER" "AGH_GROUP" "BLOCK_IPV6_DNS" "SMARTDNS_ENABLE" "TUN_DEVICE" "MIHOMO_DNS_PORT" "MIHOMO_IPV6" "IP_IPTABLES" "HOST_ENABLE" "CRONTAB_ENABLE" "BACKUP_CONF" "SUB_URL" "BLACKLIST_PACKAGE")
     # 循环执行查找并替换
     #for i in ${!conf_array[@]}
     #do
@@ -51,6 +51,9 @@ update_conf(){
     modify_conf "$s" "$t" "BLOCK_IPV6_DNS"
     modify_conf "$s" "$t" "SMARTDNS_ENABLE"
     modify_conf "$s" "$t" "TUN_DEVICE"
+    modify_conf "$s" "$t" "MIHOMO_DNS_PORT"
+    modify_conf "$s" "$t" "MIHOMO_IPV6"
+    modify_conf "$s" "$t" "IP_IPTABLES"
     modify_conf "$s" "$t" "HOST_ENABLE"
     modify_conf "$s" "$t" "CRONTAB_ENABLE"
     modify_conf "$s" "$t" "BACKUP_CONF"

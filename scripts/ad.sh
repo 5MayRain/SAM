@@ -3,9 +3,10 @@
 
 # 广告路径数组
 ad_path=(
-# 美团外卖
+# 美团
 "/data/data/com.sankuai.meituan.takeoutnew/files/cips/common/waimai/assets/ad"
 "/data/media/0/Android/data/com.sankuai.meituan.takeoutnew/files/cips/common/waimai/assets/promotion"
+"/data/data/com.sankuai.meituan/files/cips/common/mtplatform_group/assets/startup"
     
 # 知乎
 "/data/data/com.zhihu.android/files/ad"
@@ -17,6 +18,9 @@ ad_path=(
 "/data/data/com.bilibili.app.in/app_mod_resource"
 "/data/media/0/Android/data/tv.danmaku.bili/cache/default/journal"
 "/data/data/tv.danmaku.bili/files/splash2"
+"/data/data/com.cn21.ecloud/files/ecloud_current_screenad.obj"
+"/data/data/tv.danmaku.bili/files/splash_top_view"
+"/data/data/tv.danmaku.bili/files/resmanager_resource_*"
     
 # 中国广电
 "/data/data/com.ai.obc.cbn.app/files/splashShow"
@@ -28,14 +32,14 @@ ad_path=(
     
 # 网易云音乐
 "/data/media/0/Android/data/com.netease.cloudmusic/cache/Ad"
-"/data/data/com.netease.cloudmusic/cache/MusicWebApp"
+"/data/data/com.netease.cloudmusic/cache/MusicWebApp" 
 "/data/media/0/netease/adcache"
-"/data/media/0/netease/cloudmusic/Ad"  
+"/data/media/0/netease/cloudmusic/Ad"
     
 # 大麦
 "/data/data/cn.damai/files/ad_dir"
     
-# 顺丰速递
+# 顺丰
 "/data/data/com.sf.activity/files/openScreenADsImg"
     
 # 丰云行
@@ -48,16 +52,14 @@ ad_path=(
 "/data/data/com.xiaomi.youpin/shared_prefs/ad_prf.xml"
     
 # 小爱音箱
-"/data/media/0/Android/data/com.xiaomi.mico/files/log/VoipSdk"
 "/data/media/0/Android/data/com.xiaomi.mico/files/data_cache/journal"
     
 # 高德地图
-"/data/data/com.autonavi.minimap/files/LaunchDynamicResource"
-"/data/media/0/Android/data/com.autonavi.minimap/cache/ajxFileDownload"
-"/data/media/0/Android/data/com.autonavi.minimap/files/autonavi/cloud_image/journal"
 "/data/media/0/autonavi/afpSplash"
 "/data/media/0/autonavi/splash"
-"/data/user/0/com.autonavi.minimap/files/splash"
+"/data/media/0/Android/data/com.autonavi.minimap/cache/ajxFileDownload/"
+"/data/data/com.autonavi.minimap/files/LaunchDynamicResource"
+"/data/data/com.autonavi.minimap/files/splash"
     
 # 抖音
 "/data/data/com.ss.android.ugc.aweme/files/im_common_resource/common_resource/scene_strategy/incentive_chat_group_panel_alpha_video_festival"
@@ -65,22 +67,11 @@ ad_path=(
 "/data/media/0/Android/data/com.ss.android.ugc.aweme/liveSplashCache"
 "/data/media/0/Android/data/com.ss.android.ugc.aweme/splashCache"
     
-# 腾讯QQ
+# QQ
 "/data/media/0/Android/data/com.tencent.mobileqq/files/vas_ad"
 "/data/media/0/Tencent/MobileQQ/splahAD"
 "/data/media/0/Android/data/com.tencent.mobileqq/MobileQQ/splahAD"
 "/data/media/0/Android/data/com.tencent.mobileqq/Tencent/MobileQQ/vasSplashAD"
-
-# 腾讯微视
-"/data/media/0/Android/data/com.tencent.weishi/splash_cache"
-
-# QQ浏览器
-"/data/user/0/com.tencent.mtt/files/tad_cache"
-
-# QQ音乐
-"/data/user/0/com.tencent.qqmusic/app_adnet"
-"/data/user/0/com.tencent.qqmusic/files/tad_cache"
-"/data/media/0/qqmusic/splash"
     
 # 安居客
 "/data/data/com.anjuke.android.app/cache/splash_ad"
@@ -91,47 +82,63 @@ ad_path=(
     
 # 中国移动
 "/data/data/com.greenpoint.android.mc10086.activity/shared_prefs/default.xml"
-"/data/user/0/com.greenpoint.android.mc10086.activity/cache/image_manager_disk_cache"
-
-# 移动云盘
-"/data/media/0/Android/data/com.chinamobile.mcloud/files/boot_logo"
+"/data/data/com.greenpoint.android.mc10086.activity/cache/image_manager_disk_cache"
     
-# YY 
+# YY
 "/data/data/com.duowan.mobile/shared_prefs/CommonPref.xml"
     
 # 米家
-"/data/data/com.xiaomi.smarthome/files/sh_ads_file/"
+"/data/data/com.xiaomi.smarthome/files/sh_ads_file"
     
 # 米游社
-"/data/media/0/Android/data/com.mihoyo.hyperion/cache/splash/"
+"/data/media/0/Android/data/com.mihoyo.hyperion/cache/splash"
     
 # 小米社区
 "/data/data/com.xiaomi.vipaccount/files/mmkv/mmkv.default"
     
 # 天翼云盘
 "/data/data/com.cn21.ecloud/files/ecloud_current_screenad.obj"
+    
+# 闲鱼
+"/data/media/0/Android/data/com.taobao.idlefish/files/splash_ad_assets"
+"/data/media/0/Android/data/com.taobao.idlefish/files/ad"
+"/data/data/com.taobao.idlefish/cache/beizi"
+    
+# 航旅纵横
+"/data/data/com.umetrip.android.msky.app/files/ad"
+    
+# 携程旅行
+"/data/media/0/Android/data/ctrip.android.view/cache/CTADCache"
+"/data/data/ctrip.android.view/files/CTAD"
+    
+# 智行火车票
+"/data/media/0/Android/data/com.yipiao/files/CTADCache"
+"/data/media/0/Android/data/com.yipiao/files/CTADSet"
+    
+# 京东
+"/data/media/0/Android/data/com.jingdong.app.mall/cache/JDVideoFileDir"
 
 # 豆瓣
-"/data/user/0/com.douban.frodo/cache/douban_ad"
+"/data/data/com.douban.frodo/cache/douban_ad"
 
 # 驾考宝典
-"/data/user/0/com.handsgo.jiakao.android/cache/GDTDOWNLOAD"
+"/data/data/com.handsgo.jiakao.android/cache/GDTDOWNLOAD"
 "/data/media/0/Android/data/com.handsgo.jiakao.android/cache/reward_video_cache_*"
 "/data/media/0/Android/data/com.handsgo.jiakao.android/cache/splash_ad_cache"
 
 # 百度地图
-"/data/user/0/com.baidu.BaiduMap/files/AdvertData"
+"/data/data/com.baidu.BaiduMap/files/AdvertData"
 
-# 百度网盘
-"/data/user/0/com.baidu.netdisk/files/default_ad_caches"
-"/data/user/0/com.baidu.netdisk/cache/wind"
-"/data/user/0/com.baidu.netdisk/files/imgCache"
-"/data/user/0/com.baidu.netdisk/files/splash_res_caches"
-"/data/user/0/com.baidu.netdisk/files/video_front_ad_caches"
-"/data/user/0/com.baidu.netdisk/files/splash"
+# QQ浏览器
+"/data/data/com.tencent.mtt/files/tad_cache"
+
+# QQ音乐
+"/data/data/com.tencent.qqmusic/app_adnet"
+"/data/data/com.tencent.qqmusic/files/tad_cache"
+"/data/media/0/qqmusic/splash"
 
 # 人人影视PRO
-"/data/user/0/com.yyets.pro/app_ad"
+"/data/data/com.yyets.pro/app_ad"
 
 # 酷安
 "/data/media/0/Android/data/com.coolapk.market/cachett_ad"
@@ -148,6 +155,9 @@ ad_path=(
 # 今日头条
 "/data/media/0/Android/data/com.ss.android.article.news/splashCache"
 
+# 腾讯微视
+"/data/media/0/Android/data/com.tencent.weishi/splash_cache"
+
 # 酷狗音乐
 "/data/media/0/kugou/.splash"
 "/data/media/0/Android/data/com.kugou.android/files/kugou/.splash"
@@ -162,9 +172,9 @@ ad_path=(
 
 # 淘宝
 "/data/media/0/Android/data/com.taobao.taobao/files/acds"
-"/data/user/0/com.taobao.taobao/files/bootimageresources"
+"/data/data/com.taobao.taobao/files/bootimageresources"
 
-# 咪咕的各类应用
+# 咪咕
 "/data/media/0/Mob"
 
 # MIUI
@@ -175,26 +185,41 @@ ad_path=(
 "/data/media/0/Android/data/com.youdao.dict/files/yd_sdk_path"
 
 # 邮箱大师
-"/data/user/0/com.netease.mail/cache/adcache1"
-"/data/user/0/com.netease.mail/cache/adcache"
-
-# 美团
-"/data/user/0/com.sankuai.meituan/files/cips/common/mtplatform_group/assets/startup"
+"/data/data/com.netease.mail/cache/adcache1"
+"/data/data/com.netease.mail/cache/adcache"
 
 # 饿了么
-"/data/user/0/me.ele/cache/splash"
-"/data/user/0/me.ele/files/o2o_ad"
+"/data/data/me.ele/cache/splash"
+"/data/data/me.ele/files/o2o_ad"
+
+# 百度网盘
+"/data/data/com.baidu.netdisk/files/default_ad_caches"
+"/data/data/com.baidu.netdisk/cache/wind"
+"/data/data/com.baidu.netdisk/files/imgCache"
+"/data/data/com.baidu.netdisk/files/splash_res_caches"
+"/data/data/com.baidu.netdisk/files/video_front_ad_caches"
+"/data/data/com.baidu.netdisk/files/splash"
+
+# 移动云盘
+"/data/media/0/Android/data/com.chinamobile.mcloud/files/boot_logo"
 
 # 飞猪旅行
-"/data/user/0/com.taobao.trip/files/fliggy_splash"
-
-# 携程旅行
-"/data/media/0/Android/data/ctrip.android.view/cache/CTADCache"
+"/data/data/com.taobao.trip/files/fliggy_splash"
 
 # 汽水音乐
 "/data/media/0/com.luna.music/cache/image_commercial_cache"
 "/data/media/0/com.luna.music/cache/pangle_com.byted.pangle"
 "/data/media/0/com.luna.music/files/splashCache"
+
+# 微信小游戏广告
+"/data/media/0/Android/data/com.tencent.mm/MicroMsg/wagamefiles/gamead"
+
+# 书旗小说
+"/data/data/com.shuqi.controller/files/noah_ads"
+"/data/data/com.shuqi.controller/files/flash_ad_image"
+
+# 小福家
+"/data/data/com.coocaa.familychat/app_e_qq_com_setting_7d767d052a5753acb54b111c8a40c128/sdkCloudSetting.cfg"
 )
 
 # 广告屏蔽

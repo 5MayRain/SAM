@@ -214,7 +214,9 @@ start(){
     # 启动 Mihomo
     mihomo_start
     # 启动 AdGuardHome
-    agh_start 
+    agh_start     
+    # 添加 iptables 规则    
+    [ $IP_IPTABLES = true ] && $SCRIPTS_PATH/iptables.sh -e ip
     # 启动 crontabs
     crontabs_start
     # 屏蔽 app 广告文件
@@ -238,10 +240,14 @@ stop(){
     mihomo_stop
     # 停止 SmartDNS
     smartdns_stop
+    # 删除 iptables 规则    
+    [ $IP_IPTABLES = true ] && $SCRIPTS_PATH/iptables.sh -d ip
     # 关闭 crontabs
     crontabs_stop
     # 更新描述
     $SCRIPTS_PATH/update.sh desc
+    # 删除日志和缓存
+    rm -rf "$MODULE_PATH/tmp/*"
 }
 
 # 添加指令

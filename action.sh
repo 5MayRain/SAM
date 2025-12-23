@@ -1,9 +1,13 @@
-smartdns_pid=$(pgrep -f "smartdns")
-agh_pid=$(pgrep -f "AdGuardHome")
-mihomo_pid=$(pgrep -f "mihomo")
-if [ $smartdns_pid ] && [ $agh_pid ] && [ $mihomo_pid ]; then  
-    su -c "/data/adb/modules/SAM/scripts/service.sh stop"  
+# 模块根目录
+root=$(pwd)
+# 获取已启用服务数量
+service=$(su -c "$root/scripts/webui.sh service")
+# 获取服务进程数量
+process=$(su -c "$root/scripts/webui.sh process")
+# 判断数量相等，则停止，反之则运行
+if [ $service = $process ] || [ $process -ne 0 ]; then  
+    su -c "$root/scripts/service.sh stop"  
 else
-    su -c "/data/adb/modules/SAM/scripts/service.sh start"
+    su -c "$root/scripts/service.sh start"
 fi
 sleep 1

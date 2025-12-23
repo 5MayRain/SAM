@@ -12,6 +12,20 @@ dns_port(){
     fi
 }
 
+# 修改 Mihomo DNS 端口
+mihomo_dns_port(){
+    # 获取 Mihomo DNS 端口
+    port_value=$(cat $MIHOMO_CONF | grep "listen" | awk '{print $2}' | tr -d "[:space:]" | sed "s/0.0.0.0://g")
+    # 判断 Mihomo DNS 端口 与设置的端口不一致则修改
+    if [ $MIHOMO_DNS_PORT != $port_value ]; then        
+        log "修改 Mihomo DNS 端口 $port_value 为 $MIHOMO_DNS_PORT"
+        cat $MIHOMO_CONF | sed -i "s/listen: 0.0.0.0:$port_value/listen: 0.0.0.0:$MIHOMO_DNS_PORT/g" $MIHOMO_CONF
+        
+        log "同步修改 AdGuardHome 配置"
+        cat $AGH_CONF | sed -i "s/127.0.0.1:$port_value/127.0.0.1:$MIHOMO_DNS_PORT/g" $AGH_CONF
+    fi
+}
+
 # 修改 Mihomo TUN 网卡
 tun_device(){
     # 获取 Mihomo TUN 网卡
@@ -21,6 +35,26 @@ tun_device(){
         log "修改 Mihomo TUN 网卡 $device_value 为 $TUN_DEVICE"
         cat $MIHOMO_CONF | sed -i "s/device: $device_value/device: $TUN_DEVICE/g" $MIHOMO_CONF 
     fi
+}
+
+# 修改 Mihomo 的 ipv6
+ipv6_proxy(){
+    log "修改 Mihomo ipv6 设置"
+    # 输出内容
+    out_content=$(cat $MIHOMO_CONF)
+    # 获取索引
+    indexs=$(echo "$out_content" | grep -n "ipv6:" | cut -d: -f1)
+    # 循环打印
+    for i in $indexs
+    do
+        # 获取值
+        ipv6_value=$(echo "$out_content" | sed -n "${i}p" | awk '{print $2}' | tr -d "[:space:]")
+        # 判断 Mihomo ipv6 与设置的 ipv6 不一致则修改
+        if [ $MIHOMO_IPV6 != $ipv6_value ]; then
+            out_content="$(echo "$out_content" | sed "${i}s/${ipv6_value}/${MIHOMO_IPV6}/g")"
+        fi
+    done
+    echo "$out_content" > $MIHOMO_CONF
 }
 
 # 修改模块描述
@@ -212,8 +246,12 @@ case "$1" in
     config)
         # 修改 AdGuardHome DNS 端口
         dns_port
+        # 修改 Mihomo DNS 端口
+        mihomo_dns_port
         # 修改 Mihomo TUN 网卡
         tun_device
+        # 修改 Mihomo ipv6
+        ipv6_proxy
         ;;
     # 描述
     desc)
@@ -231,7 +269,6 @@ case "$1" in
         dns
         ;;
     *)
-        webui
         echo "使用: config(更新配置) | desc(更新描述) | dns(更新DNS规则)"
         exit 1
         ;;

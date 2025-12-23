@@ -39,10 +39,13 @@ dns:
   trusted_proxies:
     - 127.0.0.0/8
     - ::1/128
+  cache_enabled: false
   cache_size: 0
   cache_ttl_min: 0
   cache_ttl_max: 0
   cache_optimistic: false
+  cache_optimistic_answer_ttl: 30s
+  cache_optimistic_max_age: 12h
   bogus_nxdomain: []
   aaaa_disabled: true
   enable_dnssec: false
@@ -65,6 +68,8 @@ dns:
   use_http3_upstreams: false
   serve_plain_dns: true
   hostsfile_enabled: true
+  pending_requests:
+    enabled: true
 tls:
   enabled: false
   server_name: ""
@@ -94,36 +99,15 @@ statistics:
   enabled: true
 filters:
   - enabled: true
-    url: https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/AWAvenue-Ads-Rule.txt
-    name: AWAvenue
-    id: 1732747955
-  - enabled: false
-    url: https://adguardteam.github.io/HostlistsRegistry/assets/filter_21.txt
-    name: 'CHN: anti-AD'
-    id: 1756258561
-  - enabled: false
-    url: https://easylist-downloads.adblockplus.org/easylistchina.txt
-    name: EasylistChina
-    id: 1756531603
+    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuard/adguard_blacklist.list
+    name: 5MayRain
+    id: 1766388758
+whitelist_filters:
   - enabled: true
-    url: https://cdn.jsdelivr.net/gh//Cats-Team/AdRules@main/dns.txt
-    name: Cats-Team
-    id: 1763885644
-  - enabled: true
-    url: https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/pro.txt
-    name: hagezi
-    id: 1763885646
-whitelist_filters: []
-user_rules:
-  - '# 手机管家'
-  - '@@||srv.sec.miui.com^'
-  - '# 小米主题'
-  - '@@||thm.market.xiaomi.com^'
-  - '# 小米社区'
-  - '@@||api.vip.miui.com^'
-  - '# 讯飞输入法'
-  - '@@||inputnlp.xfinfr.com^'
-  - '@@||imeclient.openspeech.cn^'
+    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuard/adguard_whitelist.list
+    name: 5MayRain
+    id: 1766388759
+user_rules: []
 dhcp:
   enabled: false
   interface_name: ""
@@ -153,6 +137,7 @@ filtering:
     enabled: false
     bing: true
     duckduckgo: true
+    ecosia: true
     google: true
     pixabay: true
     yandex: true
@@ -161,13 +146,16 @@ filtering:
   parental_block_host: family-block.dns.adguard.com
   safebrowsing_block_host: standard-block.dns.adguard.com
   rewrites: []
+  safe_fs_patterns:
+    - /data/adb/modules/SAM/etc/AdGuardHome/data/userfilters/*
   safebrowsing_cache_size: 1048576
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  filters_update_interval: 0
+  filters_update_interval: 24
   blocked_response_ttl: 10
   filtering_enabled: true
+  rewrites_enabled: true
   parental_enabled: false
   safebrowsing_enabled: false
   protection_enabled: true
@@ -180,6 +168,7 @@ clients:
     hosts: true
   persistent: []
 log:
+  enabled: true
   file: ""
   max_backups: 0
   max_size: 100
@@ -191,4 +180,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 28
+schema_version: 32

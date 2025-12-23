@@ -14,8 +14,6 @@ get_GitHub520(){
         return
     fi
     
-    log "下载成功"
-    
     # 保存文件
     host_file="$MODULE_PATH/tmp/GitHub520_host"
     echo "$github_host" > $host_file
@@ -32,8 +30,6 @@ get_GitHub520(){
         host_content+="${rule[0]} ${rule[1]}\n"
     done < $host_file
     
-    log "读取成功"
-    
     # 写入 hosts 文件
     host_content=$(cat $HOSTS_PATH | grep -i -v "github" | sed '$a END' | sed "s/END/$host_content\n/")
     echo "$host_content" > $HOSTS_PATH
@@ -48,7 +44,7 @@ case "$1" in
         get_GitHub520
         ;;
     *)
-        echo "使用: gh(GitHub加速) | -l(日志)"
+        echo "使用: gh(GitHub加速)"
         exit 1
         ;;
 esac

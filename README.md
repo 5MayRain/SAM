@@ -19,6 +19,14 @@
 3. 把 Mihomo 的广告拦截改为直连，再排查 AdGuardHome 的拦截日志，把拦截的域名解除
 4. 把 Mihomo 的漏网之鱼改为直连，或排查相关域名，手动添规则
 
+## 2025.12.23
+1. 修改 Mihomo 配置
+2. 修改 AdGuardHome 配置
+3. 添加 ip iptables 规则
+4. 设置文件增加配置项
+5. 修改部分代码
+6. 更新 AdGuardHome 和 Mihomo 版本
+
 ## 2025.12.16
 1. 修改 Mihomo 配置
 2. 修改部分代码

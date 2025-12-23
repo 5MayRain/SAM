@@ -1,14 +1,16 @@
-MODULE_PATH="/data/adb/modules/SAM"
-SCRIPTS_PATH="/data/adb/modules/SAM/scripts"
-
-(
-
+# 等待系统启动
 until [ "$(getprop sys.boot_completed)" = "1" ]; do
     sleep 3
 done
 
+# 模块目录
+MODULE_PATH="/data/adb/modules/SAM"
+# 脚本目录
+SCRIPTS_PATH="/data/adb/modules/SAM/scripts"
+
 # 删除日志及缓存文件
 rm -rf "$MODULE_PATH/tmp/*"
+rm -rf "$MODULE_PATH/etc/ipv6"
 
 # 创建软链接
 if [ ! -e "$MODULE_PATH/bin/smartdns" ]; then
@@ -20,8 +22,6 @@ fi
 # 启动
 echo "" > $MODULE_PATH/disable
 $SCRIPTS_PATH/service.sh start
-
-)
 
 # 重置
 cat "$MODULE_PATH/module.prop" | sed  -i "6c description=None" "$MODULE_PATH/module.prop"
