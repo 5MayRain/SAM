@@ -10,7 +10,6 @@ SCRIPTS_PATH="/data/adb/modules/SAM/scripts"
 
 # 删除日志及缓存文件
 rm -rf "$MODULE_PATH/tmp/*"
-rm -rf "$MODULE_PATH/etc/ipv6"
 
 # 创建软链接
 if [ ! -e "$MODULE_PATH/bin/smartdns" ]; then

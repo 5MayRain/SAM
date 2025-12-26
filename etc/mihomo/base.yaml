@@ -80,6 +80,13 @@ All: &All
 # 代理集合
 proxy-providers:
 
+# hosts
+hosts:
+  dns.alidns.com: [223.5.5.5, 223.6.6.6]
+  dns.pub: [1.12.12.12, 120.53.53.53]
+  dns.cloudflare.com: [1.1.1.1, 1.0.0.1]
+  dns.google: [8.8.8.8, 8.8.4.4]
+
 # DNS 配置
 dns:
   enable: true
@@ -100,27 +107,26 @@ dns:
     - "+.3gppnetwork.org"
     - "+.xtracloud.net"
     - "+.market.xiaomi.com"
-    #- "+.mtalk.google.com"
   # 用于 direct 出口域名解析的 DNS 服务器
   direct-nameserver:
     #- 127.0.0.1:3721
-    - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
-    - https://dns.pub/dns-query#🛰️ 全球直连&h3=false
+    - https://dns.pub/dns-query
+    - https://dns.alidns.com/dns-query
   # 代理节点域名解析服务器
   proxy-server-nameserver:
     #- 127.0.0.1:3721
-    - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
     - https://dns.pub/dns-query#🛰️ 全球直连&h3=false
+    - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
   # 指定域名查询的解析服务器
   nameserver-policy:
     "RULE-SET:domain_cn,domain_Microsoft,domain_Apple":
       #- 127.0.0.1:3721
-      - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
       - https://dns.pub/dns-query#🛰️ 全球直连&h3=false
+      - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
   # 默认的域名解析服务器
   nameserver:
-    - https://dns.cloudflare.com/dns-query#🌐 DNS连接&h3=true
     - https://dns.google/dns-query#🌐 DNS连接&h3=true
+    - https://dns.cloudflare.com/dns-query#🌐 DNS连接&h3=true
 
 # 域名嗅探
 sniffer:
@@ -130,12 +136,12 @@ sniffer:
   force-dns-mapping: true
   # 对所有未获取到域名的流量进行强制嗅探
   parse-pure-ip: true
+  # 使用嗅探结果作为实际访问
+  override-destination: true
   # 嗅探的协议设置
   sniff:
     HTTP:
       ports: [80, 8080-8880]
-      # 使用嗅探结果作为实际访问
-      override-destination: true
     TLS:
       ports: [443, 8443]
     QUIC:
@@ -143,18 +149,9 @@ sniffer:
   # 强制嗅探
   force-domain:
     - "+.v2ex.com"
-    - "+.netflix.com"
-    - "+.nflxvideo.net"
-    - "+.amazonaws.com"
-    - "+.media.dssott.com"
   # 跳过嗅探
   skip-domain:
     - "Mijia Cloud"
-    - "+.apple.com"
-    - "dlg.io.mi.com"
-    - "+.oray.com"
-    - "+.sunlogin.net"
-    - "+.push.apple.com"
     
 # Tun 网卡
 tun:
@@ -196,7 +193,7 @@ tun:
 
 # 代理
 proxies:
-  - {name: 🇨🇳 九州, type: direct, udp: true}
+  - {name: 🇨🇳 国内, type: direct, udp: true}
   - {name: ⛔️ 拒绝连接, type: reject}
   - {name: 🌐 DNS劫持, type: dns}
 
@@ -264,7 +261,7 @@ proxy-groups:
       - "🛰️ 全球直连"
   - name: "♻️ 自动选择"
     type: url-test
-    exclude-filter: "中州|九州|🇨🇳|中国"
+    exclude-filter: "国内|🇨🇳|中国"
     <<: *A
   - name: "🇬 GitHub"
     <<: *proxy_groups
@@ -314,7 +311,7 @@ proxy-groups:
   - name: "🛰️ 全球直连"
     type: select
     proxies:
-      - "🇨🇳 九州"
+      - "🇨🇳 国内"
   - name: "🇭🇰 香港节点"
     filter: "港|HK|hk|Hong Kong|HongKong|hongkong|深港|🇭🇰"
     <<: *All

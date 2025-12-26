@@ -16,6 +16,8 @@ agh_start(){
         log "AdGuardHome 正在运行"
         return
     fi
+    export SSL_CERT_DIR="/system/etc/security/cacerts/"
+    export TZ="Asia/Shanghai"
     log "启动 AdGuardHome"
     # 后台启动并输出日志
     nohup $MODULE_PATH/bin/$AGH_BIN -c $AGH_CONF -w $AGH_PATH --no-check-update > $MODULE_PATH/tmp/$AGH_BIN.log 2>&1 &

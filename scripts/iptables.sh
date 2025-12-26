@@ -316,85 +316,6 @@ mihomo_iptables(){
     fi
 }
 
-# Mihomo ip
-mihomo_ip() {
-    # 匹配从 Tun 进入的流量，使用 main 路由转发
-    ip rule $1 from all iif "$TUN_DEVICE" lookup main suppress_prefixlength 0 pref 8000
-    # 使常规流量优先使用 main 路由表
-    ip rule $1 lookup main pref 7000
-}
-
-
-# 创建 ipv6 源设置备份
-create_ipv6_backup(){
-    # 判断备份文件不存在，则创建
-    if [ ! -e "$IPV6_PATH" ]; then
-        files=("/proc/sys/net/ipv6/conf/all/accept_ra" "/proc/sys/net/ipv6/conf/wlan0/accept_ra" "/proc/sys/net/ipv6/conf/all/disable_ipv6" "/proc/sys/net/ipv6/conf/default/disable_ipv6" "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6")
-        out_content=""
-        for file in ${files[@]}
-        do
-            out_content+="$file:$(cat $file)\n"
-        done
-        echo "$out_content" > $IPV6_PATH
-    fi    
-}
-
-# Mihomo ipv6 根据设置是否启用
-mihomo_ipv6(){
-    # 创建 ipv6 源设置备份
-    create_ipv6_backup
-    # 判断启用 ipv6，则使用备份文件复原设置
-    if [ "$MIHOMO_IPV6" = true ]; then
-        value=$(cat $IPV6_PATH | grep "$1" | sed "s/^.*://g")
-    # 判断未启用
-    else
-        value=$(echo "$IPV6_CLOSE_CONF" | grep "$1" | sed "s/^.*://g")
-    fi
-    echo $value > $1
-}
-
-# Mihomo ipv6 使用
-mihomo_ipv6_use(){
-    [ "$MIHOMO_IPV6" = true ] && log "启用 Mihomo ipv6" || log "禁用 Mihomo ipv6"
-    mihomo_ipv6 "/proc/sys/net/ipv6/conf/all/accept_ra"
-    mihomo_ipv6 "/proc/sys/net/ipv6/conf/wlan0/accept_ra"
-    mihomo_ipv6 "/proc/sys/net/ipv6/conf/all/disable_ipv6"
-    mihomo_ipv6 "/proc/sys/net/ipv6/conf/default/disable_ipv6"
-    mihomo_ipv6 "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6"
-}
-
-# Mihomo 启用规则
-mihomo_enable() {
-    # 启用 ip 转发
-    echo 1 > /proc/sys/net/ipv4/ip_forward
-    # 配置反向路径过滤
-    echo 2 > /proc/sys/net/ipv4/conf/default/rp_filter
-    echo 2 > /proc/sys/net/ipv4/conf/all/rp_filter
-    
-    # 判断存在 Tun 网卡，则执行
-    if [ "$(ifconfig | grep "$TUN_DEVICE")" ]; then
-        log "添加 Mihomo iptables 规则"     
-        # 插入防火墙规则
-        mihomo_iptables "-I" "-A"
-        log "添加 Mihomo ip 规则"
-        # 添加路由规则
-        mihomo_ip "add"
-        # 使用 Mihomo ipv6
-        mihomo_ipv6_use
-    fi    
-}
-
-# Mihomo 禁用规则
-mihomo_disable() {
-    # 删除路由规则
-    mihomo_ip "del"
-    # 删除防火墙规则
-    mihomo_iptables "-D" "-D"
-    # 使用 Mihomo ipv6
-    mihomo_ipv6_use
-}
-
-
 # 添加指令
 case "$1" in
     # 启用
@@ -407,7 +328,8 @@ case "$1" in
                 ;;
             # Mihomo
             mihomo)  
-                mihomo_enable
+                log "添加 Mihomo iptables 规则"
+                mihomo_iptables "-I" "-A"
                 ;;
             # ip
             ip)
@@ -431,7 +353,7 @@ case "$1" in
             # Mihomo
             mihomo)
                 log "删除 Mihomo iptables 规则"
-                mihomo_disable
+                mihomo_iptables "-D" "-D"
                 ;;
             # ip
             ip)

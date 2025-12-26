@@ -4,12 +4,6 @@ MODULE_PATH="/data/adb/modules/SAM"
 # host 路径
 HOSTS_PATH="$MODULE_PATH/etc/hosts"
 
-# ipv6 源设置备份路径
-# 请勿修改该文件，可能会造成手机无网络
-IPV6_PATH="$MODULE_PATH/etc/ipv6"
-# ipv6 关闭配置
-IPV6_CLOSE_CONF="/proc/sys/net/ipv6/conf/all/accept_ra:0\n/proc/sys/net/ipv6/conf/wlan0/accept_ra:0\n/proc/sys/net/ipv6/conf/all/disable_ipv6:1\n/proc/sys/net/ipv6/conf/default/disable_ipv6:1\n/proc/sys/net/ipv6/conf/wlan0/disable_ipv6:1"
-
 # 脚本路径
 SCRIPTS_PATH="$MODULE_PATH/scripts"
 
