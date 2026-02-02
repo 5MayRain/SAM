@@ -107,7 +107,7 @@ description(){
     #done
     
     # 用户和密码
-    desc_content+="🔰账号/密码: "
+    [ ${#start_state[@]} -gt 0 ] && desc_content+="🔰账号/密码: "
     for i in ${start_state[@]}
     do
         if [ "$i" = "$AGH_BIN" ]; then

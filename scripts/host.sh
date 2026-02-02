@@ -6,7 +6,7 @@ get_GitHub520(){
     log "下载 GitHub520 host"
     
     # 获取 GitHub520 host 并排除注释
-    github_host=$(curl -s https://raw.hellogithub.com/hosts | grep -v "#")
+    github_host=$(curl -s https://raw.hellogithub.com/hosts | grep -Ev "^#|^\s*$" | awk -F' ' '{print $1a, $2}')
     
     # 检查内容为空则退出
     if [ ${#github_host} -lt 1000 ]; then
@@ -14,27 +14,11 @@ get_GitHub520(){
         return
     fi
     
-    # 保存文件
-    host_file="$MODULE_PATH/tmp/GitHub520_host"
-    echo "$github_host" > $host_file
-    
-    # GitHub520 内容
-    host_content="# GitHub 加速\n"
-    
-    log "读取 GitHub520 host"
-    
-    # 循环读取每一行
-    while read line
-    do
-        rule=(${line// / })
-        host_content+="${rule[0]} ${rule[1]}\n"
-    done < $host_file
-    
     # 写入 hosts 文件
-    host_content=$(cat $HOSTS_PATH | grep -i -v "github" | sed '$a END' | sed "s/END/$host_content\n/")
-    echo "$host_content" > $HOSTS_PATH
+    host_content=$(cat $HOSTS_PATH | grep -i -Ev "github|vscode")
+    echo "$host_content\n\n# GitHub 加速\n$github_host" > $HOSTS_PATH
     
-    log "写入 hosts 文件"        
+    log "写入 hosts 文件"
 }
 
 # 添加指令

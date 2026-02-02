@@ -18,17 +18,14 @@ if [ ! -e "$MODULE_PATH/bin/smartdns" ]; then
     ln -s "$MODULE_PATH/etc/SmartDNS/lib/ld-musl-arm.so.1" "$MODULE_PATH/etc/SmartDNS/lib/ld-linux.so"
 fi
 
-# 启动
-echo "" > $MODULE_PATH/disable
-$SCRIPTS_PATH/service.sh start
-
 # 重置
 cat "$MODULE_PATH/module.prop" | sed  -i "6c description=None" "$MODULE_PATH/module.prop"
 
+# 启动
+su -c "$SCRIPTS_PATH/service.sh start"
+
 # 监控模块
 inotifyd $SCRIPTS_PATH/inotify.sh "$MODULE_PATH" > /dev/null 2>&1 &
-sleep 3
-rm -rf $MODULE_PATH/disable
 
 # 获取 Host 状态
 host_status=$(cat "$MODULE_PATH/setting.conf" | grep "HOST_ENABLE=" | awk -F'=' '{print $2}')
@@ -52,5 +49,5 @@ fi
 crontab_status=$(cat "$MODULE_PATH/setting.conf" | grep "CRONTAB_ENABLE=" | sed "s/CRONTAB_ENABLE=//g")
 # 判断定时启用则执行
 if [ "$crontab_status" = true ]; then
-    $MODULE_PATH/bin/busybox crond -c "$MODULE_PATH/etc/crontabs/"
+    busybox crond -c "$MODULE_PATH/etc/crontabs/"
 fi

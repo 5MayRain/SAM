@@ -20,7 +20,7 @@ agh_start(){
     export TZ="Asia/Shanghai"
     log "启动 AdGuardHome"
     # 后台启动并输出日志
-    nohup $MODULE_PATH/bin/$AGH_BIN -c $AGH_CONF -w $AGH_PATH --no-check-update > $MODULE_PATH/tmp/$AGH_BIN.log 2>&1 &
+    nohup $AGH_BIN -c $AGH_CONF -w $AGH_PATH --no-check-update > $MODULE_PATH/tmp/$AGH_BIN.log 2>&1 &
     # 延时 1秒
     sleep 1
     # 添加 iptables 规则
@@ -70,7 +70,7 @@ smartdns_start(){
     fi
     log "启动 SmartDNS"
     # 后台启动并输出日志
-    nohup $MODULE_PATH/bin/$SMARTDNS_BIN -c $SMARTDNS_CONF -p - > $MODULE_PATH/tmp/$SMARTDNS_BIN.log 2>&1 &
+    nohup $SMARTDNS_BIN -c $SMARTDNS_CONF -p - > $MODULE_PATH/tmp/$SMARTDNS_BIN.log 2>&1 &
     # 延时 1秒
     sleep 1
     # 输出 SmartDNS 状态
@@ -110,7 +110,7 @@ mihomo_start(){
     fi
     log "启动 Mihomo"
     # 后台启动并输出日志
-    nohup $MODULE_PATH/bin/$MIHOMO_BIN -d $MIHOMO_PATH > $MODULE_PATH/tmp/$MIHOMO_BIN.log 2>&1 &
+    nohup $MIHOMO_BIN -d $MIHOMO_PATH > $MODULE_PATH/tmp/$MIHOMO_BIN.log 2>&1 &
     # 延时 1秒
     sleep 1
     # 添加 iptables 规则
@@ -159,7 +159,7 @@ crontabs_start(){
     fi
     log "启动 crontabs"
     # 启动
-    $MODULE_PATH/bin/busybox crond -c "$MODULE_PATH/etc/crontabs/"
+    busybox crond -c "$MODULE_PATH/etc/crontabs/"
     # 延时 1秒
     sleep 1
     # 输出 crontabs 状态

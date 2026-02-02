@@ -220,6 +220,9 @@ ad_path=(
 
 # 小福家
 "/data/data/com.coocaa.familychat/app_e_qq_com_setting_7d767d052a5753acb54b111c8a40c128/sdkCloudSetting.cfg"
+
+# 堆糖
+"/data/data/com.duitang.main/shared_prefs/ad_cache.xml"
 )
 
 # 广告屏蔽
@@ -243,25 +246,30 @@ block_ad(){
 }
 
 # 广告恢复
-recovery_ad(){    
-    # 获取路径属性
-    value=$(lsattr "$1" | grep "i.*$1")
-    # 判断已锁定，则执行
-    if [ "$value" ]; then
-        # 解锁
-        chattr -i "$1"
-        # 删除
-        rm -rf "$1"
-    fi    
+recovery_ad(){
+    # 判断路径是否为目录
+    if [ -d "$1" ]; then
+        # 解除并删除
+        lsattr -d "$1" | grep -q "i-" && {
+            chattr -i "$1"
+            rmdir "$1"
+        }
+    else
+        # 解除并删除
+        lsattr "$1" | grep -q "i-" && {
+            chattr -i "$1"
+            rm -f "$1"
+        }
+    fi
 }
 
 # 运行
-run(){     
+run(){
     # 循环打印广告数组
     for ad in ${ad_path[@]}
     do
         # 判断广告路径存在
-        if [ -e "$ad" ]; then
+        if [ -n "$ad" ] && [ -e "$ad" ]; then
             $1 "$ad"
         fi
     done

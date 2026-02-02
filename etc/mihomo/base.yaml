@@ -11,15 +11,15 @@ bind-address: "*"
 # 代理模式 rule(规则匹配)、 global(全局代理)、 direct(全局直连)
 mode: rule
 # 日志级别 silent(静默)/error(仅输出发生错误至无法使用的日志)/warning(输出发生错误但不影响运行的日志)/info(输出一般运行的内容)/debug(尽可能的输出运行中所有的信息)
-log-level: error
+log-level: silent
 # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
 ipv6: true
 # 禁用 TCP Keep Alive
 disable-keep-alive: true
 # 进程匹配模式
 find-process-mode: always
-# 全局客户端指纹
-global-client-fingerprint: chrome
+# 更新时间
+updatetime: &Time 86400
 
 # API 监听地址
 external-controller: 0.0.0.0:9090
@@ -54,7 +54,7 @@ geo-update-interval: 24
 # 健康检查
 p: &p
   type: http
-  interval: 86400
+  interval: *Time
   health-check:
     enable: true
     url: "https://www.gstatic.com/generate_204"
@@ -62,8 +62,8 @@ p: &p
   proxy: 🔄 订阅更新
   header:
     User-Agent:
-      - "clash-verge/v2.2.3"
       - "ClashMetaForAndroid/2.11.2.Meta"
+      - "clash-verge/v2.2.3"
       - "ClashforWindows/0.19.23"
       - "clash.meta"
       - "mihomo"
@@ -95,7 +95,7 @@ dns:
   # DNS 处理模式
   enhanced-mode: fake-ip
   #  IP 段设置
-  fake-ip-range: 172.20.0.1/16
+  fake-ip-range: 198.18.0.1/16
   # DNS 服务监听
   listen: 0.0.0.0:1053
   # 过滤
@@ -104,9 +104,7 @@ dns:
     - "RULE-SET:domain_Private"
     - "RULE-SET:domain_GoogleFCM"
     - "RULE-SET:fakeip-filter"
-    - "+.3gppnetwork.org"
-    - "+.xtracloud.net"
-    - "+.market.xiaomi.com"
+    - "RULE-SET:classical_blacklist_direct"
   # 用于 direct 出口域名解析的 DNS 服务器
   direct-nameserver:
     #- 127.0.0.1:3721
@@ -175,7 +173,7 @@ tun:
   # UDP NAT 过期时间
   udp-timeout: 300
   # 禁用 ICMP 转发
-  disable-icmp-forwarding: true
+  # disable-icmp-forwarding: true
   # Android 排除应用包名
   # exclude-package:
     # 三星专用 >>>
@@ -218,13 +216,12 @@ proxy_groups: &proxy_groups
       - "🇮🇳 印度节点"
       - "🌀 其它节点"
       - "🛰️ 全球直连"
-    # <<: *A
 CNproxy_groups: &CNproxy_groups
     type: select
     proxies:
       - "🛰️ 全球直连"
-      - "⛔️ 拒绝连接"
       - "🎯 节点选择"
+      - "⛔️ 拒绝连接"
       - "♻️ 自动选择"
       - "🇭🇰 香港节点"
       - "🇼🇸 台湾节点"
@@ -239,7 +236,6 @@ CNproxy_groups: &CNproxy_groups
       - "🇳🇱 荷兰节点"
       - "🇮🇳 印度节点"
       - "🌀 其它节点"
-    # <<: *A
 proxy-groups:
   - name: "🎯 节点选择"
     type: select
@@ -272,7 +268,7 @@ proxy-groups:
   - name: "🎵 Spotify"
     <<: *proxy_groups
   - name: "📢 谷歌FCM"
-    <<: *proxy_groups
+    <<: *CNproxy_groups
   - name: "🇬 谷歌服务"
     <<: *proxy_groups
   - name: "🍎 苹果服务"
@@ -280,7 +276,9 @@ proxy-groups:
   - name: "Ⓜ️ 微软服务"
     <<: *CNproxy_groups
   - name: "🕹️ Steam"
-    <<: *CNproxy_groups
+    <<: *proxy_groups
+  - name: "🤖 AI"
+    <<: *proxy_groups
   - name: "🚀 测速工具"
     <<: *CNproxy_groups
   - name: "🌐 DNS连接"
@@ -355,30 +353,34 @@ proxy-groups:
 # 规则集合
 rule-anchor:
   local: &local {type: file, behavior: classical, format: text}
-  classical: &classical {type: http, behavior: classical, format: text, interval: 86400}
-  ip: &ip {type: http, behavior: ipcidr, format: mrs, interval: 86400}
-  domain: &domain {type: http, behavior: domain, format: mrs, interval: 86400}
-  domain_text: &domain_text {type: http, behavior: domain, format: text, interval: 86400}
+  classical: &classical {type: http, behavior: classical, format: text, interval: *Time}
+  ip: &ip {type: http, behavior: ipcidr, format: mrs, interval: *Time}
+  domain: &domain {type: http, behavior: domain, format: mrs, interval: *Time}
+  domain_text: &domain_text {type: http, behavior: domain, format: text, interval: *Time}
 rule-providers:
   # 黑名单
   classical_blacklist_direct:
     <<: *local
     path: "./rule_provider/classical_blacklist_direct.list"
   # 自定义直连
-  classical_custom_direct:
-    <<: *classical
-    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/classical_direct.list"
-    path: "./rule_provider/classical_custom_direct.list"
+  domain_custom_direct:
+    <<: *domain
+    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/domain_direct.mrs"
+    path: "./rule_provider/domain_custom_direct.mrs"
   # 自定义代理
   domain_custom_proxy:
     <<: *domain
     url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/domain_proxy.mrs" 
     path: "./rule_provider/domain_custom_proxy.mrs"
   # 自定义拦截
-  classical_custom_reject:
-    <<: *classical
-    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/classical_reject.list" 
-    path: "./rule_provider/classical_custom_rejectt.list"
+  domain_custom_reject:
+    <<: *domain
+    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/domain_reject.mrs" 
+    path: "./rule_provider/domain_custom_reject.mrs"
+  ip_custom_reject:
+    <<: *ip
+    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/ipcidr_reject.mrs" 
+    path: "./rule_provider/ip_custom_reject.mrs"
 
   # WebRTC
   classical_WebRTC:
@@ -589,16 +591,17 @@ rules:
   - "DST-PORT,853,🌐 DNS连接"
   
   - "RULE-SET,classical_blacklist_direct,🛰️ 全球直连"  
-  - "RULE-SET,classical_custom_direct,🛰️ 全球直连"
+  - "RULE-SET,domain_custom_direct,🛰️ 全球直连"
   - "RULE-SET,domain_custom_proxy,🎯 节点选择"
-  - "RULE-SET,classical_custom_reject,🚫 广告拦截"
+  - "RULE-SET,domain_custom_reject,🚫 广告拦截"
+  - "RULE-SET,ip_custom_reject,🚫 广告拦截,no-resolve"
 
   - "RULE-SET,classical_WebRTC,🖥️ WebRTC"
 
   - "RULE-SET,domain_DouYin,🛰️ 全球直连"
   - "RULE-SET,domain_XiaoHongShu,🛰️ 全球直连"
   - "RULE-SET,domain_BiliBili,🛰️ 全球直连"
-  - "RULE-SET,ip_BiliBili,🛰️ 全球直连"
+  - "RULE-SET,ip_BiliBili,🛰️ 全球直连,no-resolve"
   
   - "RULE-SET,domain_Steam,🕹️ Steam"
 
@@ -610,34 +613,34 @@ rules:
 
   - "RULE-SET,domain_Discord,🌏️ 社交媒体"
   - "RULE-SET,domain_Twitter,🌏️ 社交媒体"
-  - "RULE-SET,ip_Twitter,🌏️ 社交媒体"
+  - "RULE-SET,ip_Twitter,🌏️ 社交媒体,no-resolve"
   - "RULE-SET,domain_YouTube,🌏️ 社交媒体"
-  - "RULE-SET,ip_YouTube,🌏️ 社交媒体"
+  - "RULE-SET,ip_YouTube,🌏️ 社交媒体,no-resolve"
   - "RULE-SET,domain_Netflix,🌏️ 社交媒体"
-  - "RULE-SET,ip_Netflix,🌏️ 社交媒体"
+  - "RULE-SET,ip_Netflix,🌏️ 社交媒体,no-resolve"
   - "RULE-SET,domain_Facebook,🌏️ 社交媒体"
-  - "RULE-SET,ip_Facebook,🌏️ 社交媒体"
+  - "RULE-SET,ip_Facebook,🌏️ 社交媒体,no-resolve"
   - "RULE-SET,domain_Telegram,🌏️ 社交媒体"
-  - "RULE-SET,ip_Telegram,🌏️ 社交媒体"
+  - "RULE-SET,ip_Telegram,🌏️ 社交媒体,no-resolve"
 
-  - "RULE-SET,domain_OpenAI,🎯 节点选择"
-  - "RULE-SET,ip_OpenAI,🎯 节点选择"
+  - "RULE-SET,domain_OpenAI,🤖 AI"
+  - "RULE-SET,ip_OpenAI,🤖 AI,no-resolve"
   
   - "RULE-SET,domain_Spotify,🎵 Spotify"
-  - "RULE-SET,ip_Spotify,🎵 Spotify"
+  - "RULE-SET,ip_Spotify,🎵 Spotify,no-resolve"
 
   - "RULE-SET,domain_GoogleFCM,📢 谷歌FCM"
-  - "RULE-SET,ip_GoogleFCM,📢 谷歌FCM"
+  - "RULE-SET,ip_GoogleFCM,📢 谷歌FCM,no-resolve"
   - "RULE-SET,domain_Google,🇬 谷歌服务"
-  - "RULE-SET,ip_Google,🇬 谷歌服务"
+  - "RULE-SET,ip_Google,🇬 谷歌服务,no-resolve"
   
   - "RULE-SET,domain_Apple,🍎 苹果服务"
-  - "RULE-SET,ip_Apple,🍎 苹果服务"
+  - "RULE-SET,ip_Apple,🍎 苹果服务,no-resolve"
 
   - "RULE-SET,domain_Microsoft,Ⓜ️ 微软服务"
 
   - "RULE-SET,domain_cn,🛰️ 全球直连"
-  - "RULE-SET,ip_cn,🛰️ 全球直连"
+  - "RULE-SET,ip_cn,🛰️ 全球直连,no-resolve"
   - "RULE-SET,domain_Private,🛰️ 全球直连"
   - "RULE-SET,ip_Private,🛰️ 全球直连,no-resolve"
 

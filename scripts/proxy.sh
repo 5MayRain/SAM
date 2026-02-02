@@ -34,7 +34,7 @@ blacklist_package(){
     out_content=$(cat $MIHOMO_CONF | sed $line_number"c $out_content" | sed "s/空格/ /g")
     echo "$out_content" > $MIHOMO_CONF 
     rule_content+="$rule"
-    echo "$rule_content" > "$MIHOMO_PATH/rule_provider/classical_blacklist_direct.list"
+    echo -e "$rule_content" > "$MIHOMO_PATH/rule_provider/classical_blacklist_direct.list"
 }
 
 # 添加指令
