@@ -200,8 +200,9 @@ proxy_groups: &proxy_groups
     type: select
     proxies:
       - "🎯 节点选择"
-      - "⛔️ 拒绝连接"
       - "♻️ 自动选择"
+      - "⚖️ 负载均衡"
+      - "↪️ 故障转移"
       - "🇭🇰 香港节点"
       - "🇼🇸 台湾节点"
       - "🇯🇵 日本节点"
@@ -216,13 +217,15 @@ proxy_groups: &proxy_groups
       - "🇮🇳 印度节点"
       - "🌀 其它节点"
       - "🛰️ 全球直连"
+      - "⛔️ 拒绝连接"
 CNproxy_groups: &CNproxy_groups
     type: select
     proxies:
       - "🛰️ 全球直连"
       - "🎯 节点选择"
-      - "⛔️ 拒绝连接"
       - "♻️ 自动选择"
+      - "⚖️ 负载均衡"
+      - "↪️ 故障转移"
       - "🇭🇰 香港节点"
       - "🇼🇸 台湾节点"
       - "🇯🇵 日本节点"
@@ -236,11 +239,14 @@ CNproxy_groups: &CNproxy_groups
       - "🇳🇱 荷兰节点"
       - "🇮🇳 印度节点"
       - "🌀 其它节点"
+      - "⛔️ 拒绝连接"
 proxy-groups:
   - name: "🎯 节点选择"
     type: select
     proxies:
       - "♻️ 自动选择"
+      - "⚖️ 负载均衡"
+      - "↪️ 故障转移"
       - "🇭🇰 香港节点"
       - "🇼🇸 台湾节点"
       - "🇯🇵 日本节点"
@@ -257,7 +263,13 @@ proxy-groups:
       - "🛰️ 全球直连"
   - name: "♻️ 自动选择"
     type: url-test
-    exclude-filter: "国内|🇨🇳|中国"
+    <<: *A
+  - name: "⚖️ 负载均衡"
+    type: load-balance
+    strategy: round-robin
+    <<: *A
+  - name: "↪️ 故障转移"
+    type: fallback
     <<: *A
   - name: "🇬 GitHub"
     <<: *proxy_groups
