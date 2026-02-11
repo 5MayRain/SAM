@@ -8,10 +8,8 @@ ip6tables_w="ip6tables -w 100"
 agh_chain="ADGUARD_REDIRECT_DNS"
 agh_chain_v6="ADGUARD_BLOCK_DNS"
 
-tun_table_index=""
-
 # 拦截 ip 列表
-ip_list="
+REJECT_IP_LIST="
 #囧次元
 116.205.193.167
 #反诈中心
@@ -233,10 +231,10 @@ ip_list="
 120.76.141.58
 "
 
-# 拦截 ip iptables
-ip_iptables(){
+# 拦截 ip
+reject_ip_iptables(){
     # 循环打印ip列表
-    for i in $ip_list
+    for i in $REJECT_IP_LIST
     do
         # 获取ip
         ip=$(echo $i | grep -Eo '([0-9]{1,3}\.){1,3}[0-9]{1,3}')
@@ -308,7 +306,7 @@ mihomo_iptables(){
     $iptables_w $1 FORWARD -i $TUN_DEVICE -j ACCEPT
     $ip6tables_w $1 FORWARD -o $TUN_DEVICE -j ACCEPT
     $ip6tables_w $1 FORWARD -i $TUN_DEVICE -j ACCEPT
-    
+      
     # 判断 AdGuardHome 未启用，则转发至 Mihomo 的 DNS 端口
     if [ "$AGH_ENABLE" = false ]; then
         $iptables_w -t nat $2 OUTPUT -p udp --dport 53 -j REDIRECT --to-ports $MIHOMO_DNS_PORT
@@ -334,7 +332,7 @@ case "$1" in
             # ip
             ip)
                 log "使用 iptables 拦截 ip"
-                ip_iptables "-A"
+                reject_ip_iptables "-A"
                 ;;
             *)
                 echo "使用: -e ( agh | mihomo | ip )"
@@ -358,7 +356,7 @@ case "$1" in
             # ip
             ip)
                 log "禁用 iptables 拦截 ip"
-                ip_iptables "-D"
+                reject_ip_iptables "-D"
                 ;;
             *)
                 echo "使用: -d ( agh | mihomo | ip )"

@@ -1,7 +1,3 @@
-PROCESS-NAME,com.tencent.tmgp.sgame
-PROCESS-NAME,com.miHoYo.hkrpg
-PROCESS-NAME,com.miHoYo.Yuanshen
-PROCESS-NAME,com.ss.android.ugc.aweme
 DOMAIN,api.installer.xiaomi.com
 DOMAIN-SUFFIX,xtracloud.net
 DOMAIN-SUFFIX,3gppnetwork.org

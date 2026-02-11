@@ -43,6 +43,11 @@ get_monitor_status(){
 
 # 获取监控 pid
 get_monitor_pid(){
+    pid=$(pgrep -f "wifi.monitor.sh")
+    if [ $1 = "wifi" ]; then
+        echo $pid
+        return
+    fi
     pid=$(pgrep -f "host.inotify.sh")
     if [ $1 = "host" ]; then
         echo $pid
@@ -64,7 +69,9 @@ kill_monitor(){
 # 启动监控
 start_monitor(){
     pid=$(get_monitor_pid $1)
-    if [ $1 = "host" ] && [ -z "$pid" ]; then
+    if [ $1 = "wifi" ] && [ -z "$pid" ]; then
+        $SCRIPTS_PATH/wifi.monitor.sh > /dev/null 2>&1 &
+    elif [ $1 = "host" ] && [ -z "$pid" ]; then
         HOSTS_FILE="$MODULE_PATH/etc/hosts"
         inotifyd $SCRIPTS_PATH/host.inotify.sh "$HOSTS_FILE" &
     elif [ -z "$pid" ]; then

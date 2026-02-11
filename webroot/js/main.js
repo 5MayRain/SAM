@@ -43,25 +43,28 @@ async function updateServiceStatus() {
         host_mount_action.textContent = "启用";
     }
     
+    updateMonitorStatus("wifi","wifi-monitor-status","wifi-monitor-action","wifi-monitor-pid");
     updateMonitorStatus("host","host-monitor-status","host-monitor-action","host-monitor-pid");
     updateMonitorStatus("module","module-monitor-status","module-monitor-action","module-monitor-pid");
+    
+   updateServiceStatus();
 }
 
 // 更新监控状态
 async function updateMonitorStatus(value, status, action, showPid) {
-    var monitor = await exec(`su -c "${scripts_path}/webui.sh monitor ${value}"`);
+    var monitor = await exec(`su -c "${scripts_path}/webui.sh monitor ${value}"`);    
     const monitor_status = document.getElementById(status);
     const monitor_action = document.getElementById(action);
     if ( monitor.stdout == "已运行" ) {
         var pid = await exec(`su -c "${scripts_path}/webui.sh pid ${value}"`);
-        document.getElementById(showPid).innerHTML = "PID: " + pid.stdout + ( value == "module" ? " | 监听模块开关，模块启用则运行程序，模块禁用则停止程序" : " | 监听 hosts 文件，修改文件实时生效" );
+        document.getElementById(showPid).innerHTML = "PID: " + pid.stdout + ( value == "module" ? " | 监听模块开关，模块启用则运行程序，模块禁用则停止程序" : value == "wifi" ? " | 监听已连接WIFI，监听到WIFI在黑名单内则停止服务，反之则启动" : " | 监听 hosts 文件，修改文件实时生效" );
         monitor_status.innerHTML = "已运行";
         monitor_status.classList.remove('status-inactive');
         monitor_status.classList.add('status-active')
         monitor_action.classList.add('disable');
         monitor_action.textContent = "禁用";
     } else {  
-        document.getElementById(showPid).innerHTML = "PID: null" + ( value == "module" ? " | 监听模块开关，模块启用则运行程序，模块禁用则停止程序" : " | 监听 hosts 文件，修改文件实时生效" );      
+        document.getElementById(showPid).innerHTML = "PID: null" + ( value == "module" ? " | 监听模块开关，模块启用则运行程序，模块禁用则停止程序" : value == "wifi" ? " | 监听已连接WIFI，监听到WIFI在黑名单内则停止服务，反之则启动。若没有在设置文件添加黑名单，则无法启动监听" : " | 监听 hosts 文件，修改文件实时生效" );      
         monitor_status.innerHTML = "未运行";
         monitor_status.classList.remove('status-active');
         monitor_status.classList.add('status-inactive');
@@ -138,10 +141,10 @@ async function monitorControls(text) {
     var pid_status = await exec(`su -c "${scripts_path}/webui.sh monitor ${text}"`);
     if ( pid_status.stdout == "已运行" ) {
         exec(`su -c "${scripts_path}/webui.sh kill ${text}"`);
-        showToast(text == "module" ? "模块未监控" : "host未监控");
+        showToast(text == "module" ? "模块未监控" : text == "wifi" ? "WIFI未监控" : "host未监控");
     } else {
         exec(`su -c "${scripts_path}/webui.sh start ${text}"`);
-        showToast(text == "module" ? "模块已监控" : "host已监控");
+        showToast(text == "module" ? "模块已监控" : text == "wifi" ? "WIFI已监控" : "host已监控");
     }
     updateServiceStatus();
 }
@@ -201,6 +204,12 @@ async function monitorControls(text) {
     const host_monitor_action = document.getElementById("host-monitor-action");
     host_monitor_action.addEventListener('click', () => {
         monitorControls("host");
+    });
+    
+    // wifi监控点击事件   
+    const wifi_monitor_action = document.getElementById("wifi-monitor-action");
+    wifi_monitor_action.addEventListener('click', () => {
+        monitorControls("wifi");
     });
     
 })().catch((err) => 'null')

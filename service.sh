@@ -45,6 +45,13 @@ if [ "$host_status" = true ]; then
     echo "[$time]: 监控 host 文件" >> "$MODULE_PATH/tmp/host.log"
 fi
 
+# 获取WIFI黑名单
+BLACKLIST_WIFI=($(cat "$MODULE_PATH/setting.conf" | grep "BLACKLIST_WIFI=" | sed -e 's/BLACKLIST_WIFI=(//g' -e 's/)$//g'))
+# 判断黑名单不为空，则启动监听
+if [ "${#BLACKLIST_WIFI[@]}" -ne 0 ]; then
+    $SCRIPTS_PATH/wifi.monitor.sh &
+fi
+
 # 获取定时是否启用
 crontab_status=$(cat "$MODULE_PATH/setting.conf" | grep "CRONTAB_ENABLE=" | sed "s/CRONTAB_ENABLE=//g")
 # 判断定时启用则执行

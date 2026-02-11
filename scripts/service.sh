@@ -224,10 +224,10 @@ start(){
     # 屏蔽 app 广告文件
     $SCRIPTS_PATH/ad.sh block
         
-    # 判断 host 启用，则更新 GitHub 加速规则，并重新挂载
+    # 判断 host 启用，则更新 host，并重新挂载
     if [ "$HOST_ENABLE" = true ]; then
-        log "更新 GitHub 加速规则"
-        $SCRIPTS_PATH/host.sh gh
+        log "更新 host 规则"
+        $SCRIPTS_PATH/host.sh -u
     fi
     
     # 更新描述

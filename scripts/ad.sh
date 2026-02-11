@@ -223,6 +223,18 @@ ad_path=(
 
 # 堆糖
 "/data/data/com.duitang.main/shared_prefs/ad_cache.xml"
+
+# 同花顺
+"/data/data/com.hexin.plat.android/cache/splash_images"
+    
+# 锦江荟
+"/data/data/com.plateno.botaoota/cache/image_manager_disk_cache"
+
+# 腾讯地图
+"/data/data/com.tencent.map/databases/splash.db"
+
+# 4399游戏盒
+"/data/data/com.m4399.gamecenter/shared_prefs/com.m4399.gamecenter.app.xml"
 )
 
 # 广告屏蔽

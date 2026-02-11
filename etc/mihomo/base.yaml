@@ -28,7 +28,7 @@ secret: ""
 # 配置 WEB UI 目录
 external-ui: "webui/zashboard"
 # WEB UI 下载地址
-external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 
 # 缓存
 profile:
@@ -86,6 +86,8 @@ hosts:
   dns.pub: [1.12.12.12, 120.53.53.53]
   dns.cloudflare.com: [1.1.1.1, 1.0.0.1]
   dns.google: [8.8.8.8, 8.8.4.4]
+  services.googleapis.cn: services.googleapis.com
+  cn.bing.com: global.bing.com
 
 # DNS 配置
 dns:
@@ -135,7 +137,7 @@ sniffer:
   # 对所有未获取到域名的流量进行强制嗅探
   parse-pure-ip: true
   # 使用嗅探结果作为实际访问
-  override-destination: true
+  override-destination: false
   # 嗅探的协议设置
   sniff:
     HTTP:
@@ -172,6 +174,8 @@ tun:
   strict-route: true
   # UDP NAT 过期时间
   udp-timeout: 300
+  # 启用独立于端点的 NAT
+  endpoint-independent-nat: true
   # 禁用 ICMP 转发
   # disable-icmp-forwarding: true
   # Android 排除应用包名
@@ -599,6 +603,8 @@ rule-providers:
 
 # 规则
 rules:
+  - "AND,((DST-PORT,443),(NETWORK,UDP)),⛔️ 拒绝连接"
+  
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   
@@ -641,8 +647,12 @@ rules:
   - "RULE-SET,domain_Spotify,🎵 Spotify"
   - "RULE-SET,ip_Spotify,🎵 Spotify,no-resolve"
 
+  - "DST-PORT,5228,📢 谷歌FCM"
+  - "DST-PORT,5229,📢 谷歌FCM"
+  - "DST-PORT,5230,📢 谷歌FCM"
   - "RULE-SET,domain_GoogleFCM,📢 谷歌FCM"
   - "RULE-SET,ip_GoogleFCM,📢 谷歌FCM,no-resolve"
+  
   - "RULE-SET,domain_Google,🇬 谷歌服务"
   - "RULE-SET,ip_Google,🇬 谷歌服务,no-resolve"
   

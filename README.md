@@ -7,11 +7,10 @@
 ) 模块，和 Kisaratan 的 [HoshiTele](https://www.coolapk.com/feed/67830667) 模块
 
 # 注意
-1. SmartDNS 的账号和密码都是 root
+1. 模块服务的账号和密码都是 root
 2. AdGuardHome 禁止更新
-3. AdGuardHome 的账号和密码都是 root
-4. /data/adb/modules/SAM/etc/mihomo/base.yaml 配置文件禁止随意修改或删除
-5. /data/adb/modules/SAM/etc/hosts 文件修改实时生效
+3. /data/adb/modules/SAM/etc/mihomo/base.yaml 配置文件禁止随意修改或删除
+4. /data/adb/modules/SAM/etc/hosts 文件修改实时生效
 
 # 无网络
 1. 排查有没有安装其它去广告的模块
