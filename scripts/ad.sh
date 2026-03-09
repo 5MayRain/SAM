@@ -235,6 +235,22 @@ ad_path=(
 
 # 4399游戏盒
 "/data/data/com.m4399.gamecenter/shared_prefs/com.m4399.gamecenter.app.xml"
+
+# 今日头条
+"/data/data/com.ss.android.article.news/files/splashCache"
+   
+# 驾考宝典
+"/data/data/com.handsgo.jiakao.android/shared_prefs/mucangData.db.xml"
+   
+# Apkpure
+"/data/data/com.apkpure.aegon/cache/splash"
+   
+# 酷狗音乐
+"/data/media/0/Android/data/com.kugou.android/files/kugou/.splash_v4"
+   
+# 午夜AV
+"/data/data/com.aabbc.cc/files/cn_jiguang_union_ads/"
+"/data/data/com.aabbc.cc/shared_prefs/spUtils.xml"
 )
 
 # 广告屏蔽

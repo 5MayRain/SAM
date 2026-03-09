@@ -14,7 +14,7 @@ language: ""
 theme: auto
 dns:
   bind_hosts:
-    - 0.0.0.0
+    - 127.0.0.1
   port: 5300
   anonymize_client_ip: false
   ratelimit: 0
@@ -26,9 +26,13 @@ dns:
     - 127.0.0.1:1053
   upstream_dns_file: ""
   bootstrap_dns:
+    - 180.184.1.1
+    - 180.184.2.2
+    - 2400:7fc0:849e:200::4
+    - 2404:c2c0:85d8:901::4
+  fallback_dns:
     - 127.0.0.1:1053
-  fallback_dns: []
-  upstream_mode: load_balance
+  upstream_mode: parallel
   fastest_timeout: 1s
   allowed_clients: []
   disallowed_clients: []
@@ -91,12 +95,14 @@ querylog:
   interval: 24h
   size_memory: 1000
   enabled: true
+  ignored_enabled: false
   file_enabled: true
 statistics:
   dir_path: ""
   ignored: []
   interval: 24h
   enabled: true
+  ignored_enabled: false
 filters:
   - enabled: true
     url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuard/adguard_blacklist.list
@@ -107,7 +113,17 @@ whitelist_filters:
     url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuard/adguard_whitelist.list
     name: 5MayRain
     id: 1766388759
-user_rules: []
+user_rules:
+  - '# 小米系统更新'
+  - '||update.miui.com^'
+  - '||​update.intl.miui.com^'
+  - '||​ultimateota.d.miui.com^'
+  - '||​superota.d.miui.com^'
+  - '||​bigota.d.miui.com^'
+  - '||​hugeota.d.miui.com^'
+  - '||​bn.d.miui.com^'
+  - '||​cdnorg.d.miui.com^'
+  - '||​connect.rom.miui.com^'
 dhcp:
   enabled: false
   interface_name: ""
@@ -180,4 +196,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 32
+schema_version: 33

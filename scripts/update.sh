@@ -209,7 +209,7 @@ smartdns_state(){
         out=$(echo "$out" | sed $i"s/$2/$3/")
     done
     # 腾讯  
-    line_number=$(echo "$out" | sed -n -e "/dns.pub/=")
+    line_number=$(echo "$out" | sed -n -e "/doh.pub/=")
     for i in `echo $line_number`
     do
         out=$(echo "$out" | sed $i"s/$2/$3/")

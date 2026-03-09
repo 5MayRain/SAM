@@ -1,10 +1,7 @@
-DOMAIN,api.installer.xiaomi.com
-DOMAIN-SUFFIX,xtracloud.net
-DOMAIN-SUFFIX,3gppnetwork.org
-DOMAIN-SUFFIX,market.xiaomi.com
-DOMAIN-SUFFIX,ims
-DOMAIN-SUFFIX,epdg
-DOMAIN-SUFFIX,wlan.epc
-DOMAIN-SUFFIX,ims.mnc
-DOMAIN-SUFFIX,ims.mcc
-DOMAIN-SUFFIX,epdg.epc
+PROCESS-NAME,com.tencent.tmgp.sgame
+PROCESS-NAME,com.miHoYo.hkrpg
+PROCESS-NAME,com.miHoYo.Yuanshen
+PROCESS-NAME,com.ss.android.ugc.aweme
+PROCESS-NAME,com.ss.android.ugc.livelite
+PROCESS-NAME,com.larus.nova
+
