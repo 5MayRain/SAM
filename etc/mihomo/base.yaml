@@ -36,19 +36,10 @@ profile:
   store-selected: true
   # 持久化 fake-ip
   store-fake-ip: true
-  # Smart 数据采集文件大小
-  smart-collector-size: 100
 # TCP 并发
 tcp-concurrent: true
 # 统一延迟时
 unified-delay: true
-
-# Smart 自动更新模型
-lgbm-auto-update: true
-# 更新间隔
-lgbm-update-interval: 24
-# 更新地址
-lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
 # GEOIP 数据模式
 geodata-mode: false
@@ -213,7 +204,6 @@ proxy_groups: &proxy_groups
     type: select
     proxies:
       - "🎯 节点选择"
-      - "🤖 智能选择"
       - "♻️ 自动选择"
       - "⚖️ 负载均衡"
       - "↪️ 故障转移"
@@ -237,7 +227,6 @@ CNproxy_groups: &CNproxy_groups
     proxies:
       - "🛰️ 全球直连"
       - "🎯 节点选择"
-      - "🤖 智能选择"
       - "♻️ 自动选择"
       - "⚖️ 负载均衡"
       - "↪️ 故障转移"
@@ -259,7 +248,6 @@ proxy-groups:
   - name: "🎯 节点选择"
     type: select
     proxies:
-      - "🤖 智能选择"
       - "♻️ 自动选择"
       - "⚖️ 负载均衡"
       - "↪️ 故障转移"
@@ -277,13 +265,6 @@ proxy-groups:
       - "🇮🇳 印度节点"
       - "🌀 其它节点"
       - "🛰️ 全球直连"
-  - name: "🤖 智能选择"
-    type: smart
-    uselightgbm: true
-    collectdata: false
-    prefer-asn: true
-    strategy: sticky-sessions
-    <<: *A
   - name: "♻️ 自动选择"
     type: url-test
     <<: *A
