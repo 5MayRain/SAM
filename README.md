@@ -16,12 +16,12 @@
 4. 把 Mihomo 的漏网之鱼改为直连，或排查相关域名，手动添规则
 
 # 使用项目
-[MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo)
-[vernesong/mihomo](https://github.com/vernesong/mihomo)
-[AdguardTeam/AdGuardHome](https://github.com/AdguardTeam/AdGuardHome)
-[pymumu/smartdns](https://github.com/pymumu/smartdns)
+- [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo)
+- [vernesong/mihomo](https://github.com/vernesong/mihomo)
+- [AdguardTeam/AdGuardHome](https://github.com/AdguardTeam/AdGuardHome)
+- [pymumu/smartdns](https://github.com/pymumu/smartdns)
 
 # 感谢
-[twoone-3/AdGuardHomeForRoot](https://github.com/twoone-3/AdGuardHomeForRoot)
-[GitMetaio/Surfing](https://github.com/GitMetaio/Surfing)
-Kisaratan
+- [twoone-3/AdGuardHomeForRoot](https://github.com/twoone-3/AdGuardHomeForRoot)
+- [GitMetaio/Surfing](https://github.com/GitMetaio/Surfing)
+- Kisaratan
