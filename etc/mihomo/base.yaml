@@ -178,20 +178,6 @@ tun:
   endpoint-independent-nat: true
   # 禁用 ICMP 转发
   # disable-icmp-forwarding: true
-  # Android 排除应用包名
-  # exclude-package:
-    # 三星专用 >>>
-    #- com.samsung.android.messaging
-    #- com.samsung.android.app.telephonyui
-    #- com.samsung.android.dialer
-    #- com.samsung.android.incallui
-    #- com.samsung.android.smartcallprovider
-    #- com.samsung.android.intellivoiceservice
-    #- com.android.settings
-    #- com.qti.qcc
-    #- com.sec.epdg
-    #- com.sec.imsservice
-    # <<< end
 
 # 代理
 proxies:
@@ -374,6 +360,10 @@ rule-anchor:
   domain: &domain {type: http, behavior: domain, format: mrs, interval: *Time}
   domain_text: &domain_text {type: http, behavior: domain, format: text, interval: *Time}
 rule-providers:
+  # 白名单
+  classical_whitelist_proxy.list:
+    <<: *local
+    path: "./rule_provider/classical_whitelist_proxy.list"
   # 黑名单
   classical_blacklist_direct:
     <<: *local
@@ -608,7 +598,8 @@ rules:
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   
-  - "RULE-SET,classical_blacklist_direct,🛰️ 全球直连"  
+  - "RULE-SET,classical_blacklist_direct,🛰️ 全球直连" 
+  - "RULE-SET,classical_whitelist_proxy.list,🎯 节点选择" 
   - "RULE-SET,domain_custom_direct,🛰️ 全球直连"
   - "RULE-SET,domain_custom_proxy,🎯 节点选择"
   - "RULE-SET,domain_custom_reject,🚫 广告拦截"

@@ -26,13 +26,12 @@ dns:
     - 127.0.0.1:1053
   upstream_dns_file: ""
   bootstrap_dns:
-    - 180.184.1.1
-    - 180.184.2.2
-    - 2400:7fc0:849e:200::4
-    - 2404:c2c0:85d8:901::4
-  fallback_dns:
-    - 127.0.0.1:1053
-  upstream_mode: parallel
+    - 9.9.9.10
+    - 149.112.112.10
+    - 2620:fe::10
+    - 2620:fe::fe:10
+  fallback_dns: []
+  upstream_mode: load_balance
   fastest_timeout: 1s
   allowed_clients: []
   disallowed_clients: []
@@ -113,6 +112,10 @@ whitelist_filters:
     url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuard/adguard_whitelist.list
     name: 5MayRain
     id: 1766388759
+  - enabled: true
+    url: https://raw.githubusercontent.com/8680/GOODBYEADS/master/data/rules/allow.txt
+    name: GOOBYEADS
+    id: 1773845117
 user_rules:
   - '# 小米系统更新'
   - '||update.miui.com^'

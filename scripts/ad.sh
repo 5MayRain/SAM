@@ -1,5 +1,5 @@
 # 加载基础脚本
-. /data/adb/modules/SAM/scripts/base.sh
+source "/data/adb/modules/SAM/scripts/base.sh"
 
 # 广告路径数组
 ad_path=(
@@ -256,37 +256,37 @@ ad_path=(
 # 广告屏蔽
 block_ad(){
     # 获取路径属性为 i(不可改变) ，则返回
-    lsattr "$1" 2>&1 | grep -q "i.*$1" && return
+    lsattr "${1}" 2>&1 | grep -q "i.*${1}" && return
     # 判断路径是否为目录
-    if [ -d "$1" ]; then
+    if [ -d "${1}" ]; then
         # 重置为空目录
-        rm -rf "$1" >/dev/null 2>&1
-        mkdir -p "$1"
+        rm -rf "${1}" >/dev/null 2>&1
+        mkdir -p "${1}"
         # 锁定
-        chattr +i "$1"
+        chattr +i "${1}"
     # 判断路径是否为普通文件
-    elif [ -f "$1" ]; then
+    elif [ -f "${1}" ]; then
         # 重置为空文件
-        > "$1"
+        > "${1}"
         # 锁定
-        chattr +i "$1"
+        chattr +i "${1}"
     fi
 }
 
 # 广告恢复
 recovery_ad(){
     # 判断路径是否为目录
-    if [ -d "$1" ]; then
+    if [ -d "${1}" ]; then
         # 解除并删除
-        lsattr -d "$1" | grep -q "i-" && {
-            chattr -i "$1"
-            rmdir "$1"
+        lsattr -d "${1}" | grep -q "i-" && {
+            chattr -i "${1}"
+            rmdir "${1}"
         }
     else
         # 解除并删除
-        lsattr "$1" | grep -q "i-" && {
-            chattr -i "$1"
-            rm -f "$1"
+        lsattr "${1}" | grep -q "i-" && {
+            chattr -i "${1}"
+            rm -f "${1}"
         }
     fi
 }
@@ -297,20 +297,20 @@ run(){
     for ad in ${ad_path[@]}
     do
         # 判断广告路径存在
-        if [ -n "$ad" ] && [ -e "$ad" ]; then
-            $1 "$ad"
+        if [ -n "${ad}" ] && [ -e "${ad}" ]; then
+            ${1} "${ad}"
         fi
     done
 }
 
 # 添加指令
-case "$1" in
+case "${1}" in
     block)
-        log "屏蔽 App 广告文件"
+        log "i" "屏蔽 App 广告文件"
         run "block_ad"
         ;;
     recovery) 
-        log "恢复 App 广告文件" 
+        log "i" "恢复 App 广告文件" 
         run "recovery_ad"    
         ;;
     *)

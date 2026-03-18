@@ -131,7 +131,7 @@ body {
     color: var(--text-secondary);
     margin-bottom: 8px;
     line-height: 1.4;
-    width: 73vw;
+    width: 70vw;
 }
 
 /* 状态标签 */
@@ -153,11 +153,11 @@ body {
 }
 
 /* 操作按钮区 */
-.mount-actions, .service-actions {
+.mount-actions, .service-actions, .monitor-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-left: 10px;
+    margin-left: -10px;
 }
 
 .action-btn {

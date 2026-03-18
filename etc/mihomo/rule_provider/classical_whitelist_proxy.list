@@ -1,0 +1,5 @@
+PROCESS-NAME,com.android.vending
+PROCESS-NAME,com.google.android.gms
+PROCESS-NAME,org.telegram.plus
+PROCESS-NAME,com.github.android
+

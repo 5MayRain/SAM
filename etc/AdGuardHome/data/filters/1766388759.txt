@@ -4,6 +4,7 @@
 @@||a0.app.xiaomi.com^
 @@||mcc.inf.miui.com^
 @@||hpplay.cn^
+@@||api.jr.mi.com^
 @@||inputnlp.xfinfr.com^
 @@||cardservice.openspeech.cn^
 @@||imeclient.openspeech.cn^
@@ -21,7 +22,6 @@
 @@||hoyoverse.com^
 @@||img.ssl.msdk.qq.com^
 @@||settings-win.data.microsoft.com^
-@@||mrzgh.top^
 @@||ghxi.com^
 @@||zhuanzhuan.com^
 @@||c.pc.qq.com^
@@ -55,6 +55,7 @@
 @@||p3-catpcha.byteimg.com^
 @@||p6-catpcha.byteimg.com^
 @@||p9-catpcha.byteimg.com^
+@@||aweme.snssdk.com^
 @@||www.doubao.com^
 @@||log.snssdk.com^
 @@||tnc3-alisc1.snssdk.com^
@@ -154,6 +155,7 @@
 @@||ims.mnc^
 @@||ims.mcc^
 @@||epdg.epc^
+@@||fe80::/10^
 @@||p*-reading-private.fqnovel.com^$app=com.dragon.read
 @@||lf*-reading.fqnovelstatic.com^$app=com.dragon.read
 @@||api*-normal.fqnovel.com^$app=com.dragon.read

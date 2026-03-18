@@ -1,0 +1,15 @@
+# 黑名单列表
+# 不会代理填入的 App 包名
+
+# 抖音
+com.ss.android.ugc.aweme
+# 豆包
+com.larus.nova
+# 微信
+com.tencent.mm
+# 崩坏:星穹铁道
+com.miHoYo.hkrpg
+# 原神
+com.miHoYo.Yuanshen
+# 王者荣耀
+com.tencent.tmgp.sgame

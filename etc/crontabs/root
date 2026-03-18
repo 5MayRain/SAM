@@ -5,4 +5,4 @@
 0 5 * * * /data/adb/modules/SAM/scripts/service.sh restart
 
 # 每周一8点更新 host 规则
-0 8 * * 1 /data/adb/modules/SAM/scripts/host.sh -u
+0 8 * * 1 /data/adb/modules/SAM/scripts/update/host.sh update

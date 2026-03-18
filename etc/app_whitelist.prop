@@ -1,0 +1,10 @@
+# 白名单列表
+# 只会代理填入的 App 包名
+
+# 谷歌
+com.android.vending
+com.google.android.gms
+# 电报
+org.telegram.plus
+# GitHub
+com.github.android

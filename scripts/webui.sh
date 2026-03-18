@@ -48,12 +48,12 @@ get_monitor_pid(){
         echo $pid
         return
     fi
-    pid=$(pgrep -f "host.inotify.sh")
+    pid=$(pgrep -f "inotify/host.sh")
     if [ $1 = "host" ]; then
         echo $pid
         return
     fi
-    m_pid=("$(pgrep -f "inotify.sh")")
+    m_pid=("$(pgrep -f "inotify/module.sh")")
     for i in ${m_pid[@]}
     do
         [ ! "$i" = "$pid" ] && echo $i
@@ -73,9 +73,9 @@ start_monitor(){
         $SCRIPTS_PATH/wifi.monitor.sh > /dev/null 2>&1 &
     elif [ $1 = "host" ] && [ -z "$pid" ]; then
         HOSTS_FILE="$MODULE_PATH/etc/hosts"
-        inotifyd $SCRIPTS_PATH/host.inotify.sh "$HOSTS_FILE" &
+        inotifyd $SCRIPTS_PATH/inotify/host.sh "$HOSTS_FILE" &
     elif [ -z "$pid" ]; then
-        inotifyd $SCRIPTS_PATH/inotify.sh "$MODULE_PATH" > /dev/null 2>&1 &
+        inotifyd $SCRIPTS_PATH/inotify/module.sh "$MODULE_PATH" > /dev/null 2>&1 &
     fi
 }
 

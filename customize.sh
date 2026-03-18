@@ -38,16 +38,8 @@ update_conf(){
     # 更新模块的配置文件路径
     t="$MODPATH/setting.conf"
     # 需要更新的配置
-    #conf_array=("AGH_ENABLE" "AGH_DNS_PORT" "AGH_USER" "AGH_GROUP" "BLOCK_IPV6_DNS" "SMARTDNS_ENABLE" "TUN_DEVICE" "MIHOMO_DNS_PORT" "MIHOMO_IPV6" "IP_IPTABLES" "HOST_ENABLE" "CRONTAB_ENABLE" "BACKUP_CONF" "SUB_URL" "BLACKLIST_PACKAGE" "BLACKLIST_WIFI")
-    # 循环执行查找并替换
-    #for i in ${!conf_array[@]}
-    #do
-        #modify_conf "$s" "$t" "${conf_array[$i]}"
-    #done
     modify_conf "$s" "$t" "AGH_ENABLE"
     modify_conf "$s" "$t" "AGH_DNS_PORT"
-    modify_conf "$s" "$t" "AGH_USER"
-    modify_conf "$s" "$t" "AGH_GROUP"
     modify_conf "$s" "$t" "BLOCK_IPV6_DNS"
     modify_conf "$s" "$t" "SMARTDNS_ENABLE"
     modify_conf "$s" "$t" "TUN_DEVICE"
@@ -58,7 +50,7 @@ update_conf(){
     modify_conf "$s" "$t" "CRONTAB_ENABLE"
     modify_conf "$s" "$t" "BACKUP_CONF"
     modify_conf "$s" "$t" "SUB_URL"
-    modify_conf "$s" "$t" "BLACKLIST_PACKAGE"
+    modify_conf "$s" "$t" "ENABLE_WHITELIST"
     modify_conf "$s" "$t" "BLACKLIST_WIFI"
 }
 
@@ -69,7 +61,6 @@ unzip -o "$ZIPFILE" "action.sh" -d "$MODPATH" >/dev/null 2>&1
 unzip -o "$ZIPFILE" "setting.conf" -d "$MODPATH" >/dev/null 2>&1
 unzip -o "$ZIPFILE" "uninstall.sh" -d "$MODPATH" >/dev/null 2>&1
 unzip -o "$ZIPFILE" "webroot/*" -d "$MODPATH" >/dev/null 2>&1
-unzip -o "$ZIPFILE" "tmp/*" -d "$MODPATH" >/dev/null 2>&1
 
 ui_print "📥 解压脚本文件"
 unzip -o "$ZIPFILE" "scripts/*" -d "$MODPATH" >/dev/null 2>&1
@@ -91,6 +82,9 @@ unzip -o "$ZIPFILE" "etc/crontabs/*" -d "$MODPATH" >/dev/null 2>&1
 
 ui_print "📥 解压 hosts 文件"
 unzip -o "$ZIPFILE" "etc/hosts" -d "$MODPATH" >/dev/null 2>&1
+
+unzip -o "$ZIPFILE" "etc/app_blacklist.prop" -d "$MODPATH" >/dev/null 2>&1
+unzip -o "$ZIPFILE" "etc/app_whitelist.prop" -d "$MODPATH" >/dev/null 2>&1
 
 ui_print "💾 文件解压完成"
 
@@ -125,7 +119,12 @@ chmod +x "$SMARTDNS_PATH/run-smartdns"
 chmod +x "$SMARTDNS_PATH/smartdns_ui.so"
 chmod +x "$SMARTDNS_PATH/$SMARTDNS_BIN"
 chmod -R +x "$SMARTDNS_PATH/lib/"
-chmod +x "$SCRIPTS_PATH"/*.sh "$MODPATH"/*.sh
+chmod +x $MODPATH/*.sh
+chmod +x $SCRIPTS_PATH/*.sh
+chmod +x $SCRIPTS_PATH/inotify/*.sh
+chmod +x $SCRIPTS_PATH/iptables/*.sh
+chmod +x $SCRIPTS_PATH/service/*.sh
+chmod +x $SCRIPTS_PATH/update/*.sh
 chown root:net_raw "$MODPATH/bin/$AGH_BIN"
 chown root:net_admin "$MODPATH/bin/$MIHOMO_BIN"
 chown root:net_raw "$SMARTDNS_PATH/run-smartdns"
