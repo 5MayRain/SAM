@@ -1,5 +1,3 @@
-# 2026.03.09
-- Mihomo 内核更改为带 Smart 的内核
-- Mihomo 配置添加 Smart 代理组
-- 增加部分广告拦截
-- AdGuardHome 更新版本
+# 2026.03.18
+- Mihomo 添加App白名单
+- 调整代码结构
