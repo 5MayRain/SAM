@@ -4,4 +4,7 @@ PROCESS-NAME,com.tencent.mm
 PROCESS-NAME,com.miHoYo.hkrpg
 PROCESS-NAME,com.miHoYo.Yuanshen
 PROCESS-NAME,com.tencent.tmgp.sgame
-DOMAIN-SUFFIX,mrzgh.top
+PROCESS-NAME,com.ss.android.ugc.livelite
+PROCESS-NAME,com.taobao.taobao
+PROCESS-NAME,com.sankuai.meituan
+PROCESS-NAME,com.taobao.idlefish

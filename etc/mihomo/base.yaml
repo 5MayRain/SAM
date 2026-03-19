@@ -30,7 +30,7 @@ external-ui: "webui/zashboard"
 # WEB UI 下载地址
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 
-# 缓存
+## 缓存
 profile:
   # 储存策略组的选择
   store-selected: true
@@ -50,6 +50,15 @@ geox-url:
 geo-auto-update: true
 # 更新间隔，单位：小时
 geo-update-interval: 24
+
+# 实验
+experimental:
+  http-headers:
+    request:
+      - name: "User-Agent"
+        value: "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36"
+      - name: "Accept-Language"
+        value: "en-US,en;q=0.9"
 
 # 健康检查
 p: &p
@@ -98,6 +107,7 @@ dns:
   enhanced-mode: fake-ip
   #  IP 段设置
   fake-ip-range: 198.18.0.1/16
+  fake-ip-range6: fdfe:dcba:9876::/48
   # DNS 服务监听
   listen: 0.0.0.0:1053
   # 过滤
@@ -107,6 +117,7 @@ dns:
     - "RULE-SET:domain_GoogleFCM"
     - "RULE-SET:fakeip-filter"
     - "RULE-SET:domain_custom_direct"
+    - "RULE-SET:classical_user_direct"
   # 用于 direct 出口域名解析的 DNS 服务器
   direct-nameserver:
     #- 127.0.0.1:3721
@@ -119,7 +130,7 @@ dns:
     - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
   # 指定域名查询的解析服务器
   nameserver-policy:
-    "RULE-SET:domain_cn,domain_Microsoft,domain_Apple":
+    "RULE-SET:domain_cn,domain_Microsoft,domain_Apple,domain_custom_direct,classical_user_direct":
       #- 127.0.0.1:3721
       - https://doh.pub/dns-query#🛰️ 全球直连&h3=false
       - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
@@ -137,13 +148,13 @@ sniffer:
   # 对所有未获取到域名的流量进行强制嗅探
   parse-pure-ip: true
   # 使用嗅探结果作为实际访问
-  override-destination: false
+  override-destination: true
   # 嗅探的协议设置
   sniff:
     HTTP:
       ports: [80, 8080-8880]
     TLS:
-      ports: [443, 8443]
+      ports: [443, 5228, 8443]
     QUIC:
       ports: [443, 8443]
   # 强制嗅探
@@ -360,8 +371,12 @@ rule-anchor:
   domain: &domain {type: http, behavior: domain, format: mrs, interval: *Time}
   domain_text: &domain_text {type: http, behavior: domain, format: text, interval: *Time}
 rule-providers:
+  # 用户自定义直连
+  classical_user_direct:
+    <<: *local
+    path: "./rule_provider/classical_user_direct.list"
   # 白名单
-  classical_whitelist_proxy.list:
+  classical_whitelist_proxy:
     <<: *local
     path: "./rule_provider/classical_whitelist_proxy.list"
   # 黑名单
@@ -598,8 +613,9 @@ rules:
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   
+  - "RULE-SET,classical_user_direct,🛰️ 全球直连"
   - "RULE-SET,classical_blacklist_direct,🛰️ 全球直连" 
-  - "RULE-SET,classical_whitelist_proxy.list,🎯 节点选择" 
+  - "RULE-SET,classical_whitelist_proxy,🎯 节点选择" 
   - "RULE-SET,domain_custom_direct,🛰️ 全球直连"
   - "RULE-SET,domain_custom_proxy,🎯 节点选择"
   - "RULE-SET,domain_custom_reject,🚫 广告拦截"
