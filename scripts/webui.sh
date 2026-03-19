@@ -53,7 +53,7 @@ get_monitor_pid(){
         echo $pid
         return
     fi
-    m_pid=("$(pgrep -f "inotify/module.sh")")
+    m_pid=("$(pgrep -l -f "${SCRIPTS_PATH}/inotify/module.sh" | grep -v "setting.conf" | sed "s/[[:space:]].*//g")")
     for i in ${m_pid[@]}
     do
         [ ! "$i" = "$pid" ] && echo $i

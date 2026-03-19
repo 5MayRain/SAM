@@ -108,6 +108,8 @@ if [ -e "$MODULE_PATH/setting.conf" ]; then
     fi 
     cp -f "$copy_path/crontabs/root" "$MODPATH/etc/crontabs/root"    
     cp -f "$copy_path/hosts" "$MODPATH/etc/hosts"
+    cp -f "$copy_path/app_whitelist.prop" "$MODPATH/etc/app_whitelist.prop"
+    cp -f "$copy_path/app_blacklist.prop" "$MODPATH/etc/app_blacklist.prop"
 fi
 
 # 设置权限

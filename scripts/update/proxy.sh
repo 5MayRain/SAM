@@ -32,9 +32,6 @@ ipv6_proxy(){
     echo "${out_content}" > ${MIHOMO_CONF}
 }
 
-# 加载基础脚本
-source "/data/adb/modules/SAM/scripts/base.sh"
-
 # 黑名单包名
 blacklist_package(){
     # 读取内容
