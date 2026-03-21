@@ -29,18 +29,21 @@ pgrep -f $MIHOMO_BIN $SMARTDNS_BIN $AGH_BIN | wc -l)
 
     # 状态值
     state=0
+    # 索引
+    i=0
     # 循环遍历黑名单 WIFI
-    for i in ${BLACKLIST_WIFI[@]}
+    while(($i < ${#BLACKLIST_WIFI[@]}))
     do
         # 运行服务数量
         run_number=$(
 pgrep -f $MIHOMO_BIN $SMARTDNS_BIN $AGH_BIN | wc -l)
         # 判断当前所连接WIFI是否在黑名单
-        if [ "$(get_WIFI_SSID)" = "$i" ]; then
+        if [ "$(get_WIFI_SSID)" = "${BLACKLIST_WIFI[$i]}" ]; then
             state=0
             break
         fi
         state=1
+        let "i++"
     done
     
     if [ $state -eq 1 ]; then

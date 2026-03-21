@@ -6,7 +6,7 @@ get_Host(){
     log "i" "下载 ${1} host"
     
     # 获取 host 并排除注释
-    host=$(curl -s ${2} | grep -Ev "^#|^\s*$" | awk -F' ' '{print $1a, $2}')
+    host=$(curl -m 10 -s ${2} | grep -Ev "^#|^\s*$" | awk -F' ' '{print $1a, $2}')
     # 检查内容为空则退出
     if [ -z "${host}" ]; then
         log "e" "下载失败，取消使用"
