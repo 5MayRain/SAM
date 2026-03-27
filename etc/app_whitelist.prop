@@ -8,3 +8,8 @@ com.google.android.gms
 org.telegram.plus
 # GitHub
 com.github.android
+# 浏览器
+org.mozilla.firefox
+com.kiwibrowser.browser.dev
+# KernelSU
+me.weishu.kernelsu

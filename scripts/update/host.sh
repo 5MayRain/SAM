@@ -1,12 +1,12 @@
 # 加载基础脚本
-. /data/adb/modules/SAM/scripts/base.sh
+source "/data/adb/modules/SAM/scripts/base.sh"
 
 # 获取 Host
 get_Host(){    
     log "i" "下载 ${1} host"
     
     # 获取 host 并排除注释
-    host=$(curl -m 10 -s ${2} | grep -Ev "^#|^\s*$" | awk -F' ' '{print $1a, $2}')
+    host=$(curl -m 10 -s ${2} | grep -Ev "^#|^[[:space:]]*$" | awk -F' ' '{print $1a, $2}')
     # 检查内容为空则退出
     if [ -z "${host}" ]; then
         log "e" "下载失败，取消使用"
@@ -14,12 +14,12 @@ get_Host(){
     fi
     
     # 写入 hosts 文件
-    host_content=$(cat $HOSTS_PATH | grep -i -Ev $3)
-    echo -e "$host_content\n\n# $1\n$host" | grep -Ev "^\s*$"  | sed "s/#/\n#/g" > $HOSTS_PATH
+    host_content=$(cat ${HOSTS_FILE} | grep -i -Ev ${3})
+    echo -e "$host_content\n\n# ${1}\n${host}" | grep -Ev "^[[:space:]]*$"  | sed "s/#/\n#/g" > ${HOSTS_FILE}
     
     log "i" "写入 hosts 文件"
 }
-    
+
 # 添加指令
 case "$1" in
     update)

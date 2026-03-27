@@ -254,11 +254,11 @@ reject_ip(){
 # 添加指令
 case "${1}" in
     # 添加
-    -A)
+    enable)
         reject_ip "-A"
         ;;
     # 删除
-    -D)
+    disable)
         reject_ip "-D"
         ;;
 esac

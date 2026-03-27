@@ -6,7 +6,7 @@ fi
 # 脚本路径
 SCRIPTS_PATH="/data/adb/modules/SAM/scripts"
 # 加载配置
-. $SCRIPTS_PATH/config.sh
+source "$SCRIPTS_PATH/config.sh"
 
 # 获取当前连接 WIFI 的 SSID
 get_WIFI_SSID(){
@@ -17,7 +17,7 @@ get_WIFI_SSID(){
 while true
 do
     # 加载设置
-    . /data/adb/modules/SAM/setting.conf
+    source "/data/adb/modules/SAM/setting.conf"
     
     # 判断黑名单为空，和服务未启动，则启动服务并且退出监控
     if [ ${#BLACKLIST_WIFI[@]} -eq 0 ]; then

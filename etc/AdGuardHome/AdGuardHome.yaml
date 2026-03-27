@@ -23,15 +23,13 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-    - 127.0.0.1:1053
+    - 127.0.0.1:3721
   upstream_dns_file: ""
   bootstrap_dns:
-    - 9.9.9.10
-    - 149.112.112.10
-    - 2620:fe::10
-    - 2620:fe::fe:10
+    - 119.29.29.29
+    - 223.5.5.5
   fallback_dns: []
-  upstream_mode: load_balance
+  upstream_mode: parallel
   fastest_timeout: 1s
   allowed_clients: []
   disallowed_clients: []
@@ -116,17 +114,7 @@ whitelist_filters:
     url: https://raw.githubusercontent.com/8680/GOODBYEADS/master/data/rules/allow.txt
     name: GOOBYEADS
     id: 1773845117
-user_rules:
-  - '# 小米系统更新'
-  - '||update.miui.com^'
-  - '||​update.intl.miui.com^'
-  - '||​ultimateota.d.miui.com^'
-  - '||​superota.d.miui.com^'
-  - '||​bigota.d.miui.com^'
-  - '||​hugeota.d.miui.com^'
-  - '||​bn.d.miui.com^'
-  - '||​cdnorg.d.miui.com^'
-  - '||​connect.rom.miui.com^'
+user_rules: []
 dhcp:
   enabled: false
   interface_name: ""

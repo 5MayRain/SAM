@@ -1,117 +1,62 @@
 # 加载基础脚本
 source "/data/adb/modules/SAM/scripts/base.sh"
 
-# 修改 Mihomo TUN 网卡
-tun_device(){
-    # 获取 Mihomo TUN 网卡
-    device_value=$(cat ${MIHOMO_CONF} | grep "device" | awk '{print $2}' | tr -d "[:space:]")
-    # 判断 Mihomo TUN 网卡 与设置的网卡不一致则修改
-    if [ ${TUN_DEVICE} != ${device_value} ]; then        
-        log "i" "修改 Mihomo TUN 网卡 ${device_value} 为 ${TUN_DEVICE}"
-        cat ${MIHOMO_CONF} | sed -i "s/device: ${device_value}/device: ${TUN_DEVICE}/g" ${MIHOMO_CONF} 
-    fi
-}
-
-# 修改 Mihomo 的 ipv6
-ipv6_proxy(){
-    log "i" "修改 Mihomo ipv6 设置"
-    # 输出内容
-    out_content=$(cat ${MIHOMO_CONF})
-    # 获取索引
-    indexs=$(echo "${out_content}" | grep -n "ipv6:" | cut -d: -f1)
-    # 循环打印
-    for i in ${indexs}
-    do
-        # 获取值
-        ipv6_value=$(echo "${out_content}" | sed -n "${i}p" | awk '{print $2}' | tr -d "[:space:]")
-        # 判断 Mihomo ipv6 与设置的 ipv6 不一致则修改
-        if [ ${MIHOMO_IPV6} != ${ipv6_value} ]; then
-            out_content="$(echo "${out_content}" | sed "${i}s/${ipv6_value}/${MIHOMO_IPV6}/g")"
-        fi
-    done
-    echo "${out_content}" > ${MIHOMO_CONF}
-}
-
-# 黑名单包名
-blacklist_package(){
+# 处理黑白名单的app包名
+app_package(){    
     # 读取内容
-    blacklist_content=$(cat ${BLACKLIST_PATH} | grep -v '^#' | grep -v '^[[:space:]]*$')
-    if [ -z "${blacklist_content}" ]; then
-        log "i" "黑名单无内容，请在 ${BLACKLIST_PATH} 文件添加 APP 包名"
-    fi
-    
-    log "i" "添加黑名单"
-    
-    # 输出内容
-    out_content="$(placeholder 2)# 排除的 Android 应用包名\n$(placeholder 2)exclude-package:"
-    rule_content=""
-    rule=$(cat "${MIHOMO_PATH}/rule_provider/classical_blacklist_direct.list")
-    # 获取行号
-    line_number=$(cat ${MIHOMO_CONF} | sed -n -e "/disable-icmp-forwarding:/=")
-    let "line_number++"
-    
-    log "i" "获取App包名:"
-    
-    # 循环获取包名
-    for package in ${blacklist_content}
-    do
-        log "i" "$package"        
-        out_content+="\n$(placeholder 4)- ${package}"
-        rule=$(echo "$rule" | grep -v ${package})
-        rule_content+="PROCESS-NAME,${package}\n"
-    done
-    log "i" "写入配置"
-    
-    # 输出配置
-    out_content=$(cat ${MIHOMO_CONF} | sed ${line_number}"c ${out_content}" | sed "s/$(placeholder 1)/ /g")
-    echo "${out_content}" > ${MIHOMO_CONF} 
-    rule_content+="${rule}"
-    echo -e "${rule_content}" > "${MIHOMO_PATH}/rule_provider/classical_blacklist_direct.list"
-}
-
-# 白名单
-whitelist_package(){
-    # 读取内容
-    whitelist_content=$(cat ${WHITELIST_PATH} | grep -v '^#' | grep -v '^[[:space:]]*$')
-    if [ -z "${whitelist_content}" ]; then
-        log "i" "白名单无内容，请在 ${WHITELIST_PATH} 文件添加 APP 包名"
+    list_content=$(cat ${1} | grep -v '^#' | grep -v '^[[:space:]]*$')
+    if [ -z "${list_content}" ]; then
+        log "i" "${2}无内容，请在 ${1} 文件添加 APP 包名"
     fi
         
-    log "i" "添加白名单"
     # 输出内容
-    out_content="$(placeholder 2)# 包含的 Android 应用包名\n$(placeholder 2)include-package:"
-    rule_content=""
-    rule=$(cat "${MIHOMO_PATH}/rule_provider/classical_whitelist_proxy.list")
+    out_content="$(placeholder 2)# ${2}应用包名\n$(placeholder 2)${3}:"
+    
     # 获取行号
     line_number=$(cat ${MIHOMO_CONF} | sed -n -e "/disable-icmp-forwarding:/=")
     let "line_number++"
     
-    log "i" "获取App包名:"
+    log "i" "添加${2} App:"
     
     # 循环获取包名
-    for package in ${whitelist_content}
+    for package in ${list_content}
     do
-        log "i" "$package"        
-        out_content+="\n$(placeholder 4)- ${package}"
-        rule=$(echo "$rule" | grep -v ${package})
-        rule_content+="PROCESS-NAME,${package}\n"
+        log "i" "$package" | sed "s/,.*//g"   
+        out_content+="\n$(placeholder 4)- $(echo ${package} | sed 's/,.*//g')"
     done
     
     log "i" "写入配置"
     
     # 输出配置
     out_content=$(cat ${MIHOMO_CONF} | sed ${line_number}"i ${out_content}" | sed "s/$(placeholder 1)/ /g")
-    echo "${out_content}" > ${MIHOMO_CONF} 
-    rule_content+="${rule}"
-    echo -e "${rule_content}" > "${MIHOMO_PATH}/rule_provider/classical_whitelist_proxy.list"
+    echo "${out_content}\n" > ${MIHOMO_CONF} 
 }
 
-tun_device
-ipv6_proxy
-if [ "${ENABLE_WHITELIST}" = true ]; then
-    log "i" "使用白名单"
-    whitelist_package
-else
+# 处理白名单模式
+whitelist_mode(){
+    # 获取用户应用
+    user_app=$(pm list packages -3 | sed "s/package://g")
+    # 读取白名单
+    white_content=$(cat ${WHITELIST_FILE} | grep -Ev "^#.*|^[[:space:]]*$" | sed "s/,no-rule//g")
+    # 排除白名单
+    for i in ${white_content}
+    do
+        user_app=$(echo "${user_app}" | grep -v "${i}")
+    done
+    # 保存文件
+    echo "${user_app}" > "${TMP_PATH}/blacklist.prop" 
+    # 输出配置    
+    app_package "${TMP_PATH}/blacklist.prop" "黑名单" "exclude-package"
+}
+
+
+if [ ${ENABLE_WHITELIST} = true ] && [ ${WHITELIST_MODE} = 1 ]; then
+    log "i" "使用白名单模式 1"
+    app_package "${WHITELIST_FILE}" "白名单" "include-package"
+elif [ ${ENABLE_WHITELIST} = true ] && [ ${WHITELIST_MODE} = 2 ]; then
+    log "i" "使用白名单模式 2"
+    whitelist_mode
+elif [ ${ENABLE_WHITELIST} = false ]; then
     log "i" "使用黑名单"
-    blacklist_package
+    app_package "${BLACKLIST_FILE}" "黑名单" "exclude-package"
 fi

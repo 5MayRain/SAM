@@ -5,6 +5,7 @@
 @@||mcc.inf.miui.com^
 @@||hpplay.cn^
 @@||api.jr.mi.com^
+@@||px.ucweb.com^
 @@||inputnlp.xfinfr.com^
 @@||cardservice.openspeech.cn^
 @@||imeclient.openspeech.cn^

@@ -78,17 +78,6 @@ p: &p
       - "mihomo"
   exclude-filter: "套餐|重置|剩余|到期|订阅|群|账户|流量|有效期|时间|官网|失联|余额|分享|免翻|邀请|地址"
 
-# 订阅地址
-A: &A
-  use:
-
-All: &All
-  type: url-test
-  use:
-
-# 代理集合
-proxy-providers:
-
 # hosts
 hosts:
   dns.alidns.com: [223.5.5.5, 223.6.6.6, 2400:3200::1, 2400:3200:baba::1]
@@ -120,20 +109,14 @@ dns:
     - "RULE-SET:classical_user_direct"
   # 用于 direct 出口域名解析的 DNS 服务器
   direct-nameserver:
-    #- 127.0.0.1:3721
-    - https://doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
+    - system
   # 代理节点域名解析服务器
   proxy-server-nameserver:
-    #- 127.0.0.1:3721
-    - https://doh.pub/dns-query#🛰️ 全球直连&h3=false
-    - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
+    - system
   # 指定域名查询的解析服务器
   nameserver-policy:
     "RULE-SET:domain_cn,domain_Microsoft,domain_Apple,domain_custom_direct,classical_user_direct":
-      #- 127.0.0.1:3721
-      - https://doh.pub/dns-query#🛰️ 全球直连&h3=false
-      - https://dns.alidns.com/dns-query#🛰️ 全球直连&h3=true
+      - system
   # 默认的域名解析服务器
   nameserver:
     - https://dns.google/dns-query#🌐 DNS连接&h3=true
@@ -142,7 +125,7 @@ dns:
 # 域名嗅探
 sniffer:
   # 启用
-  enable: true
+  enable: false
   # 对 redir-host 类型识别的流量进行强制嗅探
   force-dns-mapping: true
   # 对所有未获取到域名的流量进行强制嗅探
@@ -375,14 +358,6 @@ rule-providers:
   classical_user_direct:
     <<: *local
     path: "./rule_provider/classical_user_direct.list"
-  # 白名单
-  classical_whitelist_proxy:
-    <<: *local
-    path: "./rule_provider/classical_whitelist_proxy.list"
-  # 黑名单
-  classical_blacklist_direct:
-    <<: *local
-    path: "./rule_provider/classical_blacklist_direct.list"
   # 自定义直连
   domain_custom_direct:
     <<: *domain
@@ -613,9 +588,7 @@ rules:
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   
-  - "RULE-SET,classical_user_direct,🛰️ 全球直连"
-  - "RULE-SET,classical_blacklist_direct,🛰️ 全球直连" 
-  - "RULE-SET,classical_whitelist_proxy,🎯 节点选择" 
+  - "RULE-SET,classical_user_direct,🛰️ 全球直连" 
   - "RULE-SET,domain_custom_direct,🛰️ 全球直连"
   - "RULE-SET,domain_custom_proxy,🎯 节点选择"
   - "RULE-SET,domain_custom_reject,🚫 广告拦截"

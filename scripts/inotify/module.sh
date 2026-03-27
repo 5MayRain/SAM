@@ -1,12 +1,13 @@
-# 加载基础脚本
-source "/data/adb/modules/SAM/scripts/base.sh"
-
-# Mihomo备份配置
-MIHOMO_CONF="/sdcard/Mihomo配置.yaml"
-
 EVENT=$1
 MONITOR_DIR=$2
 MONITOR_FILE=$3
+
+# 模块路径
+MODULE_PATH="/data/adb/modules/SAM"
+# 脚本路径
+SCRIPTS_PATH="${MODULE_PATH}/scripts"
+# Mihomo备份配置
+MIHOMO_CONF="/sdcard/Mihomo配置.yaml"
 
 # 判断模块是否启用
 if [ "${MONITOR_FILE}" = "disable" ]; then

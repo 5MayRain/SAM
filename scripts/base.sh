@@ -1,23 +1,19 @@
 # 加载设置
-. /data/adb/modules/SAM/setting.conf
+source "/data/adb/modules/SAM/setting.conf"
 # 加载配置
-. /data/adb/modules/SAM/scripts/config.sh
+source "/data/adb/modules/SAM/scripts/config.sh"
 
 # 添加环境
-[ -d "/data/adb/magisk" ] && export PATH="/data/adb/magisk:$PATH"
-[ -d "/data/adb/ksu/bin" ] && export PATH="/data/adb/ksu/bin:$PATH"
-[ -d "/data/adb/ap/bin" ] && export PATH="/data/adb/ap/bin:$PATH"
-export PATH="/data/adb/modules/SAM/bin:$PATH"
+[ -d "/data/adb/magisk" ] && export PATH="/data/adb/magisk:${PATH}"
+[ -d "/data/adb/ksu/bin" ] && export PATH="/data/adb/ksu/bin:${PATH}"
+[ -d "/data/adb/ap/bin" ] && export PATH="/data/adb/ap/bin:${PATH}"
+export PATH="${BIN_PATH}:${PATH}"
 export SSL_CERT_DIR="/system/etc/security/cacerts/"
 export TZ="Asia/Shanghai"
 
-# 缓存路径
-[ ! -e "${TMP_PATH}" ] && mkdir "${TMP_PATH}"
-
-# 删除日志和缓存
-clear_tmp(){
-    rm -rf $MODULE_PATH/tmp/*
-}
+# 防火墙指令
+iptables_w="iptables -w 100"
+ip6tables_w="ip6tables -w 100"
 
 # 占位符
 placeholder(){
@@ -50,20 +46,18 @@ log(){
 
 # 程序是否运行
 isRun(){
-    state_number=$(pgrep -l -f ${1} | grep -v "sh")
-    [ "${state_number}" ] && return 0 || return 1
-}
-
-# 停止程序
-stop(){
-    if [ -f "${1}" ] || [ "$(pidof ${2})" ]; then
-        pid=$(cat "${1}")
-        if [ "${pid}" ]; then
-            kill -9 ${pid}
-            rm "${1}"
-        fi
-        kill -9 $(pidof ${2})
+    echo "${1}" | grep -q "/" && pid=$(pgrep -f ${1}) || pid=$(pidof ${1})
+    if [ "${pid}" ]; then
+        [ "${2}" = "pid" ] && echo ${pid}
         return 0
     fi
     return 1
+}
+
+# 杀死进程
+kill_process(){
+    pid=$(isRun ${1} "pid") && {
+        sleep 1
+        kill -9 ${pid} && return 0 || return 1
+    } || return 1
 }

@@ -1,99 +1,73 @@
 # 加载基础脚本
 source "/data/adb/modules/SAM/scripts/base.sh"
 
-# 服务脚本
-SMARTDNS_SERVICE="${SCRIPTS_PATH}/service/${SMARTDNS_BIN}.sh"
-AGH_SERVICE="${SCRIPTS_PATH}/service/${AGH_BIN}.sh"
-MIHOMO_SERVICE="${SCRIPTS_PATH}/service/${MIHOMO_BIN}.sh"
-CRONTABS_SERVICE="${SCRIPTS_PATH}/service/crontabs.sh"
-
-# 启动服务
+# 启动
 start(){
-    # 判断没有订阅地址则退出
-    if [ ${#SUB_URL[@]} = 0 ]; then
-        log "e" "没有填写订阅地址 !!!"
-        log "e" "请打开 $MODULE_PATH/setting.conf 设置文件，填写订阅地址"
-        cat $MODULE_PATH/module.prop | sed -i "6c description=没有填写订阅地址 !!! 请打开 $MODULE_PATH/setting.conf 设置文件，填写订阅地址" "$MODULE_PATH/module.prop"
-        exit 0
-    fi        
-    
-    log "i" "关闭私人DNS"
-    {
-        settings get global private_dns_mode | grep off || settings put global private_dns_mode off
-    } > /dev/null
-    
-    # 更新订阅
-    ${SCRIPTS_PATH}/update.sh sub
-    # 更新配置
-    ${SCRIPTS_PATH}/update.sh config
     # 启动 SmartDNS
-    ${SMARTDNS_SERVICE} start
-    # 启动 Mihomo
-    ${MIHOMO_SERVICE} start
+    ${SERVICE_PATH}/sd.sh start
     # 启动 AdGuardHome
-    ${AGH_SERVICE} start
-    # 添加 iptables 规则    
-    [ ${IP_IPTABLES} = true ] && ${SCRIPTS_PATH}/iptables.sh -e ip
+    ${SERVICE_PATH}/agh.sh start
+    # 启动 Mihomo
+    ${SERVICE_PATH}/mihomo.sh start
+    # 添加 DNS 规则
+    ${IPTABLES_PATH}/dns.sh enable
+    # 添加屏蔽 IP 规则
+    [ ${IP_IPTABLES} = true ] && ${IPTABLES_PATH}/ip.sh enable
     # 启动 crontabs
-    ${CRONTABS_SERVICE} start
+    ${SERVICE_PATH}/crontabs.sh start
     # 屏蔽 app 广告文件
-    ${SCRIPTS_PATH}/ad.sh block
-        
+    ${SCRIPTS_PATH}/ad.sh block        
     # 判断 host 启用，则更新 host，并重新挂载
     if [ "${HOST_ENABLE}" = true ]; then
         log "i" "更新 host 规则"
         SYSTEM_HOSTS="/system/etc/hosts"
-        [ ! "$(mount | grep ${SYSTEM_HOSTS})" ] && mount -o bind "${HOSTS_PATH}" "${SYSTEM_HOSTS}" 
-        ${SCRIPTS_PATH}/update/host.sh update
+        ${UPDATE_PATH}/host.sh update
     fi
-    
     # 更新描述
-    ${SCRIPTS_PATH}/update.sh desc
+    ${UPDATE_PATH}/desc.sh
 }
 
 # 停止
-stop(){
-    # 停止 AdGuardHome
-    ${AGH_SERVICE} stop
-    # 停止 Mihomo
-    ${MIHOMO_SERVICE} stop
+stop(){   
     # 停止 SmartDNS
-    ${SMARTDNS_SERVICE} stop
-    # 删除 iptables 规则    
-    [ ${IP_IPTABLES} = true ] && ${SCRIPTS_PATH}/iptables.sh -d ip
-    # 关闭 crontabs
-    ${CRONTABS_SERVICE} stop
+    ${SERVICE_PATH}/sd.sh stop
+    # 停止 AdGuardHome
+    ${SERVICE_PATH}/agh.sh stop
+    # 停止 Mihomo
+    ${SERVICE_PATH}/mihomo.sh stop
+    # 删除 DNS 规则
+    ${IPTABLES_PATH}/dns.sh disable
+    # 删除 TUN 规则
+    ${IPTABLES_PATH}/mihomo.sh del    
+    # 添加屏蔽 IP 规则
+    [ ${IP_IPTABLES} = true ] && ${IPTABLES_PATH}/ip.sh disable
+    # 停止 crontabs
+    ${SERVICE_PATH}/crontabs.sh stop
     # 更新描述
-    ${SCRIPTS_PATH}/update.sh desc
+    ${UPDATE_PATH}/desc.sh
 }
-
-# 清除日志
-clear_tmp
 
 # 添加指令
 case "$1" in
     # 启动
-    start)
-        log "i" "START >>>"
+    start)        
+        rm -rf ${TMP_PATH}/*
+        log "i" "start >>>"
         start
-        log "i" "<<< START"
+        log "i" "<<< start"
         ;;
     # 停止
     stop)
-        log "i" "STOP >>>"
-        stop
-        log "i" "<<< STOP"
+        > ${LOG_FILE}
+        log "i" "stop >>>"
+        stop        
+        log "i" "<<< stop"
         ;;
     # 重启
     restart)
-        log "i" "RESTART >>>"
-        stop
-        start
-        log "i" "<<< RESTART"
-        ;;
-    *)
-        start
-        echo "使用: start(启动) | stop(停止) | restart(重启)"
-        exit 1
+        log "i" "restart >>>"
+        stop  
+        start      
+        log "i" "<<< restart"
         ;;
 esac
