@@ -583,8 +583,6 @@ rule-providers:
 
 # 规则
 rules:
-  - "AND,((DST-PORT,443),(NETWORK,UDP)),⛔️ 拒绝连接"
-  
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   

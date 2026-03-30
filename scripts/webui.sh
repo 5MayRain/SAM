@@ -56,7 +56,9 @@ get_monitor_pid(){
 # 杀死监控
 kill_monitor(){
     pid=$(get_monitor_pid ${1})
-    kill ${pid} || kill -9 ${pid} > /dev/null 2>&1
+    kill ${pid} || kill -9 ${pid} > /dev/null 2>&1    
+    # 更新描述
+    ${UPDATE_PATH}/desc.sh
 }
 
 # 启动监控
@@ -68,7 +70,9 @@ start_monitor(){
         inotifyd "${INOTIFY_PATH}/host.sh" "${HOSTS_FILE}" &
     elif [ -z "$pid" ]; then
         inotifyd "${INOTIFY_PATH}/module.sh" "${MODULE_PATH}" &
-    fi
+    fi    
+    # 更新描述
+    ${UPDATE_PATH}/desc.sh
 }
 
 # 添加指令

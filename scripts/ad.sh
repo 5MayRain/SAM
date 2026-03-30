@@ -251,6 +251,37 @@ ad_path=(
 # 午夜AV
 "/data/data/com.aabbc.cc/files/cn_jiguang_union_ads/"
 "/data/data/com.aabbc.cc/shared_prefs/spUtils.xml"
+
+# 掌上无畏契约
+"/data/media/0/Android/data/com.tencent.apps.valorant/cache/splash"
+
+# WakeUp课程表
+"/data/data/com.suda.yzune.wakeupschedule/shared_prefs/com.baidu.homework.Preference.FastAdPreference.xml"
+"/data/data/com.suda.yzune.wakeupschedule/shared_prefs/mobads_aplist_status_new.xml"
+   
+# 猫眼APP
+"/data/media/0/Android/data/com.sankuai.movie/cache/maoyan_downlaod"
+"/data/data/com.sankuai.movie/cache/cips/common/mtplatform_mtpicasso/assets/image_manager_disk_cache"
+   
+# 心悦俱乐部
+"/data/data/com.tencent.tgclub/cache/image_manager_disk_cache"
+   
+# 瓜子二手车
+"/data/data/com.ganji.android.haoche_c/files/guazi_theme_image"
+   
+# 小象超市
+"/data/media/0/Android/data/com.meituan.retail.v.android/files/cips/common/waimai"
+"/data/data/com.meituan.retail.v.android/cache/cips/common/mtplatform_mtpicasso/assets/image_manager_disk_cache"
+   
+# 中信银行
+"/data/data/com.ecitic.bank.mobile/files/citic/advs"
+   
+# 江苏银行
+"/data/data/cn.jsb.china/cache/images"
+"/data/data/cn.jsb.china/files/jsbank/splash"  
+   
+# 滴滴出行
+"/data/data/com.sdu.didi.psnger/cache/image_manager_disk_cache"
 )
 
 # 广告屏蔽

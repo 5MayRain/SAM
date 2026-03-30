@@ -6,6 +6,7 @@
 @@||hpplay.cn^
 @@||api.jr.mi.com^
 @@||px.ucweb.com^
+@@||adtrack.xiaojukeji.com^
 @@||inputnlp.xfinfr.com^
 @@||cardservice.openspeech.cn^
 @@||imeclient.openspeech.cn^
