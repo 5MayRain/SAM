@@ -5,10 +5,17 @@ source "/data/adb/modules/SAM/scripts/base.sh"
 start(){
     # 启动 SmartDNS
     ${SERVICE_PATH}/sd.sh start
-    # 启动 AdGuardHome
-    ${SERVICE_PATH}/agh.sh start
-    # 启动 Mihomo
-    ${SERVICE_PATH}/mihomo.sh start
+    if [ ${MODULE_DNS_MODE} = 2 ]; then
+        # 启动 AdGuardHome
+        ${SERVICE_PATH}/agh.sh start
+        # 启动 Mihomo
+        ${SERVICE_PATH}/mihomo.sh start
+    else
+        # 启动 Mihomo
+        ${SERVICE_PATH}/mihomo.sh start
+        # 启动 AdGuardHome
+        ${SERVICE_PATH}/agh.sh start
+    fi
     # 添加 DNS 规则
     ${IPTABLES_PATH}/dns.sh enable
     # 添加屏蔽 IP 规则

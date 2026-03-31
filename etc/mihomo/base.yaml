@@ -30,7 +30,7 @@ external-ui: "webui/zashboard"
 # WEB UI 下载地址
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
 
-## 缓存
+# 缓存
 profile:
   # 储存策略组的选择
   store-selected: true
@@ -92,13 +92,17 @@ dns:
   enable: true
   # 解析 IPV6
   ipv6: true
-  # DNS 处理模式
-  enhanced-mode: fake-ip
+  # DNS 服务监听
+  listen: 0.0.0.0:1053
+  # DOH 优先使用 http/3
+  prefer-h3: false
+  # 遵循路由规则
+  respect-rule: true
   #  IP 段设置
   fake-ip-range: 198.18.0.1/16
   fake-ip-range6: fdfe:dcba:9876::/48
-  # DNS 服务监听
-  listen: 0.0.0.0:1053
+  # DNS 处理模式
+  enhanced-mode: fake-ip
   # 过滤
   fake-ip-filter:
     - "RULE-SET:domain_cn"
@@ -107,6 +111,8 @@ dns:
     - "RULE-SET:fakeip-filter"
     - "RULE-SET:domain_custom_direct"
     - "RULE-SET:classical_user_direct"
+  # 是否遵循 nameserver-policy
+  direct-nameserver-follow-policy: true
   # 用于 direct 出口域名解析的 DNS 服务器
   direct-nameserver:
     - system
@@ -119,8 +125,8 @@ dns:
       - system
   # 默认的域名解析服务器
   nameserver:
-    - https://dns.google/dns-query#🌐 DNS连接&h3=true
-    - https://dns.cloudflare.com/dns-query#🌐 DNS连接&h3=true
+    - https://dns.google/dns-query#🌐 DNS连接
+    - https://dns.cloudflare.com/dns-query#🌐 DNS连接
 
 # 域名嗅探
 sniffer:
@@ -582,7 +588,7 @@ rule-providers:
     path: "./rule_provider/ip_Private.mrs"
 
 # 规则
-rules:
+rules:  
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   
