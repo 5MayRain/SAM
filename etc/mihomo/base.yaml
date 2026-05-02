@@ -42,12 +42,18 @@ tcp-concurrent: true
 unified-delay: true
 
 # GEOIP 数据模式
-geodata-mode: false
+geodata-mode: true
+# GEO 文件加载模式
+# standard(标准加载器)/memconservative(小内存设备优化加载器)
+geodata-loader: standard
 #自定 GEO 下载地址
 geox-url:
+  # geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  # geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  # mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb"
   asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 # 自动更新 GEO
-geo-auto-update: true
+geo-auto-update: false
 # 更新间隔，单位：小时
 geo-update-interval: 24
 
@@ -100,17 +106,12 @@ dns:
   respect-rule: true
   #  IP 段设置
   fake-ip-range: 198.18.0.1/16
-  fake-ip-range6: fdfe:dcba:9876::/48
+  fake-ip-range6: fdfe:dcba:9876::1/64
   # DNS 处理模式
   enhanced-mode: fake-ip
   # 过滤
   fake-ip-filter:
-    - "RULE-SET:domain_cn"
-    - "RULE-SET:domain_Private"
-    - "RULE-SET:domain_GoogleFCM"
-    - "RULE-SET:fakeip-filter"
-    - "RULE-SET:domain_custom_direct"
-    - "RULE-SET:classical_user_direct"
+    - "RULE-SET:domain_cn,domain_lan,domain_googlefcm,domain_pt,fakeip-filter,domain_all_direct"
   # 是否遵循 nameserver-policy
   direct-nameserver-follow-policy: true
   # 用于 direct 出口域名解析的 DNS 服务器
@@ -121,8 +122,9 @@ dns:
     - system
   # 指定域名查询的解析服务器
   nameserver-policy:
-    "RULE-SET:domain_cn,domain_Microsoft,domain_Apple,domain_custom_direct,classical_user_direct":
+    "RULE-SET:domain_cn,domain_lan,domain_microsoft,domain_apple":
       - system
+    "RULE-SET:domain_all_direct": "rcode://refused"
   # 默认的域名解析服务器
   nameserver:
     - https://dns.google/dns-query#🌐 DNS连接
@@ -136,14 +138,14 @@ sniffer:
   force-dns-mapping: true
   # 对所有未获取到域名的流量进行强制嗅探
   parse-pure-ip: true
-  # 使用嗅探结果作为实际访问
-  override-destination: true
   # 嗅探的协议设置
   sniff:
     HTTP:
       ports: [80, 8080-8880]
+      # 使用嗅探结果作为实际访问
+      override-destination: true
     TLS:
-      ports: [443, 5228, 8443]
+      ports: [443, 8443]
     QUIC:
       ports: [443, 8443]
   # 强制嗅探
@@ -152,6 +154,7 @@ sniffer:
   # 跳过嗅探
   skip-domain:
     - "Mijia Cloud"
+    - "+.push.apple.com"
     
 # Tun 网卡
 tun:
@@ -177,7 +180,7 @@ tun:
   # 启用独立于端点的 NAT
   endpoint-independent-nat: true
   # 禁用 ICMP 转发
-  # disable-icmp-forwarding: true
+  disable-icmp-forwarding: true
 
 # 代理
 proxies:
@@ -250,7 +253,7 @@ proxy-groups:
       - "🇳🇱 荷兰节点"
       - "🇮🇳 印度节点"
       - "🌀 其它节点"
-      - "🛰️ 全球直连"
+      - "🇨🇳 国内"
   - name: "♻️ 自动选择"
     type: url-test
     <<: *A
@@ -312,6 +315,11 @@ proxy-groups:
     type: select
     proxies:
       - "🇨🇳 国内"
+      - "🎯 节点选择"
+      - "♻️ 自动选择"
+      - "⚖️ 负载均衡"
+      - "↪️ 故障转移"
+    exclude-filter: "🛰️ 全球直连"
   - name: "🇭🇰 香港节点"
     filter: "港|HK|hk|Hong Kong|HongKong|hongkong|深港|🇭🇰"
     <<: *All
@@ -364,26 +372,23 @@ rule-providers:
   classical_user_direct:
     <<: *local
     path: "./rule_provider/classical_user_direct.list"
-  # 自定义直连
-  domain_custom_direct:
+  
+  # 直连
+  domain_all_direct:
     <<: *domain
-    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/domain_direct.mrs"
-    path: "./rule_provider/domain_custom_direct.mrs"
-  # 自定义代理
-  domain_custom_proxy:
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Direct/Domain_ALL_Direct.mrs"
+    path: "./rule_provider/Domain_ALL_Direct.mrs"
+    
+  # 广告
+  domain_all_ads:
     <<: *domain
-    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/domain_proxy.mrs" 
-    path: "./rule_provider/domain_custom_proxy.mrs"
-  # 自定义拦截
-  domain_custom_reject:
-    <<: *domain
-    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/domain_reject.mrs" 
-    path: "./rule_provider/domain_custom_reject.mrs"
-  ip_custom_reject:
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Ads/Domain_All_AD.mrs"
+    path: "./rule_provider/Domain_All_AD.mrs"
+  ip_custom_ads:
     <<: *ip
-    url: "https://raw.githubusercontent.com/5MayRain/Rule/main/Mihomo/ipcidr_reject.mrs" 
-    path: "./rule_provider/ip_custom_reject.mrs"
-
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Ads/IP_Custom.mrs"
+    path: "./rule_provider/IP_Custom.mrs"
+    
   # WebRTC
   classical_WebRTC:
     <<: *classical
@@ -393,261 +398,273 @@ rule-providers:
   # fakeip-filter
   fakeip-filter:
     <<: *domain
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs"
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/FakeipFilter/Domain_FakeipFilter.mrs"
     path: "./rule_provider/fakeip-filter.mrs"
+        
+  # 抖音
+  domain_douyin:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/DouYin/Domain_DouYin.mrs"
+    path: "./rule_provider/Domain_DouYin.mrs"
+        
+  # 哔哩哔哩
+  domain_bilibili:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/BiliBili/Domain_BiliBili.mrs"
+    path: "./rule_provider/Domain_BiliBili.mrs"
+  ip_bilibili:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/BiliBili/IP_BiliBili.mrs"
+    path: "./rule_provider/IP_BiliBili.mrs"
+    
+  # PT
+  domain_pt:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/PT/Domain_PT.mrs"
+    path: "./rule_provider/Domain_PT.mrs"
+  ip_pt:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/PT/IP_PT.mrs"
+    path: "./rule_provider/IP_PT.mrs"
+    
+  # Steam 
+  domain_steam:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Steam/Domain_Steam.mrs"
+    path: "./rule_provider/Domain_Steam.mrs"
+  domain_steam_cn:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Steam/Domain_SteamCN.mrs"
+    path: "./rule_provider/Domain_SteamCN.mrs"
+    
+  # Speedtest
+  domain_speedtest:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Speedtest/Domain_Speedtest.mrs"
+    path: "./rule_provider/Domain_Speedtest.mrs"
+    
+  # GitHub
+  domain_github:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/GitHub/Domain_GitHub.mrs"
+    path: "./rule_provider/Domain_GitHub.mrs"
+    
+  # TikTok
+  domain_tiktok:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/TikTok/Domain_TikTok.mrs"
+    path: "./rule_provider/Domain_TikTok.mrs"
+    
+  # Discord
+  domain_discord:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Discord/Domain_Discord.mrs"
+    path: "./rule_provider/Domain_Discord.mrs"
+    
+  # YouTube
+  domain_youtube:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/YouTube/Domain_YouTube.mrs"
+    path: "./rule_provider/Domain_YouTube.mrs"
+  ip_youtube:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/YouTube/IP_YouTube.mrs"
+    path: "./rule_provider/IP_YouTube.mrs"
+    
+  # Facebook
+  domain_facebook:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Facebook/Domain_Facebook.mrs"
+    path: "./rule_provider/Domain_Facebook.mrs"
+  ip_facebook:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Facebook/IP_Facebook.mrs"
+    path: "./rule_provider/IP_Facebook.mrs"
+    
+  # Twitter
+  domain_twitter:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Twitter/Domain_Twitter.mrs"
+    path: "./rule_provider/Domain_Twitter.mrs"
+  ip_twitter:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Twitter/IP_Twitter.mrs"
+    path: "./rule_provider/IP_Twitter.mrs"
+    
+  # Netflix
+  domain_netflix:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Netflix/Domain_Netflix.mrs"
+    path: "./rule_provider/Domain_Netflix.mrs"
+  ip_netflix:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Netflix/IP_Netflix.mrs"
+    path: "./rule_provider/IP_Netflix.mrs"
+    
+  # Telegram
+  domain_telegram:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Telegram/Domain_Telegram.mrs"
+    path: "./rule_provider/Domain_Telegram.mrs"
+  ip_telegram:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Telegram/IP_Telegram.mrs"
+    path: "./rule_provider/IP_Telegram.mrs"
+    
+  # OpenAI
+  domain_openai:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/OpenAI/Domain_OpenAI.mrs"
+    path: "./rule_provider/Domain_OpenAI.mrs"
+  ip_openai:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/OpenAI/IP_OpenAI.mrs"
+    path: "./rule_provider/IP_OpenAI.mrs"
+    
+  # Spotify
+  domain_spotify:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Spotify/Domain_Spotify.mrs"
+    path: "./rule_provider/Domain_Spotify.mrs"
+  ip_spotify:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Spotify/IP_Spotify.mrs"
+    path: "./rule_provider/IP_Spotify.mrs"
+    
+  # Proxy
+  domain_proxy:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Proxy/Domain_Proxy.mrs"
+    path: "./rule_provider/Domain_Proxy.mrs"
+  ip_proxy:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Proxy/IP_Proxy.mrs"
+    path: "./rule_provider/IP_Proxy.mrs"
+    
+  # Google FCM
+  domain_googlefcm:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/GoogleFCM/Domain_GoogleFCM.mrs"
+    path: "./rule_provider/Domain_GoogleFCM.mrs"
+  ip_googlefcm:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/GoogleFCM/IP_GoogleFCM.mrs"
+    path: "./rule_provider/IP_GoogleFCM.mrs"
+    
+  # Google
+  domain_google:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Google/Domain_Google.mrs"
+    path: "./rule_provider/Domain_Google.mrs"
+  ip_google:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Google/IP_Google.mrs"
+    path: "./rule_provider/IP_Google.mrs"
+    
+  # Apple
+  domain_apple:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Apple/Domain_Apple.mrs"
+    path: "./rule_provider/Domain_Apple.mrs"
+  ip_apple:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Apple/IP_Apple.mrs"
+    path: "./rule_provider/IP_Apple.mrs"
+    
+  # Microsoft
+  domain_microsoft:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Microsoft/Domain_Microsoft.mrs"
+    path: "./rule_provider/Domain_Microsoft.mrs"
 
-  # CN 域名
+  # Lan
+  domain_lan:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Lan/Domain_Lan.mrs"
+    path: "./rule_provider/Domain_Lan.mrs"
+  ip_lan:
+    <<: *ip
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Lan/IP_Lan.mrs"
+    path: "./rule_provider/IP_Lan.mrs"    
+
+  # CN
   domain_cn:
     <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/cn.mrs"
-    path: "./rule_provider/domain_cn.mrs"
-  # CN IP
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/CN/Domain_CN.mrs"
+    path: "./rule_provider/Domain_CN.mrs"
   ip_cn:
     <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/cn.mrs"
-    path: "./rule_provider/ip_cn.mrs"
-
-  # 小红书
-  domain_XiaoHongShu:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/XiaoHongShu/XiaoHongShu_OCD_Domain.mrs"
-    path: "./rule_provider/domain_XiaoHongShu.mrs"
-
-  # 抖音
-  domain_DouYin:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/DouYin/DouYin_OCD_Domain.mrs"
-    path: "./rule_provider/domain_DouYin.mrs"
-
-  # BiliBili 域名
-  domain_BiliBili:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/BiliBili/BiliBili_OCD_Domain.mrs"
-    path: "./rule_provider/domain_BiliBili.mrs"
-  # BiliBili IP
-  ip_BiliBili:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/BiliBili/BiliBili_OCD_IP.mrs"
-    path: "./rule_provider/ip_BiliBili.mrs"
-
-  # Steam
-  domain_Steam:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Steam/Steam_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Steam.mrs"
-
-  # Speedtest
-  domain_Speedtest:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Speedtest/Speedtest_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Speedtest.mrs"
-
-  # TikTok
-  domain_TikTok:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/TikTok/TikTok_OCD_Domain.mrs"
-    path: "./rule_provider/domain_TikTok.mrs"
-
-  # Spotify 域名
-  domain_Spotify:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Spotify/Spotify_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Spotify.mrs"
-  # Spotify IP
-  ip_Spotify:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Spotify/Spotify_OCD_IP.mrs"
-    path: "./rule_provider/ip_Spotify.mrs"
-
-  # Facebook 域名
-  domain_Facebook:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Facebook/Facebook_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Facebook.mrs"
-  # Facebook IP
-  ip_Facebook:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Facebook/Facebook_OCD_IP.mrs"
-    path: "./rule_provider/ip_Facebook.mrs"
-
-  # Telegram 域名
-  domain_Telegram:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Telegram/Telegram_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Telegram.mrs"
-  # Telegram IP
-  ip_Telegram:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Telegram/Telegram_OCD_IP.mrs"
-    path: "./rule_provider/ip_Telegram.mrs"
-
-  # YouTube 域名
-  domain_YouTube:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/YouTube/YouTube_OCD_Domain.mrs"
-    path: "./rule_provider/domain_YouTube.mrs"
-  # YouTube IP
-  ip_YouTube:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/YouTube/YouTube_OCD_IP.mrs"
-    path: "./rule_provider/ip_YouTube.mrs"
-
-  # Google 域名
-  domain_Google:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Google/Google_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Google.mrs"
-  # Google IP
-  ip_Google:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Google/Google_OCD_IP.mrs"
-    path: "./rule_provider/ip_Google.mrs"
-
-  # GoogleFCM 域名
-  domain_GoogleFCM:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/GoogleFCM/GoogleFCM_OCD_Domain.mrs"
-    path: "./rule_provider/domain_GoogleFCM.mrs"
-  # GoogleFCM IP
-  ip_GoogleFCM:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/GoogleFCM/GoogleFCM_OCD_IP.mrs"
-    path: "./rule_provider/ip_GoogleFCM.mrs"
-
-  # Microsoft 域名
-  domain_Microsoft:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Microsoft/Microsoft_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Microsoft.mrs"
-
-  # Apple 域名
-  domain_Apple:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Apple/Apple_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Apple.mrs"
-  # Apple IP
-  ip_Apple:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Apple/Apple_OCD_IP.mrs"
-    path: "./rule_provider/ip_Apple.mrs"
-
-  # OpenAI 域名
-  domain_OpenAI:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/OpenAI/OpenAI_OCD_Domain.mrs"
-    path: "./rule_provider/domain_OpenAI.mrs"
-  # OpenAI IP
-  ip_OpenAI:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/OpenAI/OpenAI_OCD_IP.mrs"
-    path: "./rule_provider/ip_OpenAI.mrs"
-
-  # Netflix 域名
-  domain_Netflix:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Netflix/Netflix_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Netflix.mrs"
-  # Netflix IP
-  ip_Netflix:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Netflix/Netflix_OCD_IP.mrs"
-    path: "./rule_provider/ip_Netflix.mrs"
-
-  # Discord 域名
-  domain_Discord:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Discord/Discord_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Discord.mrs"
-
-  # GitHub 域名
-  domain_GitHub:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/GitHub/GitHub_OCD_Domain.mrs"
-    path: "./rule_provider/domain_GitHub.mrs"
-
-  # Twitter 域名
-  domain_Twitter:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Twitter/Twitter_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Twitter.mrs"
-  # Twitter IP
-  ip_Twitter:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Twitter/Twitter_OCD_IP.mrs"
-    path: "./rule_provider/ip_Twitter.mrs"
-
-  # Private 域名
-  domain_Private:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Lan/Lan_OCD_Domain.mrs"
-    path: "./rule_provider/domain_Private.mrs"
-  # Private IP
-  ip_Private:
-    <<: *ip
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/rule@master/rule/Clash/Lan/Lan_OCD_IP.mrs"
-    path: "./rule_provider/ip_Private.mrs"
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/CN/IP_CN.mrs"
+    path: "./rule_provider/IP_CN.mrs"
 
 # 规则
-rules:  
+rules:
+  - "AND,((DST-PORT,443),(NETWORK,UDP),(DOMAIN-KEYWORD,mtalk)),⛔️ 拒绝连接"
+  
   - "DST-PORT,53,🌐 DNS劫持"
   - "DST-PORT,853,🌐 DNS连接"
   
-  - "RULE-SET,classical_user_direct,🛰️ 全球直连" 
-  - "RULE-SET,domain_custom_direct,🛰️ 全球直连"
-  - "RULE-SET,domain_custom_proxy,🎯 节点选择"
-  - "RULE-SET,domain_custom_reject,🚫 广告拦截"
-  - "RULE-SET,ip_custom_reject,🚫 广告拦截,no-resolve"
+  - "RULE-SET,classical_user_direct,🛰️ 全球直连"
+  - "RULE-SET,domain_all_direct,🛰️ 全球直连"
+  
+  - "RULE-SET,domain_all_ads,🚫 广告拦截"
+  - "RULE-SET,ip_custom_ads,🚫 广告拦截,no-resolve"
 
   - "RULE-SET,classical_WebRTC,🖥️ WebRTC"
 
-  - "RULE-SET,domain_DouYin,🛰️ 全球直连"
-  - "RULE-SET,domain_XiaoHongShu,🛰️ 全球直连"
-  - "RULE-SET,domain_BiliBili,🛰️ 全球直连"
-  - "RULE-SET,ip_BiliBili,🛰️ 全球直连,no-resolve"
+  - "RULE-SET,domain_douyin,🛰️ 全球直连"
+    
+  - "RULE-SET,domain_bilibili,🛰️ 全球直连"
+  - "RULE-SET,ip_bilibili,🛰️ 全球直连,no-resolve"
   
-  - "RULE-SET,domain_Steam,🕹️ Steam"
-
-  - "RULE-SET,domain_Speedtest,🚀 测速工具"
-
-  - "RULE-SET,domain_GitHub,🇬 GitHub"
-
-  - "RULE-SET,domain_TikTok,🎶 TikTok"
-
-  - "RULE-SET,domain_Discord,🌏️ 社交媒体"
-  - "RULE-SET,domain_Twitter,🌏️ 社交媒体"
-  - "RULE-SET,ip_Twitter,🌏️ 社交媒体,no-resolve"
-  - "RULE-SET,domain_YouTube,🌏️ 社交媒体"
-  - "RULE-SET,ip_YouTube,🌏️ 社交媒体,no-resolve"
-  - "RULE-SET,domain_Netflix,🌏️ 社交媒体"
-  - "RULE-SET,ip_Netflix,🌏️ 社交媒体,no-resolve"
-  - "RULE-SET,domain_Facebook,🌏️ 社交媒体"
-  - "RULE-SET,ip_Facebook,🌏️ 社交媒体,no-resolve"
-  - "RULE-SET,domain_Telegram,🌏️ 社交媒体"
-  - "RULE-SET,ip_Telegram,🌏️ 社交媒体,no-resolve"
-
-  - "RULE-SET,domain_OpenAI,🤖 AI"
-  - "RULE-SET,ip_OpenAI,🤖 AI,no-resolve"
+  - "RULE-SET,domain_pt,🛰️ 全球直连"
+  - "RULE-SET,ip_pt,🛰️ 全球直连,no-resolve"
   
-  - "RULE-SET,domain_Spotify,🎵 Spotify"
-  - "RULE-SET,ip_Spotify,🎵 Spotify,no-resolve"
+  - "RULE-SET,domain_steam,🕹️ Steam"
+  - "RULE-SET,domain_steam_cn,🛰️ 全球直连"
 
-  - "DST-PORT,5228,📢 谷歌FCM"
-  - "DST-PORT,5229,📢 谷歌FCM"
-  - "DST-PORT,5230,📢 谷歌FCM"
-  - "RULE-SET,domain_GoogleFCM,📢 谷歌FCM"
-  - "RULE-SET,ip_GoogleFCM,📢 谷歌FCM,no-resolve"
+  - "RULE-SET,domain_speedtest,🚀 测速工具"
+
+  - "RULE-SET,domain_github,🇬 GitHub"
+
+  - "RULE-SET,domain_tiktok,🎶 TikTok"
   
-  - "RULE-SET,domain_Google,🇬 谷歌服务"
-  - "RULE-SET,ip_Google,🇬 谷歌服务,no-resolve"
+  - "RULE-SET,domain_discord,🌏️ 社交媒体"
+  - "RULE-SET,domain_youtube,🌏️ 社交媒体"
+  - "RULE-SET,ip_youtube,🌏️ 社交媒体,no-resolve"
+  - "RULE-SET,domain_facebook,🌏️ 社交媒体"
+  - "RULE-SET,ip_facebook,🌏️ 社交媒体,no-resolve"
+  - "RULE-SET,domain_twitter,🌏️ 社交媒体"
+  - "RULE-SET,ip_twitter,🌏️ 社交媒体,no-resolve"
+  - "RULE-SET,domain_netflix,🌏️ 社交媒体"
+  - "RULE-SET,ip_netflix,🌏️ 社交媒体,no-resolve"
+  - "RULE-SET,domain_telegram,🌏️ 社交媒体"
+  - "RULE-SET,ip_telegram,🌏️ 社交媒体,no-resolve"
+
+  - "RULE-SET,domain_openai,🤖 AI"
+  - "RULE-SET,ip_openai,🤖 AI,no-resolve"
+    
+  - "RULE-SET,domain_spotify,🎵 Spotify"
+  - "RULE-SET,ip_spotify,🎵 Spotify,no-resolve"
   
-  - "RULE-SET,domain_Apple,🍎 苹果服务"
-  - "RULE-SET,ip_Apple,🍎 苹果服务,no-resolve"
+  - "RULE-SET,domain_proxy,🎯 节点选择"
+  - "RULE-SET,ip_proxy,🎯 节点选择,no-resolve"
 
-  - "RULE-SET,domain_Microsoft,Ⓜ️ 微软服务"
+  - "DST-PORT,5228-5230,📢 谷歌FCM"
+  - "RULE-SET,domain_googlefcm,📢 谷歌FCM"
+  - "RULE-SET,ip_googlefcm,📢 谷歌FCM,no-resolve"
+  
+  - "RULE-SET,domain_google,🇬 谷歌服务"
+  - "RULE-SET,ip_google,🇬 谷歌服务,no-resolve"
+    
+  - "RULE-SET,domain_apple,🍎 苹果服务"
+  - "RULE-SET,ip_apple,🍎 苹果服务,no-resolve"
 
+  - "RULE-SET,domain_microsoft,Ⓜ️ 微软服务"
+   
+  - "RULE-SET,domain_lan,🛰️ 全球直连"
+  - "RULE-SET,ip_lan,🛰️ 全球直连,no-resolve"
   - "RULE-SET,domain_cn,🛰️ 全球直连"
   - "RULE-SET,ip_cn,🛰️ 全球直连,no-resolve"
-  - "RULE-SET,domain_Private,🛰️ 全球直连"
-  - "RULE-SET,ip_Private,🛰️ 全球直连,no-resolve"
 
   - "MATCH,🐟 漏网之鱼"

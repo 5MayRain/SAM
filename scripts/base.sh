@@ -37,7 +37,7 @@ log(){
     if [ "${1}" = "i" ]; then
         out+="[INFO]"
     elif [ "${1}" = "e" ]; then
-        out+="[ERRO]"
+        out+="[ERROR]"
     fi
     out+=": ${2}"
     echo ${2}

@@ -2,6 +2,13 @@ http:
   pprof:
     port: 6060
     enabled: false
+  doh:
+    routes:
+      - GET /dns-query
+      - POST /dns-query
+      - GET /dns-query/{ClientID}
+      - POST /dns-query/{ClientID}
+    insecure_enabled: false
   address: 0.0.0.0:3000
   session_ttl: 720h
 users:
@@ -23,7 +30,7 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-    - 127.0.0.1:3721
+    - 127.0.0.1:1053
   upstream_dns_file: ""
   bootstrap_dns:
     - 119.29.29.29
@@ -80,7 +87,6 @@ tls:
   port_dns_over_quic: 853
   port_dnscrypt: 0
   dnscrypt_config_file: ""
-  allow_unencrypted_doh: false
   certificate_chain: ""
   private_key: ""
   certificate_path: ""
@@ -102,12 +108,12 @@ statistics:
   ignored_enabled: false
 filters:
   - enabled: true
-    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuard/adguard_blacklist.list
+    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuardHome/BlackList_All.list
     name: 5MayRain
     id: 1766388758
 whitelist_filters:
   - enabled: true
-    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuard/adguard_whitelist.list
+    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuardHome/WhiteList.list
     name: 5MayRain
     id: 1766388759
   - enabled: true
@@ -187,4 +193,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 0
-schema_version: 33
+schema_version: 34

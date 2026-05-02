@@ -77,29 +77,43 @@ disable_block_ipv6(){
     ${ip6tables_w} -t filter -X ${BLOCK_IPV6_CHAIN} || return 1
 }
 
+# 是否支持 ipv6 nat
+is_ipv6_nat(){
+    if ${ip6tables_w} -t nat -L >/dev/null 2>&1; then
+        return 0
+    else
+        log "e" "不支持 ipv6 nat"
+        return 1
+    fi
+}
+
+# 判断端口是否等于 53
+is_dns_port(){
+    if [ ${DNS_PORT} = 53 ]; then
+        log "i" "端口等于 53，跳过添加规则"
+        return 0
+    else
+        return 1
+    fi
+}
+
 # 添加指令
 case "$1" in
     # 启用
     enable)
-        [ "${DNS_PORT}" ] && enable_dns "ipv4" ${DNS_CHAIN}
+        [ "${DNS_PORT}" ] && {
+            is_dns_port || enable_dns "ipv4" ${DNS_CHAIN}
+        }
         if [ "${BLOCK_IPV6_DNS}" = true ]; then
             enabel_block_ipv6
         else
-            if ${ip6tables_w} -t nat -L >/dev/null 2>&1; then
-            enable_dns "ipv6" ${IPV6_DNS_CHAIN}
-            else
-                log "e" "不支持 ipv6 nat"
-            fi
+            is_ipv6_nat && enable_dns "ipv6" ${IPV6_DNS_CHAIN}
         fi
         ;;
     # 禁用
     disable)
         disable_dns "ipv4" ${DNS_CHAIN}
-        if ${ip6tables_w} -t nat -L >/dev/null 2>&1; then
-            disable_dns "ipv6" ${IPV6_DNS_CHAIN}
-        else
-            log "e" "不支持 ipv6 nat"
-        fi
+        is_ipv6_nat && disable_dns "ipv6" ${IPV6_DNS_CHAIN}
         disable_block_ipv6
         ;;
 esac

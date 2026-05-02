@@ -1,6 +1,11 @@
 # 加载基础脚本
 source "/data/adb/modules/SAM/scripts/base.sh"
 
+# 屏蔽数量
+block_number=0
+# 恢复数量
+recovery_number=0
+
 # 广告路径数组
 ad_path=(
 # 美团
@@ -282,6 +287,16 @@ ad_path=(
    
 # 滴滴出行
 "/data/data/com.sdu.didi.psnger/cache/image_manager_disk_cache"
+
+# 盒马App
+"/data/data/com.wudaokou.hippo/shared_prefs/splash.xml"
+   
+# 完美世界电竞
+"/data/data/com.pwrd.steam.esports/shared_prefs/advertisement_sp_name.xml"
+   
+# 人卫App
+"/data/data/com.pmph.irenwei/cache/image_manager_disk_cache"
+"/data/data/com.pmph.irenwei/files/ad.gif"
 )
 
 # 广告屏蔽
@@ -302,6 +317,7 @@ block_ad(){
         # 锁定
         chattr +i "${1}"
     fi
+    let "block_number++"
 }
 
 # 广告恢复
@@ -319,7 +335,8 @@ recovery_ad(){
             chattr -i "${1}"
             rm -f "${1}"
         }
-    fi
+    fi    
+    let "recovery_number++"
 }
 
 # 运行
@@ -332,16 +349,17 @@ run(){
             ${1} "${ad}"
         fi
     done
+    [ "${1}" = "block_ad" ] && log "i" "已屏蔽 ${block_number} 个" || log "i" "已恢复 ${recovery_number} 个"
 }
 
 # 添加指令
 case "${1}" in
     block)
-        log "i" "屏蔽 App 广告文件"
+        log "i" "屏蔽 App 广告路径"
         run "block_ad"
         ;;
     recovery) 
-        log "i" "恢复 App 广告文件" 
+        log "i" "恢复 App 广告路径" 
         run "recovery_ad"    
         ;;
     *)

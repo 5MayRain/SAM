@@ -14,16 +14,13 @@ case "$1" in
     # 添加
     add)
         # IP 转发
-        if [ $(cat "/proc/sys/net/ipv4/ip_forward") = 0 ]; then
-            log "i" "开启 IP 转发"
-            echo 1 > /proc/sys/net/ipv4/ip_forward || log "e" "开启失败"
+        if [ $(cat "/proc/sys/net/ipv4/ip_forward") = 0 ]; then            
+            echo 1 > /proc/sys/net/ipv4/ip_forward && log "i" "开启 IP 转发" || log "e" "开启 IP 转发失败"
         fi
-        log "i" "添加 TUN 流量转发"
-        tun_iptables "-I" || log "e" "添加失败"
+        tun_iptables "-I" && log "i" "添加 TUN 流量转发" || log "e" "添加 TUN 流量转发失败"
         ;;
     # 删除
     del)
-        log "i" "删除 TUN 流量转发"
-        tun_iptables "-D" || log "e" "删除失败"
+        tun_iptables "-D" && log "i" "删除 TUN 流量转发" || log "e" "删除 TUN 流量转发失败"
         ;;
 esac

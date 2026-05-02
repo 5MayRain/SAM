@@ -1,2 +1,4 @@
-# 2026.03.28_fix
-- 修复 `结构1` 无法使用相应服务的 dns，导致 dns 泄露
+# 2026.05.02
+- AdGuardHome 更新版本 v0.107.74
+- Mihomo 更新版本 v1.19.24
+- Mihomo Tun 配置自动识别跳过 ZeroTier 网络接口

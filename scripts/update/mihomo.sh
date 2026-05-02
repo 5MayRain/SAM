@@ -75,7 +75,7 @@ modify_dns(){
         if [ ${AGH_ENABLE} = true -o ${SMARTDNS_ENABLE} = true ] && [ "${DNS_PORT}" ]; then
             content=$(echo "${content}" | sed "${line}c ${prefix}127.0.0.1:${DNS_PORT}" | sed "s/$(placeholder 1)/ /g")
         else
-            content=$(echo "${content}" | sed "${line}c ${prefix}https://doh.pub/dns-query#🇨🇳 国内&h3=false\n${prefix}https://dns.alidns.com/dns-query#🇨🇳 国内&h3=true" | sed "s/$(placeholder 1)/ /g")
+            content=$(echo "${content}" | sed "${line}c ${prefix}https://doh.pub/dns-query#🇨🇳 国内\n${prefix}https://dns.alidns.com/dns-query#🇨🇳 国内" | sed "s/$(placeholder 1)/ /g")
         fi
         # 输出
         echo "${content}" > ${MIHOMO_CONF}
@@ -130,8 +130,26 @@ modify_ipv6_proxy(){
     echo "${out_content}" > ${MIHOMO_CONF}
 }
 
+# 排除 ZeroTier 网卡接口
+exclude_zerotier(){
+    # ZeroTier 未运行则退出
+    isRun "zerotier-one" || {
+        return 0
+    }
+    log "i" "排除 ZeroTier 网卡接口"
+    # 获取网卡接口
+    zt_device=$(ip link show | grep "zt" | sed -n 's/^[0-9][0-9]: \(.*\):.*$/\1/p')    
+    # 获取行号
+    line_number=$(cat ${MIHOMO_CONF} | sed -n -e "/disable-icmp-forwarding:/=")
+    let "line_number++"
+    # 输出配置
+    out_content=$(cat ${MIHOMO_CONF} | sed ${line_number}"i $(placeholder 2)# 排除网络接口\n$(placeholder 2)exclude-interface:\n$(placeholder 4)- ${zt_device}" | sed "s/$(placeholder 1)/ /g")
+    echo "${out_content}" > ${MIHOMO_CONF}
+}
+
 modify_sub
 modify_dns
 modify_dns_port
 modify_tun_device
 modify_ipv6_proxy
+exclude_zerotier
