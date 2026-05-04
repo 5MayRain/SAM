@@ -1,6 +1,6 @@
 {
-    "version": "202600502",
-    "versionCode": 2026050200,
+    "version": "202600502_fix",
+    "versionCode": 2026050201,
     "zipUrl": "https://github.com/5MayRain/SAM/releases/latest/download/SAM_Smart_20260502_release.zip",
     "changelog": "https://raw.githubusercontent.com/5MayRain/SAM/main/changelog.md"
 }

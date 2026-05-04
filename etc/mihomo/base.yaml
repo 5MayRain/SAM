@@ -36,10 +36,19 @@ profile:
   store-selected: true
   # 持久化 fake-ip
   store-fake-ip: true
+  # Smart 数据采集文件大小
+  smart-collector-size: 100
 # TCP 并发
 tcp-concurrent: true
 # 统一延迟时
 unified-delay: true
+
+# Smart 自动更新模型
+lgbm-auto-update: true
+# 更新间隔
+lgbm-update-interval: 24
+# 更新地址
+lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
 # GEOIP 数据模式
 geodata-mode: true
@@ -124,7 +133,7 @@ dns:
   nameserver-policy:
     "RULE-SET:domain_cn,domain_lan,domain_microsoft,domain_apple":
       - system
-    "RULE-SET:domain_all_direct": "rcode://refused"
+    "RULE-SET:domain_all_ad,domain_webrtc": "rcode://refused"
   # 默认的域名解析服务器
   nameserver:
     - https://dns.google/dns-query#🌐 DNS连接
@@ -380,20 +389,20 @@ rule-providers:
     path: "./rule_provider/Domain_ALL_Direct.mrs"
     
   # 广告
-  domain_all_ads:
+  domain_all_ad:
     <<: *domain
     url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Ads/Domain_All_AD.mrs"
     path: "./rule_provider/Domain_All_AD.mrs"
-  ip_custom_ads:
+  ip_custom_ad:
     <<: *ip
     url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Ads/IP_Custom.mrs"
     path: "./rule_provider/IP_Custom.mrs"
     
   # WebRTC
-  classical_WebRTC:
-    <<: *classical
-    url: "https://cdn.jsdelivr.net/gh/GitMetaio/Surfing@rm/Home/rules/WebRTC.list"
-    path: "./rule_provider/classical_WebRTC.list"
+  domain_webrtc:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/WebRTC/Domain_WebRTC.mrs"
+    path: "./rule_provider/Domain_WebRTC.mrs"
     
   # fakeip-filter
   fakeip-filter:
@@ -607,10 +616,11 @@ rules:
   - "RULE-SET,classical_user_direct,🛰️ 全球直连"
   - "RULE-SET,domain_all_direct,🛰️ 全球直连"
   
-  - "RULE-SET,domain_all_ads,🚫 广告拦截"
-  - "RULE-SET,ip_custom_ads,🚫 广告拦截,no-resolve"
+  - "RULE-SET,domain_all_ad,🚫 广告拦截"
+  - "RULE-SET,ip_custom_ad,🚫 广告拦截,no-resolve"
 
-  - "RULE-SET,classical_WebRTC,🖥️ WebRTC"
+  - "RULE-SET,domain_webrtc,🖥️ WebRTC"
+  - "DST-PORT,3478/5349-5350/10000/19302,🖥️ WebRTC"
 
   - "RULE-SET,domain_douyin,🛰️ 全球直连"
     
