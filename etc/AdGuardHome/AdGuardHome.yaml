@@ -10,7 +10,7 @@ http:
       - POST /dns-query/{ClientID}
     insecure_enabled: false
   address: 0.0.0.0:3000
-  session_ttl: 720h
+  session_ttl: 30d
 users:
   - name: root
     password: $2b$12$D3zeMIBFfzcQTqGqB.k7GOkMvqx1jgsrdiRCn2kwOHl.kNmmPfMom
@@ -35,6 +35,7 @@ dns:
   bootstrap_dns:
     - 119.29.29.29
     - 223.5.5.5
+    - 180.184.1.1
   fallback_dns: []
   upstream_mode: parallel
   fastest_timeout: 1s
@@ -95,7 +96,7 @@ tls:
 querylog:
   dir_path: ""
   ignored: []
-  interval: 24h
+  interval: 1d
   size_memory: 1000
   enabled: true
   ignored_enabled: false
@@ -103,7 +104,7 @@ querylog:
 statistics:
   dir_path: ""
   ignored: []
-  interval: 24h
+  interval: 1d
   enabled: true
   ignored_enabled: false
 filters:

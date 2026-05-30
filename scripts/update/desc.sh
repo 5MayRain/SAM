@@ -17,6 +17,9 @@ done
 [ ${#start_service} -gt 15 ] && out_content+=${start_service}
 [ ${#stop_service} -gt 15 ] && out_content+=" ${stop_service}"
 
+out_content+=" 🤖Smart内核: "
+mihomo -v | grep -q "smart" && out_content+="[✅]" || out_content+="[❌]"
+
 out_content+=" ⚙️模式: "
 if [ ${ENABLE_WHITELIST} = true ]; then
     [ ${WHITELIST_MODE} = 1 ] && out_content+="[白名单 1]" || out_content+="[白名单 2]"
@@ -35,6 +38,6 @@ out_content+=" ⏰定时: "
 
 out_content+=" 📢注意: 所有服务默认账号和密码都是root"
 
-sed -i "6c description=${out_content}" "${MODULE_PATH}/module.prop"
+sed -i "s/description=.*/description=${out_content}/g" "${MODULE_PATH}/module.prop"
 
 log "i" "更新模块描述"

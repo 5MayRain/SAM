@@ -100,6 +100,7 @@
 @@||b.bdstatic.com^
 @@||baixing.com^
 @@||baomitu.com^
+@@||bbs.acgrip.com^
 @@||bce.baidu.com^
 @@||bdtj.tagtic.cn^
 @@||beitai.pt^
@@ -150,6 +151,7 @@
 @@||cdn.cnbj1.fds.api.mi-img.com^
 @@||cdn.jsdelivr.net^
 @@||cedexis.net^
+@@||cf.trackerslist.com^
 @@||cgi.connect.qq.com^
 @@||cgpeers.com^
 @@||chkaja.com^
@@ -436,6 +438,7 @@
 @@||keepfrds.com^
 @@||kepler.jd.com^
 @@||kingsoft.com^
+@@||kisssub.org^
 @@||knet.cn^
 @@||knicks.jd.com^
 @@||koodomobile.ca^

@@ -7,6 +7,9 @@ IPV6_DNS_CHAIN="REDIRECT_IPV6_DNS"
 # 阻断 ipv6 链
 BLOCK_IPV6_CHAIN="BLOCK_IPV6_DNS"
 
+# 获取 SmartDNS 端口
+SMARTDNS_PORT=$(cat ${SMARTDNS_CONF} | grep "bind" | sed -n "s/bind.*:\(.*\)/\1/p")
+
 # DNS 端口
 if [ ${MODULE_DNS_MODE} = 1 ] && [ ${AGH_ENABLE} = true ] && [ $(isRun ${AGH_BIN} "pid") ]; then
     log "i" "使用 ${AGH_BIN} DNS"
@@ -19,7 +22,7 @@ elif [ ${MODULE_DNS_MODE} = 2 ] && [ ${MIHOMO_ENABLE} = true ] && [ $(isRun ${MI
     DNS_PORT=${MIHOMO_DNS_PORT}
 elif [ ${MODULE_DNS_MODE} = false ] && [ ${AGH_ENABLE} = false ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
     log "i" "使用 ${SMARTDNS_BIN} DNS"
-    DNS_PORT=3721
+    DNS_PORT=${SMARTDNS_PORT}
 fi
 
 itw=${iptables_w}

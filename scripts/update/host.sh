@@ -9,7 +9,7 @@ get_Host(){
     host=$(curl -m 10 -s ${2} | grep -Ev "^#|^[[:space:]]*$" | awk -F' ' '{print $1a, $2}')
     # 检查内容为空则退出
     if [ -z "${host}" ]; then
-        log "e" "下载失败，取消使用"
+        log "e" "下载失败"
         return 1
     fi
     

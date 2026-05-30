@@ -4,13 +4,16 @@ source "/data/adb/modules/SAM/scripts/base.sh"
 # 读取配置内容
 content=$(cat "${MIHOMO_PATH}/base.yaml")
 
+# 获取 SmartDNS 端口
+SMARTDNS_PORT=$(cat ${SMARTDNS_CONF} | grep "bind" | sed -n "s/bind.*:\(.*\)/\1/p")
+
 # DNS 端口
 if [ ${MODULE_DNS_MODE} = 1 ] && [ ${SMARTDNS_ENABLE} = true ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
-    DNS_PORT=3721
+    DNS_PORT=${SMARTDNS_PORT}
 elif [ ${MODULE_DNS_MODE} = 2 ] && [ ${AGH_ENABLE} = true ] && [ $(isRun ${AGH_BIN} "pid") ]; then
     DNS_PORT=${AGH_DNS_PORT}
 elif [ ${SMARTDNS_ENABLE} = true ] && [ ${AGH_ENABLE} = false ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
-    DNS_PORT=3721
+    DNS_PORT=${SMARTDNS_PORT}
 elif [ ${SMARTDNS_ENABLE} = false ] && [ ${AGH_ENABLE} = true ] && [ $(isRun ${AGH_BIN} "pid") ]; then
     DNS_PORT=${AGH_DNS_PORT}
 fi
@@ -52,7 +55,7 @@ modify_sub(){
     line=$(echo "${content}" | sed -n "/hosts:/=")
     let "line--"
     # 输出配置
-    content=$(echo "${content}" | sed "${line}i # 订阅\nA: &A\n  use:\n${sub_name}\nAll: &All\n  type: url-test\n  use:\n${sub_name}\nproxy-providers:\n${sub_content}")
+    content=$(echo "${content}" | sed "${line}i # 订阅\nA: &A\n  exclude-filter: \"${EXCLUDE_NODE}\"\n  use:\n${sub_name}\nAll: &All\n  type: url-test\n  use:\n${sub_name}\nproxy-providers:\n${sub_content}")
     echo "${content}" > ${MIHOMO_CONF}
     [ ${sub_size} -lt ${#content} ] && log "i" "订阅配置修改成功" || log "e" "订阅配置修改失败"
 }
@@ -97,6 +100,26 @@ modify_dns_port(){
         log "i" "修改 Mihomo DNS 端口 ${port_value} 为 ${MIHOMO_DNS_PORT}"
         cat ${MIHOMO_CONF} | sed -i "s/listen: 0.0.0.0:${port_value}/listen: 0.0.0.0:${MIHOMO_DNS_PORT}/g" ${MIHOMO_CONF}
     fi
+}
+
+# 修改 DNS 模式
+modify_dns_mode(){
+    log "i" "DNS 模式为 ${MIHOMO_DNS_MODE}"
+    # 判断当前模式为 redir-host 则返回
+    if [ "${MIHOMO_DNS_MODE}" = "redir-host" ]; then
+        return 0
+    fi
+    # 读取配置内容
+    content=$(cat ${MIHOMO_CONF})
+    # 读取所需修改行
+    line=$(echo "${content}" | sed -n "/enhanced-mode:/=" | sed -n "1p")
+    let "line++" 
+    
+    # fake-ip 配置
+    dns_config="$(placeholder 2)# 过滤模式\n$(placeholder 2)fake-ip-filter-mode: rule\n$(placeholder 2)# 过滤\n$(placeholder 2)fake-ip-filter:\n$(placeholder 4)- \"RULE-SET,domain_cn,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_lan,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_googlefcm,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_pt,real-ip\"\n$(placeholder 4)- \"RULE-SET,fakeip-filter,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_all_direct,real-ip\"\n$(placeholder 4)- \"MATCH,fake-ip\""
+    
+    # 输出配置
+    echo "${content}" | sed "s/enhanced-mode:.*/enhanced-mode: ${MIHOMO_DNS_MODE}/g" | sed "${line}i ${dns_config}" | sed "s/$(placeholder 1)/ /g" > ${MIHOMO_CONF}
 }
 
 # 修改 Mihomo TUN 网卡
@@ -150,6 +173,7 @@ exclude_zerotier(){
 modify_sub
 modify_dns
 modify_dns_port
+modify_dns_mode
 modify_tun_device
 modify_ipv6_proxy
 exclude_zerotier

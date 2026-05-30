@@ -4,6 +4,9 @@ source "/data/adb/modules/SAM/scripts/base.sh"
 # 读取配置内容
 content=$(cat ${AGH_CONF})
 
+# 获取 SmartDNS 端口
+SMARTDNS_PORT=$(cat ${SMARTDNS_CONF} | grep "bind" | sed -n "s/bind.*:\(.*\)/\1/p")
+
 # 修改配置
 modify_conf(){
     # 获取开始行
@@ -16,13 +19,13 @@ modify_conf(){
     # 判断 SmartDNS 启用，则使用 SmartDNS，未启用则使用默认DNS
     if [ ${SMARTDNS_ENABLE} = true ] && [ ${MODULE_DNS_MODE} = 2 ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
         log "i" "${AGH_BIN} 上游DNS使用 ${SMARTDNS_BIN}"
-        modify_dns "${prefix}127.0.0.1:3721"
+        modify_dns "${prefix}127.0.0.1:${SMARTDNS_PORT}"
     elif [ ${MIHOMO_ENABLE} = true ] && [ ${MODULE_DNS_MODE} = 1 ] && [ $(isRun ${MIHOMO_BIN} "pid") ]; then
         log "i" "${AGH_BIN} 上游DNS使用 ${MIHOMO_BIN}"
         modify_dns "${prefix}127.0.0.1:${MIHOMO_DNS_PORT}"
     elif [ ${MIHOMO_ENABLE} = false ] && [ ${SMARTDNS_ENABLE} = true ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
         log "i" "${AGH_BIN} 上游DNS使用 ${SMARTDNS_BIN}"
-        modify_dns "${prefix}127.0.0.1:3721"
+        modify_dns "${prefix}127.0.0.1:${SMARTDNS_PORT}"
     else
         log "i" "${AGH_BIN} 上游DNS使用默认DNS"
         modify_dns "${default_dns}"

@@ -36,19 +36,10 @@ profile:
   store-selected: true
   # 持久化 fake-ip
   store-fake-ip: true
-  # Smart 数据采集文件大小
-  smart-collector-size: 100
 # TCP 并发
 tcp-concurrent: true
 # 统一延迟时
 unified-delay: true
-
-# Smart 自动更新模型
-lgbm-auto-update: true
-# 更新间隔
-lgbm-update-interval: 24
-# 更新地址
-lgbm-url: "https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin"
 
 # GEOIP 数据模式
 geodata-mode: true
@@ -95,10 +86,6 @@ p: &p
 
 # hosts
 hosts:
-  dns.alidns.com: [223.5.5.5, 223.6.6.6, 2400:3200::1, 2400:3200:baba::1]
-  doh.pub: [1.12.12.12, 120.53.53.53]
-  dns.cloudflare.com: [1.1.1.1, 1.0.0.1, 2606:4700:4700::1111, 2606:4700:4700::1001]
-  dns.google: [8.8.8.8, 8.8.4.4, 2001:4860:4860::8888, 2001:4860:4860::8844]
   services.googleapis.cn: services.googleapis.com
   cn.bing.com: global.bing.com
 
@@ -116,11 +103,8 @@ dns:
   #  IP 段设置
   fake-ip-range: 198.18.0.1/16
   fake-ip-range6: fdfe:dcba:9876::1/64
-  # DNS 处理模式
-  enhanced-mode: fake-ip
-  # 过滤
-  fake-ip-filter:
-    - "RULE-SET:domain_cn,domain_lan,domain_googlefcm,domain_pt,fakeip-filter,domain_all_direct"
+  # DNS 处理模式 fake-ip / redir-host
+  enhanced-mode: redir-host
   # 是否遵循 nameserver-policy
   direct-nameserver-follow-policy: true
   # 用于 direct 出口域名解析的 DNS 服务器
@@ -289,6 +273,10 @@ proxy-groups:
     <<: *CNproxy_groups
   - name: "Ⓜ️ 微软服务"
     <<: *CNproxy_groups
+  - name: "⬇️ 下载服务"
+    <<: *CNproxy_groups
+  - name: "♥️ 特殊服务"
+    <<: *proxy_groups
   - name: "🕹️ Steam"
     <<: *proxy_groups
   - name: "🤖 AI"
@@ -387,6 +375,18 @@ rule-providers:
     <<: *domain
     url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Direct/Domain_ALL_Direct.mrs"
     path: "./rule_provider/Domain_ALL_Direct.mrs"
+    
+  # 特殊服务
+  domain_special:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Special/Domain_Special.mrs"
+    path: "./rule_provider/Domain_Special.mrs"
+    
+  # 下载服务
+  domain_download:
+    <<: *domain
+    url: "https://github.com/5MayRain/Rule/raw/main/Mihomo/Download/Domain_Download.mrs"
+    path: "./rule_provider/Domain_Download.mrs"
     
   # 广告
   domain_all_ad:
@@ -627,8 +627,11 @@ rules:
   - "RULE-SET,domain_bilibili,🛰️ 全球直连"
   - "RULE-SET,ip_bilibili,🛰️ 全球直连,no-resolve"
   
-  - "RULE-SET,domain_pt,🛰️ 全球直连"
-  - "RULE-SET,ip_pt,🛰️ 全球直连,no-resolve"
+  - "RULE-SET,domain_download,⬇️ 下载服务"
+  - "RULE-SET,domain_pt,⬇️ 下载服务"
+  - "RULE-SET,ip_pt,⬇️ 下载服务,no-resolve"
+    
+  - "RULE-SET,domain_special,♥️ 特殊服务"
   
   - "RULE-SET,domain_steam,🕹️ Steam"
   - "RULE-SET,domain_steam_cn,🛰️ 全球直连"
@@ -656,9 +659,6 @@ rules:
     
   - "RULE-SET,domain_spotify,🎵 Spotify"
   - "RULE-SET,ip_spotify,🎵 Spotify,no-resolve"
-  
-  - "RULE-SET,domain_proxy,🎯 节点选择"
-  - "RULE-SET,ip_proxy,🎯 节点选择,no-resolve"
 
   - "DST-PORT,5228-5230,📢 谷歌FCM"
   - "RULE-SET,domain_googlefcm,📢 谷歌FCM"
@@ -671,6 +671,9 @@ rules:
   - "RULE-SET,ip_apple,🍎 苹果服务,no-resolve"
 
   - "RULE-SET,domain_microsoft,Ⓜ️ 微软服务"
+  
+  - "RULE-SET,domain_proxy,🎯 节点选择"
+  - "RULE-SET,ip_proxy,🎯 节点选择,no-resolve"
    
   - "RULE-SET,domain_lan,🛰️ 全球直连"
   - "RULE-SET,ip_lan,🛰️ 全球直连,no-resolve"
