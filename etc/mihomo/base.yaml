@@ -109,7 +109,12 @@ dns:
   direct-nameserver-follow-policy: true
   # 用于 direct 出口域名解析的 DNS 服务器
   direct-nameserver:
-    - system
+    - 180.184.1.1
+    - 180.184.2.2
+    - 119.29.29.29
+    - 119.28.28.28
+    - 223.6.6.6
+    - 223.5.5.5
   # 代理节点域名解析服务器
   proxy-server-nameserver:
     - system

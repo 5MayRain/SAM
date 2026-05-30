@@ -78,7 +78,7 @@ modify_dns(){
         if [ ${AGH_ENABLE} = true -o ${SMARTDNS_ENABLE} = true ] && [ "${DNS_PORT}" ]; then
             content=$(echo "${content}" | sed "${line}c ${prefix}127.0.0.1:${DNS_PORT}" | sed "s/$(placeholder 1)/ /g")
         else
-            content=$(echo "${content}" | sed "${line}c ${prefix}https://doh.pub/dns-query#🇨🇳 国内\n${prefix}https://dns.alidns.com/dns-query#🇨🇳 国内" | sed "s/$(placeholder 1)/ /g")
+            content=$(echo "${content}" | sed "${line}c ${prefix}180.184.1.1\n${prefix}180.184.2.2\n${prefix}https://doh.pub/dns-query#🇨🇳 国内\n${prefix}https://dns.alidns.com/dns-query#🇨🇳 国内" | sed "s/$(placeholder 1)/ /g")
         fi
         # 输出
         echo "${content}" > ${MIHOMO_CONF}
