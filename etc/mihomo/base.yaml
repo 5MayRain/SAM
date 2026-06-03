@@ -109,12 +109,9 @@ dns:
   direct-nameserver-follow-policy: true
   # 用于 direct 出口域名解析的 DNS 服务器
   direct-nameserver:
-    - 180.184.1.1
-    - 180.184.2.2
-    - 119.29.29.29
-    - 119.28.28.28
+    - 1.12.12.12
     - 223.6.6.6
-    - 223.5.5.5
+    - 180.184.1.1
   # 代理节点域名解析服务器
   proxy-server-nameserver:
     - system
@@ -125,8 +122,10 @@ dns:
     "RULE-SET:domain_all_ad,domain_webrtc": "rcode://refused"
   # 默认的域名解析服务器
   nameserver:
-    - https://dns.google/dns-query#🌐 DNS连接
-    - https://dns.cloudflare.com/dns-query#🌐 DNS连接
+    - https://8.8.8.8:443/dns-query#🌐 DNS连接
+    - https://8.8.4.4:443/dns-query#🌐 DNS连接
+    - https://1.1.1.1:443/dns-query#🌐 DNS连接
+    - https://1.0.0.1:443/dns-query#🌐 DNS连接
 
 # 域名嗅探
 sniffer:

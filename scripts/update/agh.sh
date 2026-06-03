@@ -15,7 +15,7 @@ modify_conf(){
     # 获取项的前缀
     prefix=$(echo "${content}" | sed -n "${start_line}p" | sed "s/-.*/- /g")
     # 默认DNS (腾讯，阿里)
-    default_dns="${prefix}180.184.1.1\n${prefix}180.184.2.2\n${prefix}https://doh.pub/dns-query\n${prefix}https://dns.alidns.com/dns-query"
+    default_dns="${prefix}180.184.1.1\n${prefix}180.184.2.2\n${prefix}https://1.12.12.12:443/dns-query\n${prefix}https://120.53.53.53:443/dns-query\n${prefix}https://223.5.5.5:443/dns-query\n${prefix}https://223.6.6.6:443/dns-query"
     # 判断 SmartDNS 启用，则使用 SmartDNS，未启用则使用默认DNS
     if [ ${SMARTDNS_ENABLE} = true ] && [ ${MODULE_DNS_MODE} = 2 ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
         log "i" "${AGH_BIN} 上游DNS使用 ${SMARTDNS_BIN}"
