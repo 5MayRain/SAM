@@ -23,8 +23,8 @@ get_Host(){
 # 添加指令
 case "$1" in
     update)
-        # GitHub520
-        get_Host "GitHub520" "https://raw.githubusercontent.com/521xueweihan/GitHub520/refs/heads/main/hosts" "github|vscode"
+        # GitHub
+        get_Host "GitHub" "https://gitlab.com/ineo6/hosts/-/raw/master/next-hosts" "github|vscode"
         # FCM
         get_Host "FCM" "https://raw.githubusercontent.com/Mice-Tailor-Infra/fcm-hosts-next/refs/heads/main/fcm_dual.hosts" "fcm|mtalk"
         ;;

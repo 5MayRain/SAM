@@ -11,3 +11,5 @@ com.miHoYo.hkrpg
 com.miHoYo.Yuanshen
 # 王者荣耀
 com.tencent.tmgp.sgame
+# 微信
+com.tencent.mm

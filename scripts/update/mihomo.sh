@@ -78,7 +78,9 @@ modify_dns(){
         if [ ${AGH_ENABLE} = true -o ${SMARTDNS_ENABLE} = true ] && [ "${DNS_PORT}" ]; then
             content=$(echo "${content}" | sed "${line}c ${prefix}127.0.0.1:${DNS_PORT}" | sed "s/$(placeholder 1)/ /g")
         else
-            content=$(echo "${content}" | sed "${line}c ${prefix}180.184.1.1\n${prefix}180.184.2.2\n${prefix}https://1.12.12.12:443/dns-query#🇨🇳 国内\n${prefix}https://120.53.53.53:443/dns-query#🇨🇳 国内\n${prefix}https://223.5.5.5:443/dns-query#🇨🇳 国内\n${prefix}https://223.6.6.6:443/dns-query#🇨🇳 国内" | sed "s/$(placeholder 1)/ /g")
+            # 获取默认 DNS
+            default_dns=$(echo ${DNS_LIST} | sed -e "s/[[:space:]]/∷${prefix}/g" -e "s/dns-query/dns-query#🇨🇳 国内/g")
+            content=$(echo "${content}" | sed "${line}c ${prefix}${default_dns}" | sed -e "s/$(placeholder 1)/ /g" -e "s/∷/\n/g")
         fi
         # 输出
         echo "${content}" > ${MIHOMO_CONF}
@@ -170,6 +172,57 @@ exclude_zerotier(){
     echo "${out_content}" > ${MIHOMO_CONF}
 }
 
+# 添加智能选择
+add_smart_select(){
+    # 不是 Smart 内核则返回
+    mihomo -v | grep -q "smart" || return 0
+    log "i" "添加智能选择"
+    # 获取插入行
+    line=$(echo "${content}" | sed -n "/profile:/=")
+    let "line++"
+    # 读取配置内容
+    content=$(cat ${MIHOMO_CONF})
+    # 插入配置
+    smart_conf="$(placeholder 2)# Smart 数据采集文件大小\n  smart-collector-size: 100"
+    content=$(echo "${content}" | sed "${line}i ${smart_conf}")
+    
+    # 获取插入行
+    line=$(echo "${content}" | sed -n "/geodata-mode:/=")
+    let "line--"
+    # 插入配置
+    smart_conf="# Smart 自动更新模型\nlgbm-auto-update: true\n# 更新间隔\nlgbm-update-interval: 24\n# 更新地址\nlgbm-url: \"https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin\"\n"
+    content=$(echo "${content}" | sed "${line}i ${smart_conf}")
+        
+    # 获取插入行
+    line=$(echo "${content}" | sed -n "/proxy_groups: &proxy_groups/=")
+    line=`expr ${line} + 4`
+    # 插入配置
+    smart_conf="$(placeholder 6)- \"🤖 智能选择\""
+    content=$(echo "${content}" | sed "${line}i ${smart_conf}")
+        
+    # 获取插入行
+    line=$(echo "${content}" | sed -n "/CNproxy_groups: &CNproxy_groups/=")
+    line=`expr ${line} + 5`
+    # 插入配置
+    smart_conf="$(placeholder 6)- \"🤖 智能选择\""
+    content=$(echo "${content}" | sed "${line}i ${smart_conf}")
+        
+    # 获取插入行
+    line=$(echo "${content}" | sed -n "/- name: \"🎯 节点选择\"/=")
+    line=`expr ${line} + 4`
+    # 插入配置
+    smart_conf="$(placeholder 6)- \"🤖 智能选择\""
+    content=$(echo "${content}" | sed "${line}i ${smart_conf}")
+        
+    # 获取插入行
+    line=$(echo "${content}" | sed -n "/- name: \"♻️ 自动选择\"/=")
+    # 插入配置
+    smart_conf="$(placeholder 2)- name: \"🤖 智能选择\"\n    type: smart\n    uselightgbm: true\n    collectdata: false\n    prefer-asn: true\n    strategy: sticky-sessions\n    <<: *A"
+    
+    # 输出配置
+    echo "${content}" | sed "${line}i ${smart_conf}" | sed "s/$(placeholder 1)/ /g" > ${MIHOMO_CONF}
+}
+
 modify_sub
 modify_dns
 modify_dns_port
@@ -177,3 +230,4 @@ modify_dns_mode
 modify_tun_device
 modify_ipv6_proxy
 exclude_zerotier
+add_smart_select

@@ -50,3 +50,13 @@ MIHOMO_CONF="${MIHOMO_PATH}/config.yaml"
 BLACKLIST_FILE="${MODULE_PATH}/etc/app_blacklist.prop"
 # 白名单文件
 WHITELIST_FILE="${MODULE_PATH}/etc/app_whitelist.prop"
+
+# DNS 列表 ( 字节跳动 | 腾讯 | 阿里 )
+DNS_LIST="
+180.184.1.1
+180.184.2.2
+https://1.12.12.12:443/dns-query
+https://120.53.53.53:443/dns-query
+https://223.5.5.5:443/dns-query
+https://223.6.6.6:443/dns-query
+"

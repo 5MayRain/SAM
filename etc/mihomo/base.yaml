@@ -156,7 +156,7 @@ sniffer:
 # Tun 网卡
 tun:
   enable: true
-  # 模式堆栈
+  # 模式堆栈 system/gvisor/mixed
   stack: gvisor
   # 网卡名称
   device: Meta
