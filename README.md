@@ -26,7 +26,7 @@ SAM 是 SmartDNS、AdGuardHome 和 Mihomo 三合一的 Magisk 模块。每一个
 - 禁止该文件随意修改
   - /data/adb/modules/SAM/etc/mihomo/base.yaml
 
-##⚠️无网络
+## ⚠️无网络
 - 检查手机网络，开关飞行模式
 - 排查 Mihomo 和 AdGuardHome 的拦截日志，手动添加规则放行
 
