@@ -6,7 +6,7 @@ SAM 是 SmartDNS、AdGuardHome 和 Mihomo 三合一的 Magisk 模块。每一个
 - AdGuardHome 在单独启用和 SmartDNS 一起使用，都会作为本机的 DNS 转发服务，再和 Mihomo 三种一起用，就根据设置文件的配置，来选择使用哪种结构。
 - Mihomo 在单独使用，或者和另一种服务使用，都会作为本机的 DNS 转发服务。 
 
-## ⚙功能
+## ⚙️功能
 - 两种服务结构:
   - `SmartDNS > Mihomo > AdGuardHome`
   - `SmartDNS > AdGuardHome > Mihomo`
@@ -26,7 +26,7 @@ SAM 是 SmartDNS、AdGuardHome 和 Mihomo 三合一的 Magisk 模块。每一个
 - 禁止该文件随意修改
   - /data/adb/modules/SAM/etc/mihomo/base.yaml
 
-## ⚠无网络
+##⚠️无网络
 - 检查手机网络，开关飞行模式
 - 排查 Mihomo 和 AdGuardHome 的拦截日志，手动添加规则放行
 

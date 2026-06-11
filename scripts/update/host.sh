@@ -24,9 +24,9 @@ get_Host(){
 case "$1" in
     update)
         # GitHub
-        get_Host "GitHub" "https://gitlab.com/ineo6/hosts/-/raw/master/next-hosts" "github|vscode"
+        get_Host "GitHub" "https://raw.githubusercontent.com/ineo6/hosts/master/next-hosts" "github|vscode"
         # FCM
-        get_Host "FCM" "https://raw.githubusercontent.com/Mice-Tailor-Infra/fcm-hosts-next/refs/heads/main/fcm_dual.hosts" "fcm|mtalk"
+        get_Host "FCM" "https://raw.githubusercontent.com/Mice-Tailor-Infra/fcm-hosts-next/main/fcm_dual.hosts" "fcm|mtalk"
         ;;
     *)
         echo "使用: update(更新)"

@@ -172,11 +172,11 @@ exclude_zerotier(){
     echo "${out_content}" > ${MIHOMO_CONF}
 }
 
-# 添加智能选择
-add_smart_select(){
+# 添加 Smart 内核配置
+add_smart_conf(){
     # 不是 Smart 内核则返回
     mihomo -v | grep -q "smart" || return 0
-    log "i" "添加智能选择"
+    log "i" "添加 Smart 内核配置"
     # 获取插入行
     line=$(echo "${content}" | sed -n "/profile:/=")
     let "line++"
@@ -209,7 +209,7 @@ add_smart_select(){
         
     # 获取插入行
     line=$(echo "${content}" | sed -n "/- name: \"🎯 节点选择\"/=")
-    line=`expr ${line} + 4`
+    line=`expr ${line} + 3`
     # 插入配置
     smart_conf="$(placeholder 6)- \"🤖 智能选择\""
     content=$(echo "${content}" | sed "${line}i ${smart_conf}")
@@ -230,4 +230,4 @@ modify_dns_mode
 modify_tun_device
 modify_ipv6_proxy
 exclude_zerotier
-add_smart_select
+add_smart_conf
