@@ -187,10 +187,10 @@ tun:
   auto-detect-interface: true
   # dns 劫持
   dns-hijack: 
-    - "any:53"
-    - "tcp://any:53"
+    - any:53
+    - tcp://any:53
     - "[::]:53"
-    - "tcp://[::]:53"
+    - tcp://[::]:53
   # 执行严格的路由规则
   strict-route: true
   # UDP NAT 过期时间
@@ -397,6 +397,10 @@ rule-providers:
   classical_user_direct:
     <<: *local
     path: "./rule_provider/classical_user_direct.list"
+  # 用户自定义代理
+  classical_user_proxy:
+    <<: *local
+    path: "./rule_provider/classical_user_proxy.list"
   
   # 直连
   domain_all_direct:
@@ -642,7 +646,7 @@ rules:
   - "DST-PORT,853,🌐 DNS连接"
   
   - "RULE-SET,classical_user_direct,🛰️ 全球直连"
-  - "RULE-SET,domain_all_direct,🛰️ 全球直连"
+  - "RULE-SET,classical_user_proxy,🎯 节点选择"
   
   - "RULE-SET,domain_all_ad,🚫 广告拦截"
   - "RULE-SET,ip_custom_ad,🚫 广告拦截,no-resolve"
@@ -661,12 +665,26 @@ rules:
     
   - "RULE-SET,domain_special,♥️ 特殊服务"
   
+  - "DST-PORT,5228-5230,📢 谷歌FCM"
+  - "RULE-SET,domain_googlefcm,📢 谷歌FCM"
+  - "RULE-SET,ip_googlefcm,📢 谷歌FCM,no-resolve"
+  
+  - "RULE-SET,domain_google,🇬 谷歌服务"
+  - "RULE-SET,ip_google,🇬 谷歌服务,no-resolve"
+  - "PROCESS-NAME,com.android.vending,🇬 谷歌服务"
+  - "PROCESS-NAME,com.google.android.gms,🇬 谷歌服务"
+    
+  - "RULE-SET,domain_apple,🍎 苹果服务"
+  - "RULE-SET,ip_apple,🍎 苹果服务,no-resolve"
+
+  - "RULE-SET,domain_microsoft,Ⓜ️ 微软服务"
+
+  - "RULE-SET,domain_github,🇬 GitHub"
+  
   - "RULE-SET,domain_steam,🕹️ Steam"
   - "RULE-SET,domain_steam_cn,🛰️ 全球直连"
 
   - "RULE-SET,domain_speedtest,🚀 测速工具"
-
-  - "RULE-SET,domain_github,🇬 GitHub"
 
   - "RULE-SET,domain_tiktok,🎶 TikTok"
   
@@ -681,24 +699,13 @@ rules:
   - "RULE-SET,ip_netflix,🌏️ 社交媒体,no-resolve"
   - "RULE-SET,domain_telegram,🌏️ 社交媒体"
   - "RULE-SET,ip_telegram,🌏️ 社交媒体,no-resolve"
-
-  - "RULE-SET,domain_openai,🤖 AI"
-  - "RULE-SET,ip_openai,🤖 AI,no-resolve"
-    
+  - "PROCESS-NAME,org.telegram.plus,🌏️ 社交媒体"
+  
   - "RULE-SET,domain_spotify,🎵 Spotify"
   - "RULE-SET,ip_spotify,🎵 Spotify,no-resolve"
 
-  - "DST-PORT,5228-5230,📢 谷歌FCM"
-  - "RULE-SET,domain_googlefcm,📢 谷歌FCM"
-  - "RULE-SET,ip_googlefcm,📢 谷歌FCM,no-resolve"
-  
-  - "RULE-SET,domain_google,🇬 谷歌服务"
-  - "RULE-SET,ip_google,🇬 谷歌服务,no-resolve"
-    
-  - "RULE-SET,domain_apple,🍎 苹果服务"
-  - "RULE-SET,ip_apple,🍎 苹果服务,no-resolve"
-
-  - "RULE-SET,domain_microsoft,Ⓜ️ 微软服务"
+  - "RULE-SET,domain_openai,🤖 AI"
+  - "RULE-SET,ip_openai,🤖 AI,no-resolve"
   
   - "RULE-SET,domain_proxy,🎯 节点选择"
   - "RULE-SET,ip_proxy,🎯 节点选择,no-resolve"
@@ -707,5 +714,7 @@ rules:
   - "RULE-SET,ip_lan,🛰️ 全球直连,no-resolve"
   - "RULE-SET,domain_cn,🛰️ 全球直连"
   - "RULE-SET,ip_cn,🛰️ 全球直连,no-resolve"
+  
+  - "RULE-SET,domain_all_direct,🛰️ 全球直连"
 
   - "MATCH,🐟 漏网之鱼"

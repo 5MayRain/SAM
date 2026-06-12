@@ -1,6 +1,14 @@
 # 黑名单列表
 # 不会代理填入的 App 包名
 
+# 支付宝
+com.eg.android.AlipayGphone
+# 淘宝
+com.taobao.taobao
+# 拼多多
+com.xunmeng.pinduoduo
+# 哔哩哔哩
+tv.danmaku.bili
 # 抖音
 com.ss.android.ugc.aweme
 # 豆包
@@ -13,3 +21,9 @@ com.miHoYo.Yuanshen
 com.tencent.tmgp.sgame
 # 微信
 com.tencent.mm
+# QQ
+com.tencent.mobileqq
+# 高德地图
+com.autonavi.minimap
+# 网易云音乐
+com.netease.cloudmusic

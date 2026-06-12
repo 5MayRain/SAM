@@ -168,7 +168,7 @@ exclude_zerotier(){
     line_number=$(cat ${MIHOMO_CONF} | sed -n -e "/disable-icmp-forwarding:/=")
     let "line_number++"
     # 输出配置
-    out_content=$(cat ${MIHOMO_CONF} | sed ${line_number}"i $(placeholder 2)# 排除网络接口\n$(placeholder 2)exclude-interface:\n$(placeholder 4)- ${zt_device}" | sed "s/$(placeholder 1)/ /g")
+    out_content=$(cat ${MIHOMO_CONF} | sed ${line_number}"i $(placeholder 2)# 排除网络接口\n$(placeholder 2)exclude-interface:\n$(placeholder 4)- ${zt_device}" | sed "s/$(placeholder 1)/ /g")    
     echo "${out_content}" > ${MIHOMO_CONF}
 }
 
