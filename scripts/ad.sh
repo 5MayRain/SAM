@@ -264,7 +264,7 @@ ad_path=(
 "/data/data/com.suda.yzune.wakeupschedule/shared_prefs/com.baidu.homework.Preference.FastAdPreference.xml"
 "/data/data/com.suda.yzune.wakeupschedule/shared_prefs/mobads_aplist_status_new.xml"
    
-# 猫眼APP
+# 猫眼
 "/data/media/0/Android/data/com.sankuai.movie/cache/maoyan_downlaod"
 "/data/data/com.sankuai.movie/cache/cips/common/mtplatform_mtpicasso/assets/image_manager_disk_cache"
    
@@ -288,15 +288,18 @@ ad_path=(
 # 滴滴出行
 "/data/data/com.sdu.didi.psnger/cache/image_manager_disk_cache"
 
-# 盒马App
+# 盒马
 "/data/data/com.wudaokou.hippo/shared_prefs/splash.xml"
    
 # 完美世界电竞
 "/data/data/com.pwrd.steam.esports/shared_prefs/advertisement_sp_name.xml"
    
-# 人卫App
+# 人卫
 "/data/data/com.pmph.irenwei/cache/image_manager_disk_cache"
 "/data/data/com.pmph.irenwei/files/ad.gif"
+
+# 中国银河证券
+"/data/data/com.galaxy.stock/files"
 )
 
 # 广告屏蔽

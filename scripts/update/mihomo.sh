@@ -45,7 +45,8 @@ modify_sub(){
         sub_content+="    url: \"${SUB_URL[${index}]}\"\n"
         sub_content+="    path: ./proxy_provider/provider${number}.yaml\n"
         sub_content+="    override:\n"
-        sub_content+="      additional-prefix: \"[订阅${number}]\"\n"        
+        sub_content+="      additional-prefix: \"[订阅${number}]\"\n"
+        sub_content+="      client-fingerprint: chrome\n"
         let "index++"
     done
     
@@ -118,7 +119,7 @@ modify_dns_mode(){
     let "line++" 
     
     # fake-ip 配置
-    dns_config="$(placeholder 2)# 过滤模式\n$(placeholder 2)fake-ip-filter-mode: rule\n$(placeholder 2)# 过滤\n$(placeholder 2)fake-ip-filter:\n$(placeholder 4)- \"RULE-SET,domain_cn,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_lan,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_googlefcm,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_pt,real-ip\"\n$(placeholder 4)- \"RULE-SET,fakeip-filter,real-ip\"\n$(placeholder 4)- \"RULE-SET,domain_all_direct,real-ip\"\n$(placeholder 4)- \"MATCH,fake-ip\""
+    dns_config="$(placeholder 2)# 过滤\n$(placeholder 2)fake-ip-filter:\n$(placeholder 4)- \"RULE-SET:Domain_Lan,Domain_CN,Domain_GoogleFCM,Domain_PT,Domain_FakeipFilter\""
     
     # 输出配置
     echo "${content}" | sed "s/enhanced-mode:.*/enhanced-mode: ${MIHOMO_DNS_MODE}/g" | sed "${line}i ${dns_config}" | sed "s/$(placeholder 1)/ /g" > ${MIHOMO_CONF}
@@ -197,27 +198,27 @@ add_smart_conf(){
     line=$(echo "${content}" | sed -n "/proxy_groups: &proxy_groups/=")
     line=`expr ${line} + 4`
     # 插入配置
-    smart_conf="$(placeholder 6)- \"🤖 智能选择\""
+    smart_conf="$(placeholder 6)- \"智能选择\""
     content=$(echo "${content}" | sed "${line}i ${smart_conf}")
         
     # 获取插入行
-    line=$(echo "${content}" | sed -n "/CNproxy_groups: &CNproxy_groups/=")
+    line=$(echo "${content}" | sed -n "/cn_groups: &cn_groups/=")
     line=`expr ${line} + 5`
     # 插入配置
-    smart_conf="$(placeholder 6)- \"🤖 智能选择\""
+    smart_conf="$(placeholder 6)- \"智能选择\""
     content=$(echo "${content}" | sed "${line}i ${smart_conf}")
         
     # 获取插入行
-    line=$(echo "${content}" | sed -n "/- name: \"🎯 节点选择\"/=")
-    line=`expr ${line} + 3`
+    line=$(echo "${content}" | sed -n "/- name: \"节点选择\"/=")
+    line=`expr ${line} + 4`
     # 插入配置
-    smart_conf="$(placeholder 6)- \"🤖 智能选择\""
+    smart_conf="$(placeholder 6)- \"智能选择\""
     content=$(echo "${content}" | sed "${line}i ${smart_conf}")
         
     # 获取插入行
-    line=$(echo "${content}" | sed -n "/- name: \"♻️ 自动选择\"/=")
+    line=$(echo "${content}" | sed -n "/- name: \"自动选择\"/=")
     # 插入配置
-    smart_conf="$(placeholder 2)- name: \"🤖 智能选择\"\n    type: smart\n    uselightgbm: true\n    collectdata: false\n    prefer-asn: true\n    strategy: sticky-sessions\n    <<: *A"
+    smart_conf="$(placeholder 2)- name: \"智能选择\"\n    type: smart\n    icon: \"https://cdn.jsdelivr.net/gh/5MayRain/rule@main/icon/robot.svg\"\n    uselightgbm: true\n    collectdata: false\n    prefer-asn: true\n    strategy: sticky-sessions\n    <<: *A"
     
     # 输出配置
     echo "${content}" | sed "${line}i ${smart_conf}" | sed "s/$(placeholder 1)/ /g" > ${MIHOMO_CONF}

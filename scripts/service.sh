@@ -26,7 +26,6 @@ start(){
     ${SCRIPTS_PATH}/ad.sh block        
     # 判断 host 启用，则更新 host，并重新挂载
     if [ "${HOST_ENABLE}" = true ]; then
-        log "i" "更新 host 规则"
         SYSTEM_HOSTS="/system/etc/hosts"
         ${UPDATE_PATH}/host.sh update
     fi

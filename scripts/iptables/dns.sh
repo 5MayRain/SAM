@@ -25,6 +25,8 @@ elif [ ${MODULE_DNS_MODE} = false ] && [ ${AGH_ENABLE} = false ] && [ $(isRun ${
     DNS_PORT=${SMARTDNS_PORT}
 fi
 
+log "i" "当前 DNS 转发端口 ${DNS_PORT}"
+
 itw=${iptables_w}
 
 # 启用 dns
@@ -39,6 +41,7 @@ enable_dns(){
     ${itw} -t nat -A ${2} -m owner --uid-owner ${SAM_USER} --gid-owner ${SAM_GROUP} -j RETURN || return 1      
     ${itw} -t nat -A ${2} -p tcp --dport 53 -j REDIRECT --to-ports ${DNS_PORT} || return 1
     ${itw} -t nat -A ${2} -p udp --dport 53 -j REDIRECT --to-ports ${DNS_PORT} || return 1
+    ${itw} -t nat -A ${2} -d 127.0.0.1 -j ACCEPT || return 1
     ${itw} -t nat -I OUTPUT -j ${2} || return 1
 }
 

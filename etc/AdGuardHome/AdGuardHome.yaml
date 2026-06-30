@@ -30,7 +30,7 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-    - 127.0.0.1:1053
+    - 127.0.0.1:3721
   upstream_dns_file: ""
   bootstrap_dns:
     - 119.29.29.29
@@ -112,18 +112,14 @@ statistics:
   ignored_enabled: false
 filters:
   - enabled: true
-    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuardHome/BlackList_All.list
+    url: https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/AdGuardHome/BlackList.list
     name: 5MayRain
     id: 1766388758
 whitelist_filters:
   - enabled: true
-    url: https://raw.githubusercontent.com/5MayRain/Rule/main/AdGuardHome/WhiteList.list
+    url: https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/AdGuardHome/WhiteList.list
     name: 5MayRain
     id: 1766388759
-  - enabled: true
-    url: https://raw.githubusercontent.com/8680/GOODBYEADS/master/data/rules/allow.txt
-    name: GOOBYEADS
-    id: 1773845117
 user_rules: []
 dhcp:
   enabled: false
