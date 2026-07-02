@@ -607,7 +607,7 @@ rules:
   - "RULE-SET,classical_user_direct,国内"
   - "RULE-SET,classical_user_proxy,节点选择"
   
-  - "AND,((RULE-SET,Domain_Ads_White),(RULE-SET,Domain_Global)),节点选择"
+  - "AND,((RULE-SET,Domain_Ads_White),(RULE-SET,Domain_Global),(NOT,((RULE-SET,Domain_Direct))),(NOT,((RULE-SET,Domain_CN)))),节点选择"
   - "RULE-SET,Domain_Ads_White,国内"
    
   - "RULE-SET,Domain_Ads,广告拦截"
