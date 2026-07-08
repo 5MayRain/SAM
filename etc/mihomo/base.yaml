@@ -583,10 +583,6 @@ rule-providers:
     path: "./rule_provider/Domain_WebRTC.mrs"
     
   # 广告
-  Domain_Ads_White:
-    <<: *domain
-    url: "https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/Mihomo/Ads/Domain_Ads_White.mrs"
-    path: "./rule_provider/Domain_Ads_White.mrs"
   Domain_Ads:
     <<: *domain
     url: "https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/Mihomo/Ads/Domain_Ads.mrs"
@@ -607,12 +603,11 @@ rules:
   - "RULE-SET,classical_user_direct,国内"
   - "RULE-SET,classical_user_proxy,节点选择"
   
-  - "AND,((RULE-SET,Domain_Ads_White),(RULE-SET,Domain_Global),(NOT,((RULE-SET,Domain_Direct))),(NOT,((RULE-SET,Domain_CN)))),节点选择"
-  - "RULE-SET,Domain_Ads_White,国内"
-   
   - "RULE-SET,Domain_Ads,广告拦截"
   - "RULE-SET,IP_Ads,广告拦截,no-resolve"
+  
   - "RULE-SET,Domain_WebRTC,WebRTC"
+  - "DST-PORT,3478/5349-5350/10000/19302,WebRTC"
   
   - "DST-PORT,5228-5230,谷歌FCM"
   - "RULE-SET,Domain_GoogleFCM,谷歌FCM"
