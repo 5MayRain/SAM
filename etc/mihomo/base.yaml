@@ -428,6 +428,12 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/Mihomo/Direct/Domain_Direct.mrs"
     path: "./rule_provider/Domain_Direct.mrs"
     
+    # 特殊
+  Domain_Special:
+    <<: *domain
+    url: "https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/Mihomo/Special/Domain_Special.mrs"
+    path: "./rule_provider/Domain_Special.mrs"
+    
   # 谷歌
   Domain_Google:
     <<: *domain
@@ -608,6 +614,8 @@ rules:
   
   - "RULE-SET,Domain_WebRTC,WebRTC"
   - "DST-PORT,3478/5349-5350/10000/19302,WebRTC"
+  
+  - "RULE-SET,Domain_Special,特殊服务"
   
   - "DST-PORT,5228-5230,谷歌FCM"
   - "RULE-SET,Domain_GoogleFCM,谷歌FCM"

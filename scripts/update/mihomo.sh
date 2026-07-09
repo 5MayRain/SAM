@@ -80,7 +80,7 @@ modify_dns(){
             content=$(echo "${content}" | sed "${line}c ${prefix}127.0.0.1:${DNS_PORT}" | sed "s/$(placeholder 1)/ /g")
         else
             # 获取默认 DNS
-            default_dns=$(echo ${DNS_LIST} | sed -e "s/[[:space:]]/∷${prefix}/g" -e "s/dns-query/dns-query#🇨🇳 国内/g")
+            default_dns=$(echo ${DNS_LIST} | sed -e "s/[[:space:]]/∷${prefix}/g" -e "s/dns-query/dns-query#国内/g")
             content=$(echo "${content}" | sed "${line}c ${prefix}${default_dns}" | sed -e "s/$(placeholder 1)/ /g" -e "s/∷/\n/g")
         fi
         # 输出
