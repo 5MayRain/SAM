@@ -25,7 +25,7 @@ elif [ ${MODULE_DNS_MODE} = false ] && [ ${AGH_ENABLE} = false ] && [ $(isRun ${
     DNS_PORT=${SMARTDNS_PORT}
 fi
 
-log "i" "当前 DNS 转发端口 ${DNS_PORT}"
+[ "${DNS_PORT}" ] && log "i" "当前 DNS 转发端口 ${DNS_PORT}"
 
 itw=${iptables_w}
 

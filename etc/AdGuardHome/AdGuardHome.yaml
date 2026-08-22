@@ -161,6 +161,7 @@ filtering:
   rewrites: []
   safe_fs_patterns:
     - /data/adb/modules/SAM/etc/AdGuardHome/data/userfilters/*
+  max_http_size: 256MB
   safebrowsing_cache_size: 1048576
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576

@@ -300,6 +300,18 @@ ad_path=(
 
 # 中国银河证券
 "/data/data/com.galaxy.stock/files"
+
+# 南方基金
+"/data/media/0/Android/data/com.nanfangjijin.app/files/ad"
+"/data/data/com.nanfangjijin.app/cache/image_manager_disk_cache"
+   
+# 银华利生宝
+"/data/data/com.ihandy.fund/cache/image_manager_disk_cache"
+"/data/media/0/Android/data/com.ihandy.fund/cache/download/splash"
+   
+# 中国移动云盘
+"/data/media/0/Android/data/com.chinamobile.mcloud/files/M_Cloud/temp/bigcloudimage"
+"/data/media/0/Android/data/com.chinamobile.mcloud/files/boot_logo"
 )
 
 # 广告屏蔽

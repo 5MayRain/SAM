@@ -1,6 +1,9 @@
 # 定时配置
 # 格式：分 时 日 月 周 命令
 
+# 每天4点更新服务
+0 4 * * * /data/adb/modules/SAM/scripts/update.sh
+
 # 每天5点重启
 0 5 * * * /data/adb/modules/SAM/scripts/service.sh restart
 
