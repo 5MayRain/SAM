@@ -19,7 +19,8 @@ start(){
     ${UPDATE_PATH}/agh.sh
     
     # 启动
-    busybox setuidgid "${SAM_USER}:${SAM_GROUP}" ${AGH_BIN} -c ${AGH_CONF} -w ${AGH_PATH} --no-check-update > "${TMP_PATH}/${AGH_BIN}.log" 2>&1 &
+    busybox setuidgid "${SAM_USER}:${DNS_GROUP}" ${AGH_BIN} -c ${AGH_CONF} -w ${AGH_PATH} --no-check-update > "${TMP_PATH}/${AGH_BIN}.log" 2>&1 &
+    #su -g $(id -g ${DNS_GROUP}) -- nohup ${AGH_BIN} -c ${AGH_CONF} -w ${AGH_PATH} --no-check-update > "${TMP_PATH}/${AGH_BIN}.log" 2>&1 &
     
     # 延时，并判断 AdGuardHome 是否启动成功
     sleep 1

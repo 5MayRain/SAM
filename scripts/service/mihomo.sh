@@ -26,7 +26,8 @@ start(){
     ${UPDATE_PATH}/proxy.sh
     
     # 启动
-    busybox setuidgid "${SAM_USER}:${SAM_GROUP}" ${MIHOMO_BIN} -d ${MIHOMO_PATH} > "${TMP_PATH}/${MIHOMO_BIN}.log" 2>&1 &
+    busybox setuidgid "${SAM_USER}:${TUN_GROUP}" ${MIHOMO_BIN} -d ${MIHOMO_PATH} > "${TMP_PATH}/${MIHOMO_BIN}.log" 2>&1 &
+    #su -g $(id -g ${TUN_GROUP}) -G $(id -g ${DNS_GROUP}) -- nohup ${MIHOMO_BIN} -d ${MIHOMO_PATH} > "${TMP_PATH}/mihomo.log" 2>&1 &
     
     # 延时，并判断 Mihomo 是否启动成功
     sleep 1

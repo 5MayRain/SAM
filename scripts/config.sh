@@ -23,7 +23,8 @@ HOSTS_FILE="${MODULE_PATH}/etc/hosts"
 # 用户
 SAM_USER="root"
 # 用户组"
-SAM_GROUP="net_admin"
+DNS_GROUP="net_raw"
+TUN_GROUP="net_admin"
 
 # SmartDNS 路径
 SMARTDNS_BIN="smartdns"

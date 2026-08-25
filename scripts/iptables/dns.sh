@@ -38,10 +38,11 @@ enable_dns(){
     fi
     log "i" "创建 ${2} 链并添加规则"
     ${itw} -t nat -N ${2} || return 1
-    ${itw} -t nat -A ${2} -m owner --uid-owner ${SAM_USER} --gid-owner ${SAM_GROUP} -j RETURN || return 1      
+    ${itw} -t nat -A ${2} -m owner --uid-owner ${SAM_USER} --gid-owner ${DNS_GROUP} -j RETURN || return 1
+    ${itw} -t nat -A ${2} -m owner --uid-owner ${SAM_USER} --gid-owner ${TUN_GROUP} -j RETURN || return 1
     ${itw} -t nat -A ${2} -p tcp --dport 53 -j REDIRECT --to-ports ${DNS_PORT} || return 1
     ${itw} -t nat -A ${2} -p udp --dport 53 -j REDIRECT --to-ports ${DNS_PORT} || return 1
-    ${itw} -t nat -A ${2} -d 127.0.0.1 -j ACCEPT || return 1
+    ${itw} -t nat -A ${2} -d 127.0.0.0/8 -j ACCEPT || return 1
     ${itw} -t nat -I OUTPUT -j ${2} || return 1
 }
 

@@ -14,8 +14,9 @@ chmod -R +x "${MODPATH}/bin"
 chmod +x "${MODPATH}/etc/SmartDNS/smartdns"
 chmod +x "${MODPATH}/etc/SmartDNS/smartdns_ui.so"
 chmod -R +x "${MODPATH}/etc/SmartDNS/lib"
-chown -R root:net_admin "${MODPATH}/bin"
-chown root:net_admin "${MODPATH}/etc/SmartDNS/smartdns"
+chown root:net_raw "${MODPATH}/etc/SmartDNS/smartdns"
+chown root:net_raw "${MODPATH}/bin/AdGuardHome"
+chown root:net_admin "${MODPATH}/bin/mihomo"
 find "${MODPATH}" -type f -name "*.sh" -exec chmod +x {} \;
 
 # 设置输出内容

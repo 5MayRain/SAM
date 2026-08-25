@@ -78,7 +78,7 @@ smartdns_download(){
     chmod 755 "${SMARTDNS_PATH}/${SMARTDNS_BIN}"
     chmod 755 "${SMARTDNS_PATH}/smartdns_ui.so"
     chmod -R 755 "${SMARTDNS_PATH}/lib"
-    chown root:net_admin "${SMARTDNS_PATH}/${SMARTDNS_BIN}"
+    chown "${SAM_USER}:${DNS_GROUP}" "${SMARTDNS_PATH}/${SMARTDNS_BIN}"
     chown root:root "${SMARTDNS_PATH}/smartdns_ui.so"
     chown -R root:root "${SMARTDNS_PATH}/lib"
     log "i" "删除下载文件"
@@ -101,7 +101,7 @@ agh_download(){
     replace_file "${TMP_PATH}/${AGH_BIN}/${AGH_BIN}" "${BIN_PATH}/${AGH_BIN}"
     log "i" "修改权限"
     chmod 755 "${BIN_PATH}/${AGH_BIN}"
-    chown root:net_admin "${BIN_PATH}/${AGH_BIN}"
+    chown "${SAM_USER}:${DNS_GROUP}" "${BIN_PATH}/${AGH_BIN}"
     log "i" "删除下载文件"
     rm -rf "${TMP_PATH}/${AGH_BIN}"
     is_update=true
@@ -131,7 +131,7 @@ mihomo_download(){
     replace_file "${TMP_PATH}/${MIHOMO_BIN}" "${BIN_PATH}/${MIHOMO_BIN}"
     log "i" "修改权限"
     chmod 755 "${BIN_PATH}/${MIHOMO_BIN}"
-    chown root:net_admin "${BIN_PATH}/${MIHOMO_BIN}"
+    chown "${SAM_USER}:${TUN_GROUP}" "${BIN_PATH}/${MIHOMO_BIN}"
     log "i" "删除下载文件"
     rm -rf "${TMP_PATH}/${MIHOMO_BIN}"
     is_update=true

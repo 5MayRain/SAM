@@ -17,7 +17,8 @@ start(){
     
     # 进入工作路径，并启动
     cd ${SMARTDNS_PATH}
-    SMARTDNS_WORKDIR="${SMARTDNS_PATH}" exec busybox setuidgid "${SAM_USER}:${SAM_GROUP}" ${SMARTDNS_BIN} -c ${SMARTDNS_CONF} -p - > "${TMP_PATH}/${SMARTDNS_BIN}.log" 2>&1 &
+    SMARTDNS_WORKDIR="${SMARTDNS_PATH}" exec busybox setuidgid "${SAM_USER}:${DNS_GROUP}" ${SMARTDNS_BIN} -c ${SMARTDNS_CONF} -p - > "${TMP_PATH}/${SMARTDNS_BIN}.log" 2>&1 &
+    #SMARTDNS_WORKDIR="${SMARTDNS_PATH}" exec su -g $(id -g ${DNS_GROUP}) -- nohup ${SMARTDNS_BIN} -c ${SMARTDNS_CONF} -p - > "${TMP_PATH}/${SMARTDNS_BIN}.log" 2>&1 &
     
     # 延时，并判断 SmartDNS 是否启动成功
     sleep 1
