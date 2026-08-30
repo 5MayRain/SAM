@@ -312,6 +312,20 @@ ad_path=(
 # 中国移动云盘
 "/data/media/0/Android/data/com.chinamobile.mcloud/files/M_Cloud/temp/bigcloudimage"
 "/data/media/0/Android/data/com.chinamobile.mcloud/files/boot_logo"
+
+# 建信基金
+"/data/data/com.ccb.zzb.activity/files/image"
+   
+# 清空锁定IFW文件夹
+"/data/system/ifw"
+   
+# 大学搜题酱
+"/data/media/0/Android/data/com.zmzx.college.search/cache/glide"
+   
+# 汽水音乐
+"/data/media/0/com.luna.music/cache/image_commercial_cache"
+"/data/media/0/com.luna.music/cache/pangle_com.byted.pangle"
+"/data/media/0/com.luna.music/files/splashCache"
 )
 
 # 广告屏蔽

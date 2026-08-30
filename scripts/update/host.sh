@@ -45,9 +45,9 @@ case "$1" in
     update)
         log "i" "更新 host 规则"
         # GitHub
-        get_host "GitHub" "https://cdn.jsdelivr.net/gh/521xueweihan/GitHub520@master/hosts"
+        get_host "GitHub" "https://github.com/521xueweihan/GitHub520/raw/main/hosts" || log "i" "更换备用链接" && get_host "GitHub" "https://cdn.jsdelivr.net/gh/521xueweihan/GitHub520@master/hosts"
         # FCM
-        get_host "FCM" "https://cdn.jsdelivr.net/gh/Mice-Tailor-Infra/fcm-hosts-next@master/fcm_dual.hosts"
+        get_host "FCM" "https://github.com/cagedbird043/fcm-hosts-next/raw/main/fcm_dual.hosts" || log "i" "更换备用链接" && get_host "FCM" "https://cdn.jsdelivr.net/gh/Mice-Tailor-Infra/fcm-hosts-next@master/fcm_dual.hosts"
         ;;
     *)
         echo "使用: update(更新)"

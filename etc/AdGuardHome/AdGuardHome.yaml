@@ -112,12 +112,12 @@ statistics:
   ignored_enabled: false
 filters:
   - enabled: true
-    url: https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/AdGuardHome/BlackList.list
+    url: https://github.com/5MayRain/rule/raw/main/rule/AdGuardHome/BlackList.list
     name: 5MayRain
     id: 1766388758
 whitelist_filters:
   - enabled: true
-    url: https://cdn.jsdelivr.net/gh/5MayRain/rule@main/rule/AdGuardHome/WhiteList.list
+    url: https://github.com/5MayRain/rule/raw/main/rule/AdGuardHome/WhiteList.list
     name: 5MayRain
     id: 1766388759
 user_rules: []
