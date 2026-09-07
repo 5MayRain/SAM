@@ -119,7 +119,7 @@ modify_dns_mode(){
     let "line++" 
     
     # fake-ip 配置
-    dns_config="$(placeholder 2)# 过滤\n$(placeholder 2)fake-ip-filter:\n$(placeholder 4)- \"RULE-SET:Domain_Lan,Domain_CN,Domain_GoogleFCM,Domain_PT,Domain_FakeipFilter\""
+    dns_config="$(placeholder 2)# 过滤\n$(placeholder 2)fake-ip-filter:\n$(placeholder 4)- \"RULE-SET:Domain_FakeipFilter,Domain_Lan,Domain_CN,Domain_GoogleFCM,Domain_PT\""
     
     # 输出配置
     echo "${content}" | sed "s/enhanced-mode:.*/enhanced-mode: ${MIHOMO_DNS_MODE}/g" | sed "${line}i ${dns_config}" | sed "s/$(placeholder 1)/ /g" > ${MIHOMO_CONF}
@@ -156,21 +156,117 @@ modify_ipv6_proxy(){
     echo "${out_content}" > ${MIHOMO_CONF}
 }
 
-# 排除 ZeroTier 网卡接口
-exclude_zerotier(){
-    # ZeroTier 未运行则退出
-    isRun "zerotier-one" || {
-        return 0
-    }
-    log "i" "排除 ZeroTier 网卡接口"
+# 添加 ZeroTier 配置
+add_zerotier_conf(){
+    # ZeroTier 未运行，则退出
+    isRun "zerotier-one" || return 1
+    
     # 获取网卡接口
-    zt_device=$(ip link show | grep "zt" | sed -n 's/^[0-9][0-9]: \(.*\):.*$/\1/p')    
+    zt_device=$(ip route | grep -E "^.*dev[[:space:]]zt.*$" | sed -n "s/^.*dev[[:space:]]\(.*\)[[:space:]]proto.*$/\1/p")
+    # 获取网段
+    zt_ipcidr=$(ip route | grep ${zt_device} | sed -n "s/^\(.*\)[[:space:]]dev.*$/\1/p")
+    # 获取端口
+    zt_port=$(ss -tuanp | grep 'zerotier-one' | grep -E '0\.0\.0\.0:[0-9]' | sed -n 's/^.*:\(.*[0-9]\)[[:space:]].*$/\1/p')
+    
+    # 没有获取到，则退出
+    [ -z "${zt_device}" ] && return 1
+    [ -z "${zt_ipcidr}" ] && return 1
+    [ -z "${zt_port}" ] && return 1
+        
+    log "i" "排除 ZeroTier 网卡接口"
     # 获取行号
     line_number=$(cat ${MIHOMO_CONF} | sed -n -e "/disable-icmp-forwarding:/=")
     let "line_number++"
-    # 输出配置
-    out_content=$(cat ${MIHOMO_CONF} | sed ${line_number}"i $(placeholder 2)# 排除网络接口\n$(placeholder 2)exclude-interface:\n$(placeholder 4)- ${zt_device}" | sed "s/$(placeholder 1)/ /g")    
-    echo "${out_content}" > ${MIHOMO_CONF}
+    # 输出内容
+    out_content=$(cat ${MIHOMO_CONF} | sed ${line_number}"i $(placeholder 2)# 排除网络接口\n$(placeholder 2)exclude-interface:\n$(placeholder 4)- ${zt_device}")
+        
+    log "i" "创建 ZeroTier 节点"
+    # 获取行号
+    line_number=$(echo "${out_content}" | sed -n -e "/proxies:/=" | sed -n "1p")
+    let "line_number++"
+    # 输出内容
+    out_content=$(echo "${out_content}" | sed "${line_number}i $(placeholder 2)- {name: \"ZeroTier\", type: direct, udp: true, interface-name: ${zt_device}}")
+      
+    log "i" "添加 ZeroTier 路由规则"
+    # 获取行号
+    line_number=$(echo "${out_content}" | sed -n -e "/rules:/=" | sed -n "1p")
+    let "line_number++"
+    # 输出内容
+    out_content=$(echo "${out_content}" | sed "${line_number}i $(placeholder 2)- \"IP-CIDR,${zt_ipcidr},ZeroTier,no-resolve\"")
+    let "line_number++"
+    out_content=$(echo "${out_content}" | sed "${line_number}i $(placeholder 2)- \"AND,((NETWORK,UDP),(DST-PORT,${zt_port})),虚拟组网\"\n")
+
+    # 保存
+    echo "${out_content}" | sed "s/$(placeholder 1)/ /g" > ${MIHOMO_CONF}
+}
+
+# 添加 EasyTier 配置
+add_easytier_conf(){
+    # EasyTier 未运行，则退出
+    isRun "easytier-core" || return 1
+    
+    # EasyTier 模块路径
+    et_path="/data/adb/modules/easytier_magisk"
+    # EasyTier 配置路径
+    et_conf_path="${et_path}/config"
+    # 未安装模块则退出
+    [ -e "${et_path}" ] || return 1
+    # 设置环境变量
+    export PATH="${et_path}:${PATH}"
+    
+    # 获取网段
+    et_ipcidr=$(easytier-cli node | grep "Virtual IP" | sed "s/ //g" | sed -n "s/^\|VirtualIP\|\(.*\)\/.*$/\1/p")
+    et_ipcidr=$(ip route | grep ${et_ipcidr} | sed -n "s/^\(.*\)[[:space:]]dev.*$/\1/p") 
+    # 获取网卡接口
+    et_device=$(ip route | grep ${et_ipcidr} | sed -n "s/^.*dev[[:space:]]\(.*\)[[:space:]]proto.*$/\1/p")
+    
+    # EasyTier 服务器链接
+    et_server_url=""
+    # EasyTier 服务器端口
+    et_server_port=""
+    
+    # 读取启动参数文件，不存在则读取配置文件
+    if [ -e "${et_conf_path}/command_args" ]; then
+        et_server_url=$(cat "${et_conf_path}/command_args" | sed -n "s/^.*:\/\/\(.*\):.*$/\1/p")
+        et_server_port=$(cat "${et_conf_path}/command_args" | sed -n "s/^.*:\(.*\)\/.*$/\1/p")
+    else
+        et_server_url=$(cat "${et_conf_path}/config.toml" | grep -E "^uri" | sed -n "s/^.*:\/\/\(.*\):.*$/\1/p" | sort | uniq)
+        et_server_port=$(cat "${et_conf_path}/config.toml" | grep -E "^uri" | sed -n "s/^.*:\(.*\)\".*$/\1/p")
+    fi
+    
+    # 处理端口    
+    et_server_port=$(echo "22020\n${et_server_port}\n$(ss -tuanp | grep 'easytier-core' | grep -E '^.*\[::\]:[0-9]{0,6}.*$' | sed -n 's/^.*\[::\]:\(.*\).*\[::\]:\*.*$/\1/p')" | sort | uniq)
+    et_server_port=$(echo ${et_server_port} | sed "s/ /\//g")
+        
+    # 没有获取到，则退出
+    [ -z "${et_device}" ] && return 1
+    [ -z "${et_ipcidr}" ] && return 1
+    [ -z "${et_server_url}" ] && return 1
+    [ -z "${et_server_port}" ] && return 1
+    
+    log "i" "创建 EasyTier 节点"
+    # 获取行号
+    line_number=$(cat ${MIHOMO_CONF} | sed -n -e "/proxies:/=" | sed -n "1p")
+    let "line_number++"
+    # 输出内容
+    out_content=$(cat ${MIHOMO_CONF} | sed "${line_number}i $(placeholder 2)- {name: \"EasyTier\", type: direct, udp: true, interface-name: ${et_device}}")
+         
+    log "i" "添加 EasyTier 路由规则"
+    # 获取行号
+    line_number=$(echo "${out_content}" | sed -n -e "/rules:/=" | sed -n "1p")
+    let "line_number++"
+    # 遍历  
+    for src in $(echo ${et_server_url})
+    do
+        # 输出内容
+        out_content=$(echo "${out_content}" | sed "${line_number}i $(placeholder 2)- \"AND,((DOMAIN,${src}),(DST-PORT,${et_server_port})),虚拟组网\"")
+        let "line_number++"
+    done
+    out_content=$(echo "${out_content}" | sed "${line_number}i $(placeholder 2)- \"IP-CIDR,${et_ipcidr},EasyTier,no-resolve\"\n")
+    
+    # 保存
+    echo "${out_content}" | sed "s/$(placeholder 1)/ /g" > ${MIHOMO_CONF}
+    
 }
 
 # 添加 Smart 内核配置
@@ -230,5 +326,6 @@ modify_dns_port
 modify_dns_mode
 modify_tun_device
 modify_ipv6_proxy
-exclude_zerotier
+add_zerotier_conf
+add_easytier_conf
 add_smart_conf

@@ -1,7 +1,7 @@
 id=SAM
 name=SmartDNS + AdGuardHome + Mihomo
-version=20260830
-versionCode=2026083000
+version=20260907
+versionCode=2026090700
 author=棕果核
 description=模块未启动
 updateJson=https://raw.githubusercontent.com/5MayRain/SAM/main/update.json

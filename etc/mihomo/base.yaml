@@ -163,7 +163,7 @@ tun:
     - any:53
     - tcp://any:53
   # 执行严格的路由规则
-  strict-route: true
+  strict-route: false
   # UDP NAT 过期时间
   udp-timeout: 300
   # 路由表索引
@@ -295,6 +295,13 @@ proxy-groups:
   - name: "测速工具"
     icon: "https://cdn.jsdelivr.net/gh/5MayRain/rule@main/icon/speed_test.svg"
     <<: *cn_groups
+  - name: "虚拟组网"
+    type: select
+    icon: "https://cdn.jsdelivr.net/gh/5MayRain/rule@main/icon/virtual_network.svg"
+    include-all: true
+    filter: "EasyTier|easytier|ZeroTier|zerotier"
+    proxies:
+      - "全球直连"
   - name: "DNS连接"
     icon: "https://cdn.jsdelivr.net/gh/5MayRain/rule@main/icon/dns.svg"
     <<: *proxy_groups
