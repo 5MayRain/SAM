@@ -5,15 +5,6 @@ source "/data/adb/modules/SAM/scripts/base.sh"
 get_host(){    
     # 读取 hosts
     hosts_content=$(cat ${HOSTS_FILE} | grep -Ev "^[[:space:]]*$")
-     
-    # 获取开始和结束行
-    start_line=$(echo "${hosts_content}" | sed -n "/^#.*start.*${1}/=")
-    end_line=$(echo "${hosts_content}" | sed -n "/^#.*${1}.*end/=")
-    # 判断获取到则删除
-    if [ -n "${start_line}" ] && [ -n "${end_line}" ]; then
-        log "i" "删除 ${1} 旧规则"
-        hosts_content=$(echo "${hosts_content}" | sed "${start_line},${end_line}d")
-    fi
         
     log "i" "获取最新 ${1} host"
     # 获取 host
@@ -28,6 +19,15 @@ get_host(){
     if [ -z "${get_content}" ] || [ ${#get_content} -le 100 ]; then
         log "e" "获取失败"
         return 1
+    fi
+     
+    # 获取开始和结束行
+    start_line=$(echo "${hosts_content}" | sed -n "/^#.*start.*${1}/=")
+    end_line=$(echo "${hosts_content}" | sed -n "/^#.*${1}.*end/=")
+    # 判断获取到则删除
+    if [ -n "${start_line}" ] && [ -n "${end_line}" ]; then
+        log "i" "删除 ${1} 旧规则"
+        hosts_content=$(echo "${hosts_content}" | sed "${start_line},${end_line}d")
     fi
     
     # 排序并查重
@@ -45,9 +45,15 @@ case "$1" in
     update)
         log "i" "更新 host 规则"
         # GitHub
-        get_host "GitHub" "https://github.com/521xueweihan/GitHub520/raw/main/hosts" || log "i" "更换备用链接" && get_host "GitHub" "https://cdn.jsdelivr.net/gh/521xueweihan/GitHub520@master/hosts"
+        get_host "GitHub" "https://raw.githubusercontent.com/521xueweihan/GitHub520/main/hosts" || {
+            log "i" "更换备用链接"
+            get_host "GitHub" "https://cdn.jsdelivr.net/gh/521xueweihan/GitHub520@master/hosts"
+        }
         # FCM
-        get_host "FCM" "https://github.com/cagedbird043/fcm-hosts-next/raw/main/fcm_dual.hosts" || log "i" "更换备用链接" && get_host "FCM" "https://cdn.jsdelivr.net/gh/Mice-Tailor-Infra/fcm-hosts-next@master/fcm_dual.hosts"
+        get_host "FCM" "https://raw.githubusercontent.com/cagedbird043/fcm-hosts-next/main/fcm_dual.hosts" || {
+            log "i" "更换备用链接"
+            get_host "FCM" "https://cdn.jsdelivr.net/gh/Mice-Tailor-Infra/fcm-hosts-next@master/fcm_dual.hosts"
+        }
         ;;
     *)
         echo "使用: update(更新)"

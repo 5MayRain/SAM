@@ -12,10 +12,14 @@ modify_conf(){
     # 获取开始行
     start_line=$(echo "${content}" | sed -n "/upstream_dns:/=")
     let "start_line++"
+    # 获取结束行
+    end_line=$(echo "${content}" | sed -n "/upstream_dns_file:/=")
+    let "end_line--"
     # 获取项的前缀
-    prefix=$(echo "${content}" | sed -n "${start_line}p" | sed "s/-.*/- /g")
+    prefix=$(echo "${content}" | sed -n "${start_line}p" | sed -e "s/-.*/- /g" -e "s/ /$(placeholder 1)/g")
     # 获取默认DNS
     default_dns=$(echo "${DNS_LIST}" | grep -Ev "^[[:space:]]*$" | sed "s/^/${prefix}/g")
+    default_dns=$(echo ${default_dns} | sed "s/ /∷/g")
     # 判断 SmartDNS 启用，则使用 SmartDNS，未启用则使用默认DNS
     if [ ${SMARTDNS_ENABLE} = true ] && [ ${MODULE_DNS_MODE} = 2 ] && [ $(isRun ${SMARTDNS_BIN} "pid") ]; then
         log "i" "${AGH_BIN} 上游DNS使用 ${SMARTDNS_BIN}"
@@ -34,7 +38,7 @@ modify_conf(){
 
 # 修改DNS
 modify_dns(){
-        echo "${content}" | sed "/upstream_dns:/,/upstream_dns_file:/c\  upstream_dns:\n${1}\n  upstream_dns_file: \"\"" > ${AGH_CONF}
+    echo "${content}" | sed "${start_line},${end_line}d" | sed "${start_line}i ${1}" | sed -e "s/$(placeholder 1)/ /g" -e "s/∷/\n/g" > ${AGH_CONF}
 }
 
 # 修改 DNS 端口
